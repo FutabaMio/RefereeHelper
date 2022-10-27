@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Верхний бар с названием - #BDB76B-->
+    <!--Навигационный бар с кнопками - #F0E68C-->
+
+    <!--Colors-->
+    <Color x:Key="Upper Title Bar">#BDB76B</Color>
+    <Color x:Key="Upper Buttons Bar">#F0E68C</Color>
+    <Color x:Key="Basic Background UC">#F0E68C</Color>
+
+
+    <!--Brushes-->
+    <SolidColorBrush x:Key="Upper Title Bar Brush" Color="{StaticResource Upper Title Bar}"/>
+    <SolidColorBrush x:Key="Upper Title Buttons Brush" Color="{StaticResource Upper Buttons Bar}"/>
+    <SolidColorBrush x:Key="Basic Background UC Brush" Color="{StaticResource Basic Background UC}"/>
+
+</ResourceDictionary>
