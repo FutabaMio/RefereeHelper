@@ -13,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RefereeHelper.Controls
+namespace RefereeHelper.Views
 {
     /// <summary>
-    /// Логика взаимодействия для NavigationBar.xaml
+    /// Логика взаимодействия для DistancesView.xaml
     /// </summary>
-    public partial class NavigationBar : UserControl
+    public partial class DistancesView : UserControl
     {
-        public NavigationBar()
+        public DistancesView()
         {
             InitializeComponent();
         }
-
-        
     }
 }

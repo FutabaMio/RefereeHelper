@@ -6,12 +6,13 @@
 
     <!--Colors-->
     <Color x:Key="Upper Title Bar">#BDB76B</Color>
-    <Color x:Key="Upper Buttons Bar">#F0E68C</Color>
+    <Color x:Key="Upper Title Bar Main">#0c0d0d</Color>
+    <Color x:Key="Upper Buttons Bar">#bab9b3</Color>
     <Color x:Key="Basic Background UC">#F0E68C</Color>
 
 
     <!--Brushes-->
-    <SolidColorBrush x:Key="Upper Title Bar Brush" Color="{StaticResource Upper Title Bar}"/>
+    <SolidColorBrush x:Key="Upper Title Bar Brush" Color="{StaticResource Upper Title Bar Main}"/>
     <SolidColorBrush x:Key="Upper Title Buttons Brush" Color="{StaticResource Upper Buttons Bar}"/>
     <SolidColorBrush x:Key="Basic Background UC Brush" Color="{StaticResource Basic Background UC}"/>
 

@@ -7,7 +7,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Background="{StaticResource Basic Background UC Brush}" Text="База Участников" FontSize="20" />
-    </Grid>
+
+        <TextBlock Background="White" Text="База Участников" FontSize="20"/>
+            <Button x:Name="AddMember" Margin="10,411,690,10" Content="Добавить вручную" FontSize="10"/>
+            <Button x:Name="AddFromExcel" Margin="115,411,584,10" Content="Загрузить из Excel" FontSize="10"/>
+            <Button x:Name="AddToExcel" Margin="221,411,478,10" Content="Выгрузить в Excel" FontSize="10"/>
+            <Button x:Name="DeleteMember" Margin="327,411,400,10" Content="Удалить" FontSize="10"/>
+            <Button x:Name="CategoryTable" Margin="566,411,10,10" Content="Открыть базу разрядов для редактирования" FontSize="10"/>
+        </Grid>
+
+        <!--"<Grid>
+            <Button x:Name="AddMember" Margin="10,411,690,10" Content="Добавить вручную" FontSize="10"/>
+            <Button x:Name="AddFromExcel" Margin="115,411,584,10" Content="Загрузить из Excel" FontSize="10"/>
+            <Button x:Name="AddToExcel" Margin="221,411,478,10" Content="Выгрузить в Excel" FontSize="10"/>
+            <Button x:Name="DeleteMember" Margin="327,411,400,10" Content="Удалить" FontSize="10"/>
+            <Button x:Name="CategoryTable" Margin="566,411,10,10" Content="Открыть базу разрядов для редактирования" FontSize="10"/>
+        </Grid> -->
 
 </UserControl>

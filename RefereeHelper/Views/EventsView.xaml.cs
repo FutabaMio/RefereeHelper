@@ -13,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RefereeHelper.Controls
+namespace RefereeHelper.Views
 {
     /// <summary>
-    /// Логика взаимодействия для NavigationBar.xaml
+    /// Логика взаимодействия для EventsView.xaml
     /// </summary>
-    public partial class NavigationBar : UserControl
+    public partial class EventsView : UserControl
     {
-        public NavigationBar()
+        public EventsView()
         {
             InitializeComponent();
         }
-
-        
     }
 }

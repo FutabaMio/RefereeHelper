@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="RefereeHelper.Views.ClubsViews"
+﻿<UserControl x:Class="RefereeHelper.Views.DistancesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,10 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <TextBlock Text="Клубы" FontSize="24" FontWeight="Bold"/>
-        <Button x:Name="AddClubButton" Margin="10,411,690,10" Content="Добавить клуб" FontSize="10"/>
-        <Button x:Name="EditClub" Margin="115,411,560,10" Content="Редактировать клуб" FontSize="10"/>
+        <TextBlock Text="Дистанции" FontSize="24" FontWeight="Bold"/>
+        <Button x:Name="AddDistanceButton" Margin="10,411,680,10" Content="Добавить дистанцию" FontSize="10"/>
+        <Button x:Name="EditDistance" Margin="125,411,560,10" Content="Редактировать клуб" FontSize="10"/>
         <Button x:Name="DeleteButton" Margin="245,411,450,10" Content="Удалить" FontSize="10"/>
-        <Button x:Name="OpenBaseButton" Margin="650,411,20,10" Content="Открыть базу регионов" FontSize="10"/>
     </Grid>
 </UserControl>
