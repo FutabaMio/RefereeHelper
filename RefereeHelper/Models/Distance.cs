@@ -8,11 +8,28 @@ namespace RefereeHelper.Models
 {
     public class Distance
     {
-        public int Id { get; }
-        public string Name { get; }
-        public decimal length { get; }
-        public decimal height { get; }
+        public Distance _distance;
+
+       
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Length { get; set; }
+        public decimal Height { get; set; }
         public TimeOnly startTime { get; set; }
+
+        public Distance(Distance distance)
+        {
+            _distance=distance;
+        }
+
+        public void AddDistanceManually(string name, decimal length, decimal height, TimeOnly startT)
+        {
+            _distance.Name = name;
+            _distance.Length = length;
+            _distance.Height = height;
+            _distance.startTime = startT;
+        }
 
     }
 }

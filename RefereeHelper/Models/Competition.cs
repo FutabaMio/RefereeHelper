@@ -8,7 +8,7 @@ namespace RefereeHelper.Models
 {
     public class Competition
     {
-        public readonly Competition _competition;
+        public  Competition _competition;
 
       
 

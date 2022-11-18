@@ -8,7 +8,7 @@ namespace RefereeHelper.Models
 {
     public class Group
     {
-        public readonly Group _group;
+        public  Group _group;
 
         
 
