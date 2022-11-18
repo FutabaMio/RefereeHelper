@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace RefereeHelper.Models
 {
-    internal class Timing
+    public class Timing
     {
+        public int Id { get; set; }
+        
+
     }
 }
