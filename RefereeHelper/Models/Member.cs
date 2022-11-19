@@ -25,6 +25,8 @@ namespace RefereeHelper.Models
             _member=member;
         }
 
+
+
         public void AddMemberManually(string name, string surname, DateOnly bornDate, bool gender)
         {
             _member.Name = name;

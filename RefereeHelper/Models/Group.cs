@@ -16,7 +16,7 @@ namespace RefereeHelper.Models
         public string Name { get; set; }
         public int startAge { get; set; }
         public int endAge { get; set; }
-
+        public List<Member> members { get; set; }
         public int distance { get; set; }
 
         public Group(Group group)
