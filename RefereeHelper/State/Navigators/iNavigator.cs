@@ -12,7 +12,11 @@ namespace RefereeHelper.State.Navigators
     {
         Members,
         Groups,
-        Clubs
+        Clubs,
+        Competitions,
+        Distances,
+        Regions,
+        Timing
     }
 
     public interface iNavigator

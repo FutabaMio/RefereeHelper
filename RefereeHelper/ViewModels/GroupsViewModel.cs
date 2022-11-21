@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using RefereeHelper.Models;
 
 namespace RefereeHelper.ViewModels
 {
     public class GroupsViewModel : ViewModelBase
     {
+        private List<Group> _groups;
+
+        public List<Group> Groups
+        {
+            get => _groups;
+            set
+            {
+                _groups = value;
+                OnPropertyChanged(nameof(Groups));
+            }
+        }
     }
 }

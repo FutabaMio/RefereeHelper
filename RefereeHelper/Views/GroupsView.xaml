@@ -3,14 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RefereeHelper.Views"
+             xmlns:local="clr-namespace:RefereeHelper.Views" xmlns:viewmodels="clr-namespace:RefereeHelper.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:GroupsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="139*"/>
+            <RowDefinition Height="11*"/>
+        </Grid.RowDefinitions>
         <TextBlock Text="Группы" FontSize="24" FontWeight="Bold"/>
-        <Button x:Name="AddGroupButton" Margin="10,411,690,10" Content="Добавить группу" FontSize="10"/>
-        <Button x:Name="EditGroup" Margin="115,411,560,10" Content="Редактировать группу" FontSize="10"/>
-        <Button x:Name="DeleteButton" Margin="245,411,450,10" Content="Удалить" FontSize="10"/>
+        <DataGrid x:Name="groupsTable" Grid.Row="0" IsReadOnly="True" ItemsSource="{Binding Group}" Margin="0,40,0,0"/>
     </Grid>
 </UserControl>
