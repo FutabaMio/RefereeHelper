@@ -9,7 +9,7 @@ namespace RefereeHelper.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        public iNavigator Navigator { get; set; } = new Navigator();
-
+        public iNavigator Navigator { get; set; } = new Navigator(new MembersViewModel());
+        
     }
 }

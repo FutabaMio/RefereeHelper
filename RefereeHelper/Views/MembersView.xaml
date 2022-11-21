@@ -3,20 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RefereeHelper.Views"
+             xmlns:local="clr-namespace:RefereeHelper.Views" xmlns:viewmodels="clr-namespace:RefereeHelper.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MembersViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="31*"/>
+            <RowDefinition Height="382*"/>
+            <RowDefinition Height="37*"/>
+        </Grid.RowDefinitions>
         <TextBlock Background="White" Text="База Участников" FontSize="20"/>
-            <Button x:Name="AddMember" Margin="10,411,690,10" Content="Добавить вручную" FontSize="10"/>
-            <Button x:Name="AddFromExcel" Margin="115,411,584,10" Content="Загрузить из Excel" FontSize="10"/>
-            <Button x:Name="AddToExcel" Margin="221,411,478,10" Content="Выгрузить в Excel" FontSize="10"/>
-            <Button x:Name="DeleteMember" Margin="327,411,400,10" Content="Удалить" FontSize="10"/>
-            <Button x:Name="CategoryTable" Margin="566,411,10,10" Content="Открыть базу разрядов для редактирования" FontSize="10"/>
-        </Grid>
+        <Button x:Name="AddMember" Content="Добавить вручную" FontSize="10" Grid.Row="2" Margin="0,0,691,0"/>
+        <Button x:Name="AddFromExcel"  Content="Загрузить из Excel" FontSize="10" Grid.Row="2" Margin="114,0,594,0"/>
+        <Button x:Name="AddToExcel"  Content="Выгрузить в Excel" FontSize="10" Grid.Row="2" Margin="211,0,469,0"/>
+        <Button x:Name="DeleteMember"  Content="Удалить" FontSize="10" Grid.Row="2" Margin="336,0,336,0"/>
+        <Button  x:Name="CategoryTable" Content="Открыть базу разрядов для редактирования" FontSize="10" Grid.Row="2" Margin="574,0,0,0"/>
+        <DataGrid Grid.Row="1" Background="White" Name="membersDataGrid" IsReadOnly="True" ItemsSource="{Binding Members}">
 
-        <!--"<Grid>
+        </DataGrid>
+    </Grid>
+
+    <!--"<Grid>
             <Button x:Name="AddMember" Margin="10,411,690,10" Content="Добавить вручную" FontSize="10"/>
             <Button x:Name="AddFromExcel" Margin="115,411,584,10" Content="Загрузить из Excel" FontSize="10"/>
             <Button x:Name="AddToExcel" Margin="221,411,478,10" Content="Выгрузить в Excel" FontSize="10"/>

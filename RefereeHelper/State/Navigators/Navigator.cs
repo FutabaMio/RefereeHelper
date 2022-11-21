@@ -14,6 +14,12 @@ namespace RefereeHelper.State.Navigators
     public class Navigator : ObservableObject,  iNavigator
     {
         private ViewModelBase _currentViewModel;
+
+        public Navigator(ViewModelBase currentViewModel)
+        {
+            _currentViewModel=currentViewModel;
+        }
+
         public ViewModelBase CurrentViewModel
         {
             get
@@ -29,7 +35,7 @@ namespace RefereeHelper.State.Navigators
 
         public ICommand UpdateCurrentViewModelCommand => new UpdateCurrentViewModelCommand(this);
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        //public event PropertyChangedEventHandler? PropertyChanged;
 
  
     }

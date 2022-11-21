@@ -1,6 +1,8 @@
 ﻿<Application x:Class="RefereeHelper.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewmodels ="clr-namespace:RefereeHelper.ViewModels"
+             xmlns:views ="clr-namespace:RefereeHelper.Views"
              xmlns:local="clr-namespace:RefereeHelper">
 
     <Application.Resources>
@@ -9,6 +11,12 @@
                 <ResourceDictionary Source="Styles/Common.xaml"/>
                 <ResourceDictionary Source="Styles/NavigationDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type viewmodels:MembersViewModel}">
+                <views:MembersView/>
+            </DataTemplate>
+            
+            
         </ResourceDictionary>
-    </Application.Resources>
+    </Application.Resources>   
 </Application>
