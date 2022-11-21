@@ -15,6 +15,12 @@
             <DataTemplate DataType="{x:Type viewmodels:MembersViewModel}">
                 <views:MembersView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:ClubsViewModel}">
+                <views:ClubsViews/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:GroupsViewModel}">
+                <views:GroupsView/>
+            </DataTemplate>
             
             
         </ResourceDictionary>
