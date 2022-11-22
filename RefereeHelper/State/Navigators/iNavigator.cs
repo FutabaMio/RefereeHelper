@@ -16,7 +16,7 @@ namespace RefereeHelper.State.Navigators
         Competitions,
         Distances,
         Regions,
-        Timing
+        Timings
     }
 
     public interface iNavigator

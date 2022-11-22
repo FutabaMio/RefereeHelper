@@ -41,6 +41,12 @@ namespace RefereeHelper.Commands
                     case ViewType.Clubs:
                         _navigator.CurrentViewModel = new ClubsViewModel();
                         break;
+                    case ViewType.Competitions:
+                            _navigator.CurrentViewModel = new CompetitionsViewModel();
+                        break;
+                    case ViewType.Timings:
+                        _navigator.CurrentViewModel = new TimingViewModel();
+                        break;
                     default:
                         break;
                 }

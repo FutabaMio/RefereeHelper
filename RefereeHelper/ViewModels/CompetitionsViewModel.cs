@@ -10,6 +10,7 @@ namespace RefereeHelper.ViewModels
     public class CompetitionsViewModel : ViewModelBase
     {
         private List<Competition> _competitions;
+        private List<Group> _group;
 
         public List<Competition> Competitions
         {
@@ -18,6 +19,16 @@ namespace RefereeHelper.ViewModels
             {
                 _competitions = value;
                 OnPropertyChanged(nameof(Competitions));
+            }
+        }
+
+        public List<Group> Group
+        {
+            get => _group;
+            set
+            {
+                _group = value;
+                OnPropertyChanged(nameof(Group));
             }
         }
     }

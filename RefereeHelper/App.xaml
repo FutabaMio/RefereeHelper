@@ -21,6 +21,12 @@
             <DataTemplate DataType="{x:Type viewmodels:GroupsViewModel}">
                 <views:GroupsView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:CompetitionsViewModel}">
+                <views:CompetitionView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:TimingViewModel}">
+                <views:TimingView/>
+            </DataTemplate>
             
             
         </ResourceDictionary>

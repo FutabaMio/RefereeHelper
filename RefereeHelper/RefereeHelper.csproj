@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RefereeHelper.Domain\RefereeHelper.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

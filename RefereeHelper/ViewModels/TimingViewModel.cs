@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RefereeHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,18 @@ using System.Threading.Tasks;
 
 namespace RefereeHelper.ViewModels
 {
-    internal class TimingViewModel
+    public class TimingViewModel : ViewModelBase
     {
+        private List<Timing> _timing;
+
+        public List<Timing> Timing
+        {
+            get => _timing;
+            set
+            {
+                _timing = value;
+                OnPropertyChanged(nameof(Timing));
+            }
+        }
     }
 }
