@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RefereeHelper.Views" xmlns:viewmodels="clr-namespace:RefereeHelper.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:TimingViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBox Text="Тайминги будут тут"/>
+             d:DesignHeight="369" d:DesignWidth="800">
+    <Grid Background="White">
+        <Label Name="secundomer" Content="0" FontSize="48" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <Button Name="StartButton" Click="TimerStart" Content="Старт" Margin="18,184,617,159"/>
+        <Button Click="TimerStop" Content="Сброс" Margin="535,253,100,89"/>
     </Grid>
 </UserControl>
