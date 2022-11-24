@@ -10,16 +10,27 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="31*"/>
             <RowDefinition Height="382*"/>
-            <RowDefinition Height="37*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Background="White" Text="База Участников" FontSize="20"/>
-        <Button x:Name="AddMember" Content="Добавить вручную" FontSize="10" Grid.Row="2" Margin="0,0,691,0"/>
-        <Button x:Name="AddFromExcel"  Content="Загрузить из Excel" FontSize="10" Grid.Row="2" Margin="114,0,594,0"/>
-        <Button x:Name="AddToExcel"  Content="Выгрузить в Excel" FontSize="10" Grid.Row="2" Margin="211,0,469,0"/>
-        <Button x:Name="DeleteMember"  Content="Удалить" FontSize="10" Grid.Row="2" Margin="336,0,336,0"/>
-        <Button  x:Name="CategoryTable" Content="Открыть базу разрядов для редактирования" FontSize="10" Grid.Row="2" Margin="574,0,0,0"/>
-        <DataGrid Grid.Row="1" Background="White" Name="membersDataGrid" IsReadOnly="True" ItemsSource="{Binding Members}">
+            <RowDefinition Height="37*">
 
+            </RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Background="White" Text="База Участников" FontSize="20" Grid.Row="0"/>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="122*"/>
+                <ColumnDefinition Width="115*"/>
+                <ColumnDefinition Width="131*"/>
+                <ColumnDefinition Width="144*"/>
+                <ColumnDefinition Width="288*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="AddMember" Content="Добавить вручную" FontSize="10" Grid.Column="0"/>
+            <Button x:Name="AddFromExcel"  Content="Загрузить из Excel" FontSize="10" Grid.Column="1"/>
+            <Button x:Name="AddToExcel"  Content="Выгрузить в Excel" FontSize="10" Grid.Column="2"/>
+            <Button x:Name="DeleteMember" Content="Удалить" FontSize="10" Grid.Column="3"/>
+            <Button  x:Name="CategoryTable" Content="Открыть базу разрядов для редактирования" FontSize="10" Grid.Column="4"/>
+        </Grid>
+
+        <DataGrid Grid.Row="1" Background="White" Name="membersDataGrid" IsReadOnly="True" ItemsSource="{Binding Members}">
         </DataGrid>
     </Grid>
 

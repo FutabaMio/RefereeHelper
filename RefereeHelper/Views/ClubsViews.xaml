@@ -7,10 +7,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="188*"/>
+            <RowDefinition Height="17*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*"/>
+                <ColumnDefinition Width="40*"/>
+                <ColumnDefinition Width="29*"/>
+                <ColumnDefinition Width="51*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="AddClubButton" Content="Добавить клуб" FontSize="10" Grid.Column="0"/>
+            <Button x:Name="EditClub" Content="Редактировать клуб" FontSize="10" Grid.Column="1"/>
+            <Button x:Name="DeleteButton" Content="Удалить" FontSize="10" Grid.Column="2"/>
+            <Button x:Name="OpenBaseButton" Content="Открыть базу регионов" FontSize="10" Grid.Column="3"/>
+        </Grid>
         <TextBlock Text="Клубы" FontSize="24" FontWeight="Bold"/>
-        <Button x:Name="AddClubButton" Margin="10,411,690,10" Content="Добавить клуб" FontSize="10"/>
-        <Button x:Name="EditClub" Margin="115,411,560,10" Content="Редактировать клуб" FontSize="10"/>
-        <Button x:Name="DeleteButton" Margin="245,411,450,10" Content="Удалить" FontSize="10"/>
-        <Button x:Name="OpenBaseButton" Margin="650,411,20,10" Content="Открыть базу регионов" FontSize="10"/>
+
     </Grid>
 </UserControl>

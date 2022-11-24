@@ -34,9 +34,9 @@
             <RadioButton Grid.Column="1" Content="Клубы" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Clubs}"/>
             <RadioButton Grid.Column="2" Content="Группы" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Groups}"/>
             <RadioButton Grid.Column="3" Content="Мероприятия" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Competitions}"/>
-            <RadioButton Grid.Column="4" Content="Тайминги" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Timings}"/>
-            <RadioButton Grid.Column="5" Content="Название"/>
-            <RadioButton Grid.Column="6" Content="Название"/>
+            <RadioButton Grid.Column="4" Content="Дистанции" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Distances}"/>
+            <RadioButton Grid.Column="5" Content="Тайминги" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Timings}"/>
+            <RadioButton Grid.Column="6" Content="О программе (выкл)"/>
         </Grid>
     </Grid>
 </UserControl>

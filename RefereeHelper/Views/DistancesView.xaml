@@ -7,9 +7,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="77*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions> 
+            <Button x:Name="AddDistanceButton" Content="Добавить дистанцию" FontSize="10" Grid.Column="0"/>
+        <Button x:Name="EditDistance" Content="Редактировать" FontSize="10" Grid.Column="1"/>
+        <Button x:Name="DeleteButton" Content="Удалить" FontSize="10" Grid.Column="2"/>
+        </Grid>
         <TextBlock Text="Дистанции" FontSize="24" FontWeight="Bold"/>
-        <Button x:Name="AddDistanceButton" Margin="10,411,680,10" Content="Добавить дистанцию" FontSize="10"/>
-        <Button x:Name="EditDistance" Margin="125,411,560,10" Content="Редактировать клуб" FontSize="10"/>
-        <Button x:Name="DeleteButton" Margin="245,411,450,10" Content="Удалить" FontSize="10"/>
+       
     </Grid>
 </UserControl>
