@@ -1,9 +1,11 @@
-﻿using RefereeHelper.Models;
+﻿using RefereeHelper.Commands;
+using RefereeHelper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace RefereeHelper.ViewModels
 {
@@ -19,6 +21,13 @@ namespace RefereeHelper.ViewModels
                 _members = value;
                 OnPropertyChanged(nameof(Members));
             }
+        }
+
+            public ICommand ManualAdd { get; set; }
+
+        public MembersViewModel(Member member)
+        {
+            ManualAdd = new AddMemberManuallyComamnd();
         }
     }
 }

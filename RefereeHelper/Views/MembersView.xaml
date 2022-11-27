@@ -23,7 +23,7 @@
                 <ColumnDefinition Width="144*"/>
                 <ColumnDefinition Width="288*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="AddMember" Content="Добавить вручную" FontSize="10" Grid.Column="0"/>
+            <Button x:Name="AddMember" Content="Добавить вручную" FontSize="10" Grid.Column="0" Command="{Binding ManualAdd}"/>
             <Button x:Name="AddFromExcel"  Content="Загрузить из Excel" FontSize="10" Grid.Column="1"/>
             <Button x:Name="AddToExcel"  Content="Выгрузить в Excel" FontSize="10" Grid.Column="2"/>
             <Button x:Name="DeleteMember" Content="Удалить" FontSize="10" Grid.Column="3"/>
