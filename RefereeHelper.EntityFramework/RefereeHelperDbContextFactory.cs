@@ -17,5 +17,4 @@ namespace RefereeHelper.EntityFramework
             return new RefereeHelperDbContext(options.Options);
         }
     }
-    }
-}
+ }
