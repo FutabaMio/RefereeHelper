@@ -10,7 +10,9 @@ namespace RefereeHelper.EntityFramework
 {
     public class RefereeHelperDbContext : DbContext
     {
-
+        public RefereeHelperDbContext(DbContextOptions options) : base(options)
+        {
+        }
 
         public DbSet<Members> Members { get; set; }
         public DbSet<Groups> Groups { get; set; }
@@ -25,7 +27,7 @@ namespace RefereeHelper.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("");
+            optionsBuilder.UseSqlite("Data Context=SyclicSheck.db");
 
             base.OnConfiguring(optionsBuilder);
         }
