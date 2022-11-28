@@ -25,9 +25,9 @@ namespace RefereeHelper.ViewModels
 
             public ICommand ManualAdd { get; set; }
 
-        public MembersViewModel(Member member)
+    /*    public MembersViewModel(Member member)
         {
             ManualAdd = new AddMemberManuallyComamnd();
-        }
+        } */
     }
 }

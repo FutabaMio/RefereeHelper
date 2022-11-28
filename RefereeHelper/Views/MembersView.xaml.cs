@@ -23,6 +23,9 @@ namespace RefereeHelper.Views
         public MembersView()
         {
             InitializeComponent();
+
+
+            
         }
     }
 }

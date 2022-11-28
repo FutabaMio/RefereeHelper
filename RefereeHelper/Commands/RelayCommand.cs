@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace RefereeHelper.Commands
 {
-    public class RelayCommand
+    public class RelayCommand : CommandBase
     {
-
+        public override void Execute(object? parameter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
