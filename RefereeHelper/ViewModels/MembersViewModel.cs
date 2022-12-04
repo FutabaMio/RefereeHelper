@@ -1,5 +1,6 @@
 ﻿using RefereeHelper.Commands;
 using RefereeHelper.Models;
+using RefereeHelper.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,8 @@ namespace RefereeHelper.ViewModels
 
             public ICommand ManualAdd { get; set; }
 
-        public MembersViewModel(Member member)
+       /* public MembersViewModel(Member member)
         {
             ManualAdd = new AddMemberManuallyComamnd();
-        }
-    }
+        } */    }
 }

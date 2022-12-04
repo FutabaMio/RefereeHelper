@@ -1,0 +1,33 @@
+﻿<Window x:Class="RefereeHelper.OptionsWindows.AddMemberInCommandFromTable"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RefereeHelper.OptionsWindows"
+        mc:Ignorable="d"
+        Title="AddMemberInCommandFromTable" Height="450" Width="800" WindowStyle="None">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="47*"/>
+            <RowDefinition Height="13*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="0" Content="Фамилия" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
+        <ListBox Name="secondNameList" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Height="20"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Чип" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
+        <TextBox Name="chipNumberTextBox" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Height="20"/>
+        <Button Name="readChip" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" Height="25" Width="100" Content="Зачитать чип"/>
+        <Label Grid.Column="1" Grid.Row="1" Content="Стартовый номер" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
+        <TextBox Name="startNumberTextBox" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
+        <Button Grid.Column="1" Grid.Row="4" Content="OK"/>
+        <Button Grid.Column="2" Grid.Row="4" Content="Отмена" Click="Button_Click"/>
+    </Grid>
+</Window>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,19 @@ namespace RefereeHelper.Views
         public CompetitionView()
         {
             InitializeComponent();
+            RefreshData();
+        }
+
+        public void RefreshData()
+        {
+            SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
+            con.Open();
+
+            SqliteCommand command = new SqliteCommand(@"SELECT * FROM competition", con);
+            SqliteDataReader dataReader = command.ExecuteReader();
+            competitionsTable.ItemsSource = dataReader;
+
+            //создать копию, где вызываются только те команды, у которых в таблице group_competition айдишниики принадлежат соревнованию
         }
     }
 }

@@ -19,7 +19,7 @@ namespace RefereeHelper
             Window window = new MainWindow();
             window.DataContext = new MainViewModel();            
             window.Show();
-            base.OnStartup(e);
+           // base.OnStartup(e);
         }
     }
 }

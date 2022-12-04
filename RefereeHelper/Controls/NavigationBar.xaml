@@ -36,7 +36,8 @@
             <RadioButton Grid.Column="3" Content="Мероприятия" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Competitions}"/>
             <RadioButton Grid.Column="4" Content="Дистанции" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Distances}"/>
             <RadioButton Grid.Column="5" Content="Тайминги" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Timings}"/>
-            <RadioButton Grid.Column="6" Content="О программе (выкл)"/>
+            <RadioButton Grid.Column="6" Content="Команды" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Comands}"/>
+            
         </Grid>
     </Grid>
 </UserControl>

@@ -18,11 +18,11 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions> 
-            <Button x:Name="AddDistanceButton" Content="Добавить дистанцию" FontSize="10" Grid.Column="0"/>
-        <Button x:Name="EditDistance" Content="Редактировать" FontSize="10" Grid.Column="1"/>
+            <Button x:Name="AddDistanceButton" Content="Добавить дистанцию" FontSize="10" Grid.Column="0" Click="AddDistanceButton_Click"/>
+        <Button x:Name="EditDistance" Content="Редактировать" FontSize="10" Grid.Column="1" Click="EditDistance_Click"/>
         <Button x:Name="DeleteButton" Content="Удалить" FontSize="10" Grid.Column="2"/>
         </Grid>
         <TextBlock Text="Дистанции" FontSize="24" FontWeight="Bold"/>
-       
+        <DataGrid Grid.Row="1" Name="distanceTable"/>
     </Grid>
 </UserControl>

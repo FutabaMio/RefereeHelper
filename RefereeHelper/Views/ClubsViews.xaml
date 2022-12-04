@@ -19,12 +19,15 @@
                 <ColumnDefinition Width="29*"/>
                 <ColumnDefinition Width="51*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="AddClubButton" Content="Добавить клуб" FontSize="10" Grid.Column="0"/>
+            <Button x:Name="AddClubButton" Content="Добавить клуб" FontSize="10" Grid.Column="0" Click="AddClubButton_Click"/>
             <Button x:Name="EditClub" Content="Редактировать клуб" FontSize="10" Grid.Column="1"/>
             <Button x:Name="DeleteButton" Content="Удалить" FontSize="10" Grid.Column="2"/>
             <Button x:Name="OpenBaseButton" Content="Открыть базу регионов" FontSize="10" Grid.Column="3"/>
         </Grid>
         <TextBlock Text="Клубы" FontSize="24" FontWeight="Bold"/>
+        <DataGrid Grid.Row="1" Name="clubDataGrid" ItemsSource="{Binding Clubs}">
+            
+        </DataGrid>
 
     </Grid>
 </UserControl>

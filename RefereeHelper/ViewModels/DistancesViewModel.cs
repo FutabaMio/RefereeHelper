@@ -1,4 +1,6 @@
 ﻿using RefereeHelper.Domain.Models;
+using RefereeHelper.Models;
+using RefereeHelper.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,9 @@ namespace RefereeHelper.ViewModels
 {
     public class DistancesViewModel : ViewModelBase
     {
-        private List<Distances> _distances;
+        private List<Distance> _distances;
 
-        public List<Distances> Distances
+        public List<Distance> Distances
         {
             get => _distances;
             set

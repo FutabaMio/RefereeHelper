@@ -50,7 +50,9 @@ namespace RefereeHelper.Commands
                     case ViewType.Distances:
                         _navigator.CurrentViewModel = new DistancesViewModel();
                         break;
-                    //case ViewType.   кнопка "О Программе"
+                    case ViewType.Comands:
+                        _navigator.CurrentViewModel = new ComandViewModel();
+                        break;
                     default:
                         break;
                 }

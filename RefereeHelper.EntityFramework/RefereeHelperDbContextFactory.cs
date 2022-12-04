@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace RefereeHelper.EntityFramework
 {
-    internal class RefereeHelperDbContextFactory : IDesignTimeDbContextFactory<RefereeHelperDbContext>
+    public class RefereeHelperDbContextFactory : IDesignTimeDbContextFactory<RefereeHelperDbContext>
     {
         public RefereeHelperDbContext CreateDbContext(string[] args)
         {

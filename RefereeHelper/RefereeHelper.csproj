@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RefereeHelper.Domain\RefereeHelper.Domain.csproj" />
+    <ProjectReference Include="..\RefereeHelper.EntityFramework\RefereeHelper.EntityFramework.csproj" />
   </ItemGroup>
 
 </Project>

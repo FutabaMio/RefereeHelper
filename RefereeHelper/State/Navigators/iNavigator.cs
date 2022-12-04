@@ -1,4 +1,4 @@
-﻿using RefereeHelper.ViewModels;
+﻿using RefereeHelper.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,8 @@ namespace RefereeHelper.State.Navigators
         Competitions,
         Distances,
         Regions,
-        Timings
+        Timings,
+        Comands,
     }
 
     public interface iNavigator

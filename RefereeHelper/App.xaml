@@ -30,8 +30,10 @@
             <DataTemplate DataType="{x:Type viewmodels:TimingViewModel}">
                 <views:TimingView/>
             </DataTemplate>
-            
-            
+            <DataTemplate DataType="{x:Type viewmodels:ComandViewModel}">
+                <views:ComandsView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>   
 </Application>

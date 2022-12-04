@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace RefereeHelper.ViewModels
+namespace RefereeHelper.ViewModels.Base
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
@@ -12,15 +12,15 @@ namespace RefereeHelper.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
 
-      /*  protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string PropertyName = null)
-        {
-            if (Equals(field, value))
-            {
-                return false;
-            }
-            field = value;
-            OnPropertyChanged(PropertyName);
-            return true;
-        } */
+        /*  protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string PropertyName = null)
+          {
+              if (Equals(field, value))
+              {
+                  return false;
+              }
+              field = value;
+              OnPropertyChanged(PropertyName);
+              return true;
+          } */
     }
 }

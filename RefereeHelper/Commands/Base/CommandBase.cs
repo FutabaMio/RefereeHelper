@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RefereeHelper.Commands
+namespace RefereeHelper.Commands.Base
 {
     public abstract class CommandBase : ICommand
     {

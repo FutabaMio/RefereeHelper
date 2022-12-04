@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RefereeHelper.Domain.Models
+namespace RefereeHelper.Domain.Models.Base
 {
-    public class Groups
+    public class BaseEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

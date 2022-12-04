@@ -17,5 +17,7 @@
         <Button Grid.Row="2" Margin="10,2,660,2" Content="Добавить соревнование" FontSize="10"/>
         <Button Grid.Row="2" Margin="145,2,538,2" Content="Редактировать" FontSize="10"/>
         <Button Grid.Row="2" Margin="267,2,416,2" Content="Удалить" FontSize="10"/>
+
+        <DataGrid Grid.Row="0" Margin="0,35,0,0" Name="eventsTable"/>
     </Grid>
 </UserControl>
