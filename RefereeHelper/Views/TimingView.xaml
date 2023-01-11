@@ -28,6 +28,7 @@
                 </Grid.RowDefinitions>
                 <Button Name="StartButton" Click="TimerStart" Content="Старт" Grid.Row="1"/>
                 <Button Click="TimerStop" Content="Сброс" Grid.Row="2"/>
+                
             </Grid>
         </Grid>
         <Grid Grid.Row="3">
@@ -37,11 +38,12 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
+            
             <Button Grid.Column="0" Content="Загрузить из файла"/>
             <Button Grid.Column="1" Content="Добавить из базы"/>
             <Button Grid.Column="2" Content="Добавить вручную"/>
             <Button Grid.Column="3" Content="Печать стартового протокола"/>
         </Grid>
-
+        <DataGrid Grid.Row="2" Name="TeamTimer"/>
     </Grid>
 </UserControl>

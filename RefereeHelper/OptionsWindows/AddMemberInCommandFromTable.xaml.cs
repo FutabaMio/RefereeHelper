@@ -28,5 +28,10 @@ namespace RefereeHelper.OptionsWindows
         {
             this.Close();
         }
+
+        private void readChip_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

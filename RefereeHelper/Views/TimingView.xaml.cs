@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,6 +15,17 @@ namespace RefereeHelper.Views
         public TimingView()
         {
             InitializeComponent();
+            RefreshData();
+        }
+
+        public void RefreshData()
+        {
+            SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
+            con.Open();
+
+            SqliteCommand command = new SqliteCommand(@"SELECT * FROM timer", con);
+            SqliteDataReader dataReader = command.ExecuteReader();
+            TeamTimer.ItemsSource = dataReader;
         }
 
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();

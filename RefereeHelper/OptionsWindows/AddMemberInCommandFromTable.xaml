@@ -24,7 +24,7 @@
         <ListBox Name="secondNameList" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Height="20"/>
         <Label Grid.Column="0" Grid.Row="1" Content="Чип" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
         <TextBox Name="chipNumberTextBox" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Height="20"/>
-        <Button Name="readChip" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" Height="25" Width="100" Content="Зачитать чип"/>
+        <Button Name="readChip" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" Height="25" Width="100" Content="Зачитать чип" Click="readChip_Click"/>
         <Label Grid.Column="1" Grid.Row="1" Content="Стартовый номер" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
         <TextBox Name="startNumberTextBox" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
         <Button Grid.Column="1" Grid.Row="4" Content="OK"/>

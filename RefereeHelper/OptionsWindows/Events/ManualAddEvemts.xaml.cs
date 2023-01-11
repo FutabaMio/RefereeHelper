@@ -10,26 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using RefereeHelper.OptionsWindows.Events;
 
-namespace RefereeHelper.Views
+namespace RefereeHelper.OptionsWindows.Events
 {
     /// <summary>
-    /// Логика взаимодействия для EventsView.xaml
+    /// Interaction logic for ManualAddEvemts.xaml
     /// </summary>
-    public partial class EventsView : UserControl
+    public partial class ManualAddEvemts : Window
     {
-        public EventsView()
+        public ManualAddEvemts()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ManualAddEvemts manualAddEvemts = new ManualAddEvemts();
-            manualAddEvemts.ShowDialog();
         }
     }
 }
