@@ -44,13 +44,6 @@ namespace RefereeHelper.Views
             MembersList.DataContext = db.Members.Local.ToBindingList();
         }
 
-        public void RefreshData()
-        {
-            /*SqliteCommand command = new SqliteCommand(@"SELECT * FROM sportsman", con);
-            SqliteDataReader dataReader = command.ExecuteReader();
-            membersDataGrid.ItemsSource = dataReader;*/
-        }
-
         private void AddMember_Click(object sender, RoutedEventArgs e)
         {
             ManualAddMembers manualAddWindow = new ManualAddMembers(new Member());

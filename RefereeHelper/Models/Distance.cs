@@ -12,6 +12,6 @@ namespace RefereeHelper.Models
         public string Name { get; set; }
         public decimal Length { get; set; }
         public decimal Height { get; set; }
-        public TimeOnly startTime { get; set; }
+       // public DateTime startTime { get; set; }
     }
 }

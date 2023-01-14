@@ -23,6 +23,6 @@
             <Button Grid.Column="2" Content="Удалить"/>
         </Grid>
         <TextBlock Text="Группы" FontSize="24" FontWeight="Bold" Grid.Row="0"/>
-        <DataGrid x:Name="groupsTable" Grid.Row="1" IsReadOnly="True" ItemsSource="{Binding Group}"/>
+        <DataGrid Name="groupsTable" Grid.Row="1" IsReadOnly="True" ItemsSource="{Binding}" MouseRightButtonDown="groupsTable_MouseRightButtonDown"/>
     </Grid>
 </UserControl>

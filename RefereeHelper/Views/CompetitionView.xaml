@@ -18,14 +18,14 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Добавить соревнование"/>
-            <Button Grid.Column="1" Content="Редактировать соревнование"/>
-            <Button Grid.Column="2" Content="Удалить"/>
+            <Button Name="AddCompetition" Grid.Column="0" Content="Добавить соревнование" Click="AddCompetition_Click"/>
+           <!-- <Button Grid.Column="1" Content="Редактировать соревнование"/>
+            <Button Grid.Column="2" Content="Удалить"/> -->
         </Grid>
 
         <TextBlock Grid.Row="0" Text="Соревнования" FontSize="20"/>
         <TextBlock Grid.Row="1" Text="Участвующие команды" FontSize="20"/>
-        <DataGrid Grid.Row="0" Background="White" Name="competitionsTable" IsReadOnly="True" ItemsSource="{Binding Competitions}" Margin="0,26,0,0"/>
+        <DataGrid Grid.Row="0" Background="White" Name="competitionsTable" ItemsSource="{Binding}" MouseRightButtonDown="competitionsTable_MouseRightButtonDown" Margin="0,26,0,0"/>
         <DataGrid Grid.Row="1" Background="White" Name="comandsTable" IsReadOnly="True" ItemsSource="{Binding Group}" Margin="0,27,0,0"/>
     </Grid>
 </UserControl>

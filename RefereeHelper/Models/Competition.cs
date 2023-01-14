@@ -11,8 +11,11 @@ namespace RefereeHelper.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public string Place { get; set; }
+        public string Organizer { get; set; }
+        public string Judge { get; set; }
+        public string Secretary { get; set; }
 
     }
 }

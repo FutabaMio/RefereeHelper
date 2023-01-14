@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using RefereeHelper.OptionsWindows;
+using Microsoft.EntityFrameworkCore;
+using RefereeHelper.Models;
 
 namespace RefereeHelper.Views
 {
@@ -22,32 +24,42 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class DistancesView : UserControl
     {
+        ApplicationContext db = new ApplicationContext();
         public DistancesView()
         {
             InitializeComponent();
-            RefreshData();
+            Loaded+=DistancesView_Loaded;
         }
 
-        public void RefreshData()
+        private void DistancesView_Loaded(object sender, RoutedEventArgs e)
         {
-            SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
-            con.Open();
-
-            SqliteCommand command = new SqliteCommand(@"SELECT * FROM distance", con);
-            SqliteDataReader dataReader = command.ExecuteReader();
-            distanceTable.ItemsSource = dataReader;
+            db.Database.EnsureCreated();
+            db.Distances.Load();
+            DataContext = db.Distances.Local.ToObservableCollection();
+            distanceTable.DataContext = db.Distances.Local.ToBindingList();
         }
 
         private void AddDistanceButton_Click(object sender, RoutedEventArgs e)
         {
-            ManualAddDistances manualAddDistances = new ManualAddDistances();
-            manualAddDistances.ShowDialog();
+            ManualAddDistances manualAddDistances = new ManualAddDistances(new Distance());
+            if (manualAddDistances.ShowDialog()==true)
+            {
+                Distance Distance = manualAddDistances.Distance;
+                db.Distances.Add(Distance);
+                db.SaveChanges();
+            }
+            
         }
 
-        private void EditDistance_Click(object sender, RoutedEventArgs e)
+        private void distanceTable_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ManualAddDistances manualAddDistances = new ManualAddDistances();
-            manualAddDistances.ShowDialog();
+            ManualAddDistances manualAddDistances = new ManualAddDistances(new Distance());
+            if (manualAddDistances.ShowDialog()==true)
+            {
+                Distance Distance = manualAddDistances.Distance;
+                db.Distances.Add(Distance);
+                db.SaveChanges();
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using RefereeHelper.Models;
+using RefereeHelper.OptionsWindows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,22 +24,42 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class CompetitionView : UserControl
     {
+        ApplicationContext db = new ApplicationContext();
         public CompetitionView()
         {
             InitializeComponent();
-            RefreshData();
+            Loaded+=CompetitionView_Loaded;
+
         }
 
-        public void RefreshData()
+        private void CompetitionView_Loaded(object sender, RoutedEventArgs e)
         {
-            SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
-            con.Open();
+            db.Database.EnsureCreated();
+            db.Competitions.Load();
+            DataContext = db.Competitions.Local.ToObservableCollection();
+            competitionsTable.DataContext = db.Competitions.Local.ToBindingList();
+        }
 
-            SqliteCommand command = new SqliteCommand(@"SELECT * FROM competition", con);
-            SqliteDataReader dataReader = command.ExecuteReader();
-            competitionsTable.ItemsSource = dataReader;
+        private void AddCompetition_Click(object sender, RoutedEventArgs e)
+        {
+            ManualAddCompetition manualAddCompetition = new ManualAddCompetition(new Competition());
+            if(manualAddCompetition.ShowDialog() == true)
+            {
+                Competition Competition = manualAddCompetition.Competition;
+                db.Competitions.Add(Competition);
+                db.SaveChanges();
+            }
+        }
 
-            //создать копию, где вызываются только те команды, у которых в таблице group_competition айдишниики принадлежат соревнованию
+        private void competitionsTable_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ManualAddCompetition manualAddCompetition = new ManualAddCompetition(new Competition());
+            if (manualAddCompetition.ShowDialog() == true)
+            {
+                Competition Competition = manualAddCompetition.Competition;
+                db.Competitions.Add(Competition);
+                db.SaveChanges();
+            }
         }
     }
 }

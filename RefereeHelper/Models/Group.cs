@@ -10,10 +10,10 @@ namespace RefereeHelper.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int startAge { get; set; }
-        public int endAge { get; set; }
-        public List<Member> members { get; set; }
-        public int distance { get; set; }
+        public int StartAge { get; set; }
+        public int EndAge { get; set; }
+        //public List<Member> members { get; set; } <- уточнить
+        //public int distance { get; set; } <- уточнить
 
     }
 }

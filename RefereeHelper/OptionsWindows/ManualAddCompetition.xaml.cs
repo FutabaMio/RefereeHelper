@@ -16,22 +16,26 @@ using System.Windows.Shapes;
 namespace RefereeHelper.OptionsWindows
 {
     /// <summary>
-    /// Interaction logic for ManualAddClub.xaml
+    /// Interaction logic for ManualAddCompetition.xaml
     /// </summary>
-    public partial class ManualAddClub : Window
+    public partial class ManualAddCompetition : Window
     {
-        public Club Club { get; private set; }
-        public ManualAddClub(Club club)
+        public Competition Competition { get; private set; }
+        public ManualAddCompetition(Competition competition)
         {
             InitializeComponent();
-            Club = club;
-            DataContext = Club;
+            Competition = competition;
+            DataContext= Competition;
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            Club.Name = clubNameTextBox.Text;
-            Club.Couch = couchTextBox.Text;
+            Competition.Name = competitionNameBox.Text;
+            Competition.Place = competitionPlaceBox.Text;
+            Competition.Organizer = competitionOrganizerBox.Text;
+            Competition.Judge = competitionJudgeBox.Text;
+            Competition.Secretary = competitionSecretaryBox.Text;
+            Competition.Date = competitionDatePicker.SelectedDate.Value.Date;
             DialogResult=true;
         }
 
