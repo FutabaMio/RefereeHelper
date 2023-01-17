@@ -20,6 +20,7 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class ManualAddClub : Window
     {
+        ApplicationContext db = new ApplicationContext();
         public Club Club { get; private set; }
         public ManualAddClub(Club club)
         {
@@ -38,6 +39,17 @@ namespace RefereeHelper.OptionsWindows
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void RegionAdd_Click(object sender, RoutedEventArgs e)
+        {
+            ManualAddRegion manualAddRegion = new ManualAddRegion(new Region());
+            if(manualAddRegion.ShowDialog() == true)
+            {
+                Region Region = manualAddRegion.Region;
+                db.Regions.Add(Region);
+                db.SaveChanges();
+            }
         }
     }
 }
