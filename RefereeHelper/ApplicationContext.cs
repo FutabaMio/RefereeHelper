@@ -16,7 +16,7 @@ namespace RefereeHelper
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Competition> Competitions { get; set; }
         public DbSet<Region> Regions { get; set; }
-        //public DbSet<Timing> Timings { get; set; }
+        public DbSet<Timing> Timings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -36,7 +36,7 @@ namespace RefereeHelper.Views
         {
             db.Database.EnsureCreated();
             db.Clubs.Load();
-            DataContext = db.Members.Local.ToObservableCollection();
+            DataContext = db.Clubs.Local.ToObservableCollection();
             clubDataGrid.DataContext = db.Clubs.Local.ToBindingList();
         }
 
@@ -65,6 +65,11 @@ namespace RefereeHelper.Views
                 db.Add(Club);
                 db.SaveChanges();
             }
+        }
+
+        private void clubDataGrid_CurrentCellChanged(object sender, EventArgs e)
+        {
+           // db.SaveChanges();   <- не так, не сохраняет
         }
     }
 }

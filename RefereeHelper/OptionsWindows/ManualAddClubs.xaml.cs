@@ -27,6 +27,7 @@ namespace RefereeHelper.OptionsWindows
             InitializeComponent();
             Club = club;
             DataContext = Club;
+            //regionsList.ItemsSource = db.Regions.Local.ToBindingList();
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)

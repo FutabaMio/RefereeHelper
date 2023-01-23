@@ -25,7 +25,7 @@
             <Button x:Name="OpenBaseButton" Content="Открыть базу регионов" FontSize="10" Grid.Column="3"/>
         </Grid>
         <TextBlock Text="Клубы" FontSize="24" FontWeight="Bold"/>
-        <DataGrid Grid.Row="1" Name="clubDataGrid" ItemsSource="{Binding}" MouseDoubleClick="clubDataGrid_MouseDoubleClick" MouseRightButtonDown="clubDataGrid_MouseRightButtonDown">
+        <DataGrid Grid.Row="1" Name="clubDataGrid" ItemsSource="{Binding}" MouseDoubleClick="clubDataGrid_MouseDoubleClick" MouseRightButtonDown="clubDataGrid_MouseRightButtonDown" CurrentCellChanged="clubDataGrid_CurrentCellChanged">
             
         </DataGrid>
 
