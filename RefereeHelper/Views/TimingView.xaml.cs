@@ -1,5 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
+using RefereeHelper.Models;
 using System;
+using System.Net.Sockets;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,21 +15,29 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class TimingView : UserControl
     {
+        
+
+        ApplicationContext db = new ApplicationContext();
         public TimingView()
         {
             InitializeComponent();
-            RefreshData();
         }
-
-        public void RefreshData()
+        //це Миё
+        class PeopleForTakeInfo
         {
-            SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
-            con.Open();
-
-            SqliteCommand command = new SqliteCommand(@"SELECT * FROM timer", con);
-            SqliteDataReader dataReader = command.ExecuteReader();
-            TeamTimer.ItemsSource = dataReader;
+            public string Tag { get; set; }
+            public DateTime Time { get; set; }
         }
+        int sportsmansCount;
+        DateTime _time;
+        UdpClient udpClient = new UdpClient(27069);             
+        UdpReceiveResult result;                                
+        byte[] datagram;
+        string received;
+        List<PeopleForTakeInfo> sportsmans = new();
+        int secondOfDifference = 5;
+        TimeSpan timeOfDifference = new(0, 0, secondOfDifference);
+        //
 
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         DateTime currentTime;
@@ -66,6 +77,75 @@ namespace RefereeHelper.Views
             startTime = DateTime.Now;
             dispatcherTimer.Stop();
 
+        }
+        //full maё
+        async void Reseive()
+        {
+            while (true)
+            {
+                result = await udpClient.ReceiveAsync();
+                datagram = result.Buffer;
+                received = Encoding.UTF8.GetString(datagram);
+                _time = DateTime.Now;
+                received = received.Substring(received.IndexOf("Tag:") + 4);
+                received = received.Substring(0, received.IndexOf(" "));
+                if(sportsmans.Count == 0)
+                {
+                    sportsmans.Add(new PeopleForTakeInfo()
+                    {
+                        Tag = received,
+                        Time = _time
+                    });
+                }
+                else
+                {
+                    sportsmansCount = sportsmans.Count;
+                    for (int i = sportsmans.Count - 1; i > -1; i--)
+                    {
+
+                        if (sportsmans[i].Tag == searchTag)
+                        {
+                            if (_time - sportsmans[i].Time > timeOfDifference)
+                            {
+                                sportsmans.Add(new PeopleForTakeInfo()
+                                {
+                                    Tag = searchTag,
+                                    Time = _time
+                                });
+                            }
+                            break;
+                        }
+                        else
+                        {
+
+                        }
+
+                    }
+                }
+                MessageBox.Show($"Tag:{received}");// дальше 111 строка в моём проекте
+            }
+            
+
+        }
+        //ne maё
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            timeOfDifference = new(0, 0, secondOfDifference);
+            if (automode.IsChecked == true) 
+            {
+                Reseive();
+            }
+            else
+            {
+                udpClient.Close();
+            }
+        }
+
+        private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Timing Timing;
+           // db.Timings.Add(Timing);
+            //..прописать дэбэйн шур криейтет
         }
     }
 }

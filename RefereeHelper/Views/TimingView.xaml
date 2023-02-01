@@ -43,7 +43,9 @@
             <Button Grid.Column="1" Content="Добавить из базы"/>
             <Button Grid.Column="2" Content="Добавить вручную"/>
             <Button Grid.Column="3" Content="Печать стартового протокола"/>
-        </Grid>
-        <DataGrid Grid.Row="2" Name="TeamTimer"/>
+        </Grid>  
+        <CheckBox Grid.Row="0" Content="On|Off" Name="automode" HorizontalAlignment="Right" FontSize="20" Checked="CheckBox_Checked"/>
+
+        <DataGrid Grid.Row="2" Name="TeamTimer" MouseRightButtonDown="TeamTimer_MouseRightButtonDown"/>
     </Grid>
 </UserControl>
