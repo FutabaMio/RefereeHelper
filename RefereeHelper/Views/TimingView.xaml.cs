@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using RefereeHelper.Models;
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Windows;
@@ -35,8 +36,8 @@ namespace RefereeHelper.Views
         byte[] datagram;
         string received;
         List<PeopleForTakeInfo> sportsmans = new();
-        int secondOfDifference = 5;
-        TimeSpan timeOfDifference = new(0, 0, secondOfDifference);
+        int secondOfDifference;
+        TimeSpan timeOfDifference = new(0, 0, 5);
         //
 
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -83,19 +84,22 @@ namespace RefereeHelper.Views
         {
             while (true)
             {
+                secondOfDifference = Int32.Parse(textBox_TimeOfDifference.Text);
+                timeOfDifference = new(0, 0, secondOfDifference);
                 result = await udpClient.ReceiveAsync();
                 datagram = result.Buffer;
                 received = Encoding.UTF8.GetString(datagram);
                 _time = DateTime.Now;
                 received = received.Substring(received.IndexOf("Tag:") + 4);
                 received = received.Substring(0, received.IndexOf(" "));
-                if(sportsmans.Count == 0)
+                if(!sportsmans.Exists(x => x.Tag == received))
                 {
                     sportsmans.Add(new PeopleForTakeInfo()
                     {
                         Tag = received,
                         Time = _time
                     });
+                    MessageBox.Show($"Tag:{received}");
                 }
                 else
                 {
@@ -103,26 +107,22 @@ namespace RefereeHelper.Views
                     for (int i = sportsmans.Count - 1; i > -1; i--)
                     {
 
-                        if (sportsmans[i].Tag == searchTag)
+                        if (sportsmans[i].Tag == received)
                         {
                             if (_time - sportsmans[i].Time > timeOfDifference)
                             {
                                 sportsmans.Add(new PeopleForTakeInfo()
                                 {
-                                    Tag = searchTag,
+                                    Tag = received,
                                     Time = _time
                                 });
+                                MessageBox.Show($"Tag:{received}");
                             }
                             break;
                         }
-                        else
-                        {
-
-                        }
-
                     }
                 }
-                MessageBox.Show($"Tag:{received}");// дальше 111 строка в моём проекте
+               // MessageBox.Show($"Tag:{received}");// дальше 111 строка в моём проекте
             }
             
 
