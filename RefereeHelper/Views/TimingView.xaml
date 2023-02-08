@@ -19,7 +19,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Name="secundomer" Content="0" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <Label Name="secundomer" Content="00:00:00.0" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" />
             <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -44,6 +44,8 @@
             <Button Grid.Column="2" Content="Добавить вручную"/>
             <Button Grid.Column="3" Content="Печать стартового протокола"/>
         </Grid>
-        <DataGrid Grid.Row="2" Name="TeamTimer"/>
+        <DataGrid Grid.Row="2" Name="TimerDataGrid" Margin="0,100,0,0"/>
+        <TextBox Grid.Row="0" Name="StartTimeBox" MaxWidth="250"/>
+        <Button Grid.Column="0" Name="StartTimeAccepter" Content="Установить время" HorizontalAlignment="Right" Width="150" Click="StartTimeAccepter_Click"/>
     </Grid>
 </UserControl>

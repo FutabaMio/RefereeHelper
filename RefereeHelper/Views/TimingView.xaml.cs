@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,25 +13,24 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class TimingView : UserControl
     {
+        ApplicationContext db = new ApplicationContext();
         public TimingView()
         {
             InitializeComponent();
-            RefreshData();
+            Loaded+=TimingView_Loaded;
         }
 
-        public void RefreshData()
+        private void TimingView_Loaded(object sender, RoutedEventArgs e)
         {
-            SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
-            con.Open();
-
-            SqliteCommand command = new SqliteCommand(@"SELECT * FROM timer", con);
-            SqliteDataReader dataReader = command.ExecuteReader();
-            TeamTimer.ItemsSource = dataReader;
+            db.Database.EnsureCreated();
+            db.Timings.Load();
+            DataContext = db.Timings.Local.ToObservableCollection();
+            TimerDataGrid.DataContext=db.Timings.Local.ToBindingList();
         }
 
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         DateTime currentTime;
-        DateTime startTime = DateTime.Now;
+        DateTime startTime;
         int hours;
         int minutes;
         int seconds;
@@ -57,7 +57,7 @@ namespace RefereeHelper.Views
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0,1); //обновление информации каждую 0.1 мс
 
-        }
+        } 
 
 
         private void TimerStop(object sender, RoutedEventArgs e)
@@ -65,7 +65,12 @@ namespace RefereeHelper.Views
             
             startTime = DateTime.Now;
             dispatcherTimer.Stop();
+        }
 
+        private void StartTimeAccepter_Click(object sender, RoutedEventArgs e) //Потенциальный фикс - асинхронный метод сравнения
+        {                                                                      //А лучше подумать, как можно постоянно (или через промежутки времени)
+            DateTime.TryParse(StartTimeBox.Text, out startTime);               //Сравнивать текущую дату с заданной, если они равны
+            
         }
     }
 }
