@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,18 @@ namespace RefereeHelper.Views
         public TimingView()
         {
             InitializeComponent();
+
+            Loaded+= TimingView_Loaded;
         }
+
+        private void TimingView_Loaded(object sender, RoutedEventArgs e)
+        {
+            db.Database.EnsureCreated();
+            db.Timings.Load();
+            DataContext = db.Timings.Local.ToObservableCollection();
+            TeamTimer.DataContext = db.Timings.Local.ToBindingList();
+        }
+
         //це Миё
         class PeopleForTakeInfo
         {
@@ -143,9 +155,10 @@ namespace RefereeHelper.Views
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Timing Timing;
-           // db.Timings.Add(Timing);
-            //..прописать дэбэйн шур криейтет
+            Timing timing;
+            db.Timings.Add(timing); //пофиксить запись (почитать об ошибке)
+            //почитать, как при записи в бд подсосать данные из таблиц по номеру участнику
+            db.SaveChanges();
         }
     }
 }
