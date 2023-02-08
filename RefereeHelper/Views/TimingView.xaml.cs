@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using RefereeHelper.Models;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -71,6 +72,14 @@ namespace RefereeHelper.Views
         {                                                                      //А лучше подумать, как можно постоянно (или через промежутки времени)
             DateTime.TryParse(StartTimeBox.Text, out startTime);               //Сравнивать текущую дату с заданной, если они равны
             
+        }
+
+        private void TimerDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Timing timing;
+            db.Timings.Add(timing); //надо решить косяк с записью
+            //надо придумать, как перед записью подсосать данные из таблиц по номеру спортсмена
+            //db.SaveChanges;
         }
     }
 }
