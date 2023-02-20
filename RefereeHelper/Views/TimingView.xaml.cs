@@ -104,8 +104,8 @@ namespace RefereeHelper.Views
        /* private void StartTimeAccepter_Click(object sender, RoutedEventArgs e) //Потенциальный фикс - асинхронный метод сравнения
         {                                                                      //А лучше подумать, как можно постоянно (или через промежутки времени)
             DateTime.TryParse(StartTimeBox.Text, out startTime);               //Сравнивать текущую дату с заданной, если они равны
-            
-        } */
+            //стартовое время хранится в distance
+        }
 
         private void TimerDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -136,7 +136,6 @@ namespace RefereeHelper.Views
                     });
                     MessageBox.Show($"Tag:{received}");
                 }
-                //
                 else
                 {
                     sportsmansCount = sportsmans.Count;
