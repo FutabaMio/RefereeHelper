@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RefereeHelper.Views" xmlns:viewmodels="clr-namespace:RefereeHelper.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:TimingViewModel}"
+             xmlns:local="clr-namespace:RefereeHelper.Views" 
+             xmlns:viewmodels="clr-namespace:RefereeHelper.ViewModels" 
+             xmlns:DataContext="{d:DesignInstance Type=viewmodels:TimingViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="369" d:DesignWidth="800">
     <Grid Background="White">
@@ -45,12 +47,14 @@
         </Grid>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <!--<ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>-->
+                <ColumnDefinition Width="40*"/>
+                <ColumnDefinition Width="40*"/>
+                <ColumnDefinition Width="17*"/>
+                <ColumnDefinition Width="63*"/>
             </Grid.ColumnDefinitions>
-            <CheckBox Grid.Column="2" Content="On|Off" Name="automode" HorizontalAlignment="Right" FontSize="20" Checked="CheckBox_Checked"/>
-            <TextBox Grid.Row="0" Name="textBox_TimeOfDifference" MaxWidth="150" HorizontalAlignment="Right" Width="150" Margin="0,0,250,0" Text="Таймер считывания меток"/>
+            <CheckBox Grid.Column="3" Content="On|Off" Name="automode" HorizontalAlignment="Left" FontSize="20" Checked="CheckBox_Checked" Margin="126,0,0,0" Width="79"/>
+            <Button Grid.Row="0" Grid.Column="2" Content="OK" HorizontalAlignment="Left" Width="100" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Name="textBox_TimeOfDifference" Text="Таймер считывания меток" Margin="0,0,5,0"/>
         </Grid>
         <DataGrid Grid.Row="2" Name="TeamTimer" MouseRightButtonDown="TeamTimer_MouseRightButtonDown"/>
     </Grid>

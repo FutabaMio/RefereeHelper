@@ -99,8 +99,8 @@ namespace RefereeHelper.Views
 
         private void TimerDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Timing timing;
-            db.Timings.Add(timing); //надо решить косяк с записью
+            //Timing timing;
+            //db.Timings.Add(timing); //надо решить косяк с записью
             //надо придумать, как перед записью подсосать данные из таблиц по номеру спортсмена
             //db.SaveChanges;
         }
