@@ -8,10 +8,10 @@
              d:DesignHeight="369" d:DesignWidth="800">
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="80*"/>
-            <RowDefinition Height="232*"/>
-            <RowDefinition Height="27*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="59*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -19,16 +19,15 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Name="secundomer" Content="00:00:00.0" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <Label Name="secundomer" Content="0" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" />
             <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button Name="StartButton" Click="TimerStart" Content="Старт" Grid.Row="1"/>
-                <Button Click="TimerStop" Content="Сброс" Grid.Row="2"/>
-                
+                <Button Name="StartButton" Click="TimerStart" Content="Старт" Grid.Row="0"/>
+                <Button Click="TimerStop" Content="Сброс" Grid.Row="1"/>
+
             </Grid>
         </Grid>
         <Grid Grid.Row="3">
@@ -38,14 +37,21 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            
+
             <Button Grid.Column="0" Content="Загрузить из файла"/>
             <Button Grid.Column="1" Content="Добавить из базы"/>
             <Button Grid.Column="2" Content="Добавить вручную"/>
             <Button Grid.Column="3" Content="Печать стартового протокола"/>
         </Grid>
-        <DataGrid Grid.Row="2" Name="TimerDataGrid" Margin="0,100,0,0" MouseRightButtonDown="TimerDataGrid_MouseRightButtonDown"/>
-        <TextBox Grid.Row="0" Name="StartTimeBox" MaxWidth="250"/>
-        <Button Grid.Column="0" Name="StartTimeAccepter" Content="Установить время" HorizontalAlignment="Right" Width="150" Click="StartTimeAccepter_Click"/>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <!--<ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>-->
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="2" Content="On|Off" Name="automode" HorizontalAlignment="Right" FontSize="20" Checked="CheckBox_Checked"/>
+            <TextBox Grid.Row="0" Name="textBox_TimeOfDifference" MaxWidth="150" HorizontalAlignment="Right" Width="150" Margin="0,0,250,0" Text="Таймер считывания меток"/>
+        </Grid>
+        <DataGrid Grid.Row="2" Name="TeamTimer" MouseRightButtonDown="TeamTimer_MouseRightButtonDown"/>
     </Grid>
 </UserControl>
