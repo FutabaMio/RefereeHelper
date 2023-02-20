@@ -126,6 +126,7 @@ namespace RefereeHelper.Views
                     });
                     MessageBox.Show($"Tag:{received}");
                 }
+                //
                 else
                 {
                     sportsmansCount = sportsmans.Count;
