@@ -17,6 +17,7 @@ namespace RefereeHelper.Views
         }
 
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        //надо поискать другеи таймеры (помимо того, что в диспатчере)
         DateTime currentTime;
         DateTime startTime = DateTime.Now;
         int hours;
@@ -55,5 +56,12 @@ namespace RefereeHelper.Views
             dispatcherTimer.Stop();
 
         }
+
+        //Для диспатчер таймера нужно о диспатчере читать
+        //дистпатчер - вызов из разных потоков, таймер закинуть в другой потом надо
+        //но надо придумать, как его потом вызвать (у диспатчера своя очередь потоков)
+        
+        //нельзя просто таймер добавить, сначала выполяется:
+        //initialize->инициализированный->свой поток
     }
 }
