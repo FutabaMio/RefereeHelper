@@ -32,13 +32,13 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Name="secundomer" Content="0" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBox Name="secundomer" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" />
             <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button Name="StartButton" Click="TimerStart" Content="Старт" Grid.Row="0" FontSize="20" Margin="10,10,10,10"/>
+                <Button Name="StartButton" Click="StartButton_Click" Content="Старт" Grid.Row="0" FontSize="20" Margin="10,10,10,10"/>
                 <Button Click="TimerStop" Content="Стоп" Grid.Row="1" FontSize="20" Margin="10,10,10,10"/>
 
             </Grid>
