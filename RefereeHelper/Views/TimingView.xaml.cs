@@ -20,11 +20,15 @@ namespace RefereeHelper.Views
         
 
         ApplicationContext db = new ApplicationContext();
+
+        
         public TimingView()
         {
             InitializeComponent();
 
             Loaded+= TimingView_Loaded;
+            LoadEvents();
+            
         }
 
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
@@ -33,6 +37,12 @@ namespace RefereeHelper.Views
             db.Timings.Load();
             DataContext = db.Timings.Local.ToObservableCollection();
             TeamTimer.DataContext = db.Timings.Local.ToBindingList();
+        }
+
+        public void LoadEvents()            //надо привести возвращаемые объекты к тексту, придумать, как по названию (или айди выбранного объекта) искать в базе и подгружать участников
+        {
+            db.Competitions.Load();
+            EventsListBox.DataContext = db.Competitions.Local.ToBindingList();
         }
 
         //це Миё
@@ -91,11 +101,11 @@ namespace RefereeHelper.Views
             dispatcherTimer.Stop();
         }
 
-        private void StartTimeAccepter_Click(object sender, RoutedEventArgs e) //Потенциальный фикс - асинхронный метод сравнения
+       /* private void StartTimeAccepter_Click(object sender, RoutedEventArgs e) //Потенциальный фикс - асинхронный метод сравнения
         {                                                                      //А лучше подумать, как можно постоянно (или через промежутки времени)
             DateTime.TryParse(StartTimeBox.Text, out startTime);               //Сравнивать текущую дату с заданной, если они равны
             
-        }
+        } */
 
         private void TimerDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -169,10 +179,10 @@ namespace RefereeHelper.Views
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Timing timing;
-            db.Timings.Add(timing); //пофиксить запись (почитать об ошибке)
+            //Timing timing;
+            //db.Timings.Add(timing); //пофиксить запись (почитать об ошибке)
             //почитать, как при записи в бд подсосать данные из таблиц по номеру участнику
-            db.SaveChanges();
+            //db.SaveChanges();
         }
     }
 }
