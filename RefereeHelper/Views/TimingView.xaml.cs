@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using System.Data;
 
 namespace RefereeHelper.Views
 {
@@ -42,6 +43,25 @@ namespace RefereeHelper.Views
             DataContext = db.Timings.Local.ToObservableCollection();
             TeamTimer.DataContext = db.Timings.Local.ToBindingList();
         }
+
+        //DateTable для записи тайминга в бд
+        private static DataTable TimingDateTable()
+        {
+            DataColumn[] columns =
+            {
+                new DataColumn("Id", typeof(int)),
+                new DataColumn("IdStart",typeof(int)),
+                new DataColumn("TimeNow",typeof(string)), //не уверен насчёт типа, но в БД у нас стоит просто Text
+                new DataColumn("TimeFromStart",typeof(string)),
+                new DataColumn("CircleTime",typeof(string)),
+                new DataColumn("Circle", typeof(int)),
+                new DataColumn("Place", typeof(int)),
+                new DataColumn("PlaceAbsolute", typeof(int)),
+                new DataColumn("currentTime", typeof(string))
+            };
+        }
+
+        //конец
 
         //
         //блок секундомер (не асинхронный)
