@@ -12,6 +12,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Data;
+using RefereeHelper.EntityFramework;
+using System.Linq;
 
 namespace RefereeHelper.Views
 {
@@ -44,9 +46,33 @@ namespace RefereeHelper.Views
             TeamTimer.DataContext = db.Timings.Local.ToBindingList();
         }
 
+        //тут я напишу как обращаться к разному через линкью
+        
+
+
+
+
+
+
+
         //DateTable для записи тайминга в бд
+        
         private static DataTable TimingDateTable()
         {
+            
+            List<Start> starts = new List<Start>();
+            string name;
+            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                var timings = dbContext.Timings.ToList();//выгрузка 
+                name = dbContext.Members.Where(x=>x.Name)
+            }
+
+
+
+
+
+
             DataColumn[] columns =
             {
                 new DataColumn("Id", typeof(int)),
@@ -59,6 +85,7 @@ namespace RefereeHelper.Views
                 new DataColumn("PlaceAbsolute", typeof(int)),
                 new DataColumn("currentTime", typeof(string))
             };
+            
         }
 
         //конец
@@ -133,7 +160,7 @@ namespace RefereeHelper.Views
             //db.Timings.Add(timing); //надо решить косяк с записью
             //надо придумать, как перед записью подсосать данные из таблиц по номеру спортсмена
             //db.SaveChanges;
-        }
+        }*/
         //full maё
         async void Reseive()
         {

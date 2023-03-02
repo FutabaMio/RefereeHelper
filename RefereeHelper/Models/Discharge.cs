@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace RefereeHelper.Models
 {
-    class Discharge
+    public class Discharge
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public /*sk*/virtual IEnumerable<Member>? Members { get; set; }
+
     }
 }

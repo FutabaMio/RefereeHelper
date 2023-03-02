@@ -16,6 +16,6 @@ namespace RefereeHelper.Models
         public string Organizer { get; set; }
         public string Judge { get; set; }
         public string Secretary { get; set; }
-
+        public /*sk*/virtual IEnumerable<Partisipation> Partisipations { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace RefereeHelper.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int codeNumber { get; set; }
+        public /*sk*/virtual IEnumerable<Club> Clubs { get; set; }
 
     }
 }

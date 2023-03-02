@@ -9,7 +9,7 @@ namespace RefereeHelper.Models
     public class Timing
     {
         public int Id { get; set; }
-        public int IdStart { get; set; }
+        public virtual Start? Start { get; set; }
         public TimeOnly TimeNow { get; set; }
         public TimeOnly TimeFromStart { get; set; }            // может быть и DateTime
         public TimeOnly CircleTime { get; set; }

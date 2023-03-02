@@ -9,6 +9,8 @@ namespace RefereeHelper.Models
     public class Member
     {
         public int Id { get; set; }
+        public virtual Discharge? Discharge { get; set; }
+        public virtual Club? Club { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string FamilyName { get; set; }
@@ -16,6 +18,7 @@ namespace RefereeHelper.Models
         public int gender { get; set; }
 
         //public string chipNumber { get; set;}
+        public IEnumerable<Partisipation> Partisipations { get; set; }
 
 
 
