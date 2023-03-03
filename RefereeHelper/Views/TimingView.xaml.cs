@@ -35,7 +35,6 @@ namespace RefereeHelper.Views
             dt.Tick+=new EventHandler(dtTick);
             dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
             LoadEvents();
-            
         }
 
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
@@ -61,11 +60,11 @@ namespace RefereeHelper.Views
         {
             
             List<Start> starts = new List<Start>();
-            string name;
+            List<string> names;
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
             {
                 var timings = dbContext.Timings.ToList();//выгрузка 
-                name = dbContext.Members.Where(x=>x.)
+                names = dbContext.Members.Where(x=>x.Name)
             }
 
 
