@@ -64,7 +64,10 @@ namespace RefereeHelper.Views
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
             {
                 var timings = dbContext.Timings.ToList();//выгрузка 
-                names = dbContext.Members.Where(x=>x.Name)
+                foreach (var tim in dbContext.Timings)
+                {
+                    MessageBox.Show(tim.Sta);
+                }
             }
 
 

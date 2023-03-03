@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RefereeHelper.Models.Base;
+
 
 namespace RefereeHelper.Models
 {
-    public class Timing
+    public class Timing : BaseEntity
     {
-        public int Id { get; set; }
         public virtual Start? Start { get; set; }
         public TimeOnly TimeNow { get; set; }
         public TimeOnly TimeFromStart { get; set; }            // может быть и DateTime

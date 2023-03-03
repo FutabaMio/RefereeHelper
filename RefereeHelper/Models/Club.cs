@@ -4,12 +4,12 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RefereeHelper.Models.Base;
 
 namespace RefereeHelper.Models
 {
-    public class Club
+    public class Club : BaseEntity
     {
-        public int Id { get; set; }
         public virtual Region Region { get; set; }
         public string Couch { get; set; }
         public string Name { get; set; }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RefereeHelper.Models.Base;
 
 namespace RefereeHelper.Models
 {
-    public class Member
+    public class Member : BaseEntity
     {
-        public int Id { get; set; }
         public virtual Discharge? Discharge { get; set; }
         public virtual Club? Club { get; set; }
         public string Name { get; set; }

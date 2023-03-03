@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RefereeHelper.Models.Base;
+
 
 namespace RefereeHelper.Models
 {
-    public class Team
+    public class Team : BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public /*sk*/virtual IEnumerable<Start> Starts { get; set; }
     }
