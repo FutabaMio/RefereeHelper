@@ -46,26 +46,43 @@ namespace RefereeHelper.Views
         }
 
         //тут я напишу как обращаться к разному через линкью
-        
 
 
 
 
 
 
+
+        int i = 0;
 
         //DateTable для записи тайминга в бд
-        
-        private static void TimingDateTable()
+        void LoadData()//я создал эту фунцкию для обновления таблицы, вывода данных
         {
-            
-            List<Start> starts = new List<Start>();
-            List<string> names;
+            i = 0;
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                var members = dbContext.Timings.Include(x => x.Start).Tolist()
+                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
+                var teams = dbContext.Teams.ToList();
+                foreach (var t in timings)
+                {
+                    i++;
+                    Console.WriteLine($"{i}\n\tStart Number:{t.Start?.Number}" +
+                                         $"\n\tChip number:{t.Start?.Chip}" +
+                                         $"\n\tTime now:{t.TimeNow}" +//возможно его надо не отсюда брать, но это мелочи
+                                         $"\n\tTime from start:{t.TimeFromStart}" +
+                                         $"\n\tName:{t.Start?.Partisipation?.Member?.Surname} {t.Start?.Partisipation?.Member?.Name} {t.Start?.Partisipation?.Member?.FamilyName}" +
+                                         $"\n\tCity:{t.Start?.Partisipation?.Member?.City}" +
+                                         //$"\n\tPlace:{t.Place}{}" +
+                                         $"\n\tTime of circle: {t.CircleTime}" +
+                                         $"\n\tTeam:{t.Start?.Team?.Name}"; //+
+                                       //$"\n\tisFinish?");
+                }
+
             }
 
+        }
+        private static void TimingDateTable()
+        {
 
 
 
