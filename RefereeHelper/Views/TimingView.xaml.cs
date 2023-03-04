@@ -56,18 +56,14 @@ namespace RefereeHelper.Views
 
         //DateTable для записи тайминга в бд
         
-        private static DataTable TimingDateTable()
+        private static void TimingDateTable()
         {
             
             List<Start> starts = new List<Start>();
             List<string> names;
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                var timings = dbContext.Timings.ToList();//выгрузка 
-                foreach (var tim in dbContext.Timings)
-                {
-                    MessageBox.Show(tim.Sta);
-                }
+                var members = dbContext.Timings.Include(x => x.Start).Tolist()
             }
 
 
