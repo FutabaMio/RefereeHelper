@@ -74,7 +74,7 @@ namespace RefereeHelper.Views
                                          $"\n\tCity:{t.Start?.Partisipation?.Member?.City}" +
                                          //$"\n\tPlace:{t.Place}{}" +
                                          $"\n\tTime of circle: {t.CircleTime}" +
-                                         $"\n\tTeam:{t.Start?.Team?.Name}"; //+
+                                         $"\n\tTeam:{t.Start?.Team?.Name}"); //+
                                        //$"\n\tisFinish?");
                 }
 
