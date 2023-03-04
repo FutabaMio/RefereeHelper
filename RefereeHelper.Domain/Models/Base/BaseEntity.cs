@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RefereeHelper.Domain.Models.Base
+namespace RefereeHelper.Models.Base
 {
     public class BaseEntity
     {

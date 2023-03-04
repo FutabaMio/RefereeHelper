@@ -5,14 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using RefereeHelper.Models.Base;
 
-
 namespace RefereeHelper.Models
 {
-    public class Region : BaseEntity
+    public class Discharge : BaseEntity
     {
         public string Name { get; set; }
-        public int codeNumber { get; set; }
-        public /*sk*/virtual IEnumerable<Club> Clubs { get; set; }
+        public /*sk*/virtual IEnumerable<Member>? Members { get; set; }
 
     }
 }

@@ -19,6 +19,10 @@ namespace RefereeHelper.EntityFramework
         public DbSet<Competition> Competitions { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Timing> Timings { get; set; }
+        public DbSet<Discharge> Discharges { get; set; }
+        public DbSet<Partisipation> Partisipations { get; set; }
+        public DbSet<Start> Starts { get; set; }
+        public DbSet<Team> Teams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

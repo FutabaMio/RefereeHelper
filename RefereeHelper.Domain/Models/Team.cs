@@ -8,11 +8,9 @@ using RefereeHelper.Models.Base;
 
 namespace RefereeHelper.Models
 {
-    public class Region : BaseEntity
+    public class Team : BaseEntity
     {
         public string Name { get; set; }
-        public int codeNumber { get; set; }
-        public /*sk*/virtual IEnumerable<Club> Clubs { get; set; }
-
+        public /*sk*/virtual IEnumerable<Start> Starts { get; set; }
     }
 }
