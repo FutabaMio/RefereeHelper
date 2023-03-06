@@ -14,6 +14,5 @@ namespace RefereeHelper.Models
         public virtual Competition Competition { get; set; }
         public virtual Group? Group { get; set; }
         public /*sk*/virtual IEnumerable<Start> Starts { get; set; }
-
     }
 }

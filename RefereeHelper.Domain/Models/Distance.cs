@@ -12,7 +12,8 @@ namespace RefereeHelper.Models
         public string Name { get; set; }
         public decimal Length { get; set; }
         public decimal Height { get; set; }
-        // public DateTime startTime { get; set; }
+        public decimal Circles { get; set; }
+        public DateTime startTime { get; set; }
         public /*sk*/virtual IEnumerable<Group> Groups { get; set; }
 
     }

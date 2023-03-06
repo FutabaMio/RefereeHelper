@@ -71,7 +71,7 @@ namespace RefereeHelper.Views
                                          $"\n\tChip number:{t.Start?.Chip}" +
                                          $"\n\tTime now:{t.TimeNow}" +//возможно его надо не отсюда брать, но это мелочи
                                          $"\n\tTime from start:{t.TimeFromStart}" +
-                                         $"\n\tName:{t.Start?.Partisipation?.Member?.Surname} {t.Start?.Partisipation?.Member?.Name} {t.Start?.Partisipation?.Member?.FamilyName}" +
+                                         $"\n\tName:{t.Start?.Partisipation?.Member?.FamilyName} {t.Start?.Partisipation?.Member?.Name} {t.Start?.Partisipation?.Member?.SecondName}" +
                                          $"\n\tCity:{t.Start?.Partisipation?.Member?.City}" +
                                          //$"\n\tPlace:{t.Place}{}" +
                                          $"\n\tTime of circle: {t.CircleTime}" +
