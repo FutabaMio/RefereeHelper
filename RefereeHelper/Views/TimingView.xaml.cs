@@ -53,7 +53,10 @@ namespace RefereeHelper.Views
         //тут я напишу как обращаться к разному через линкью
 
 
-
+        void AddData()
+        {
+            
+        }
 
 
 
