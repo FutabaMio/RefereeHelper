@@ -43,22 +43,22 @@ namespace RefereeHelper.Views
             {
                 //var Members=db.Members.Include();
                 //MembersList.DataContext= Members;
+                db.Database.EnsureCreated(); //гарантия создания или подключения к бд
+                db.Members.Load(); //Загружаем участников из бд
+                DataContext = db.Members.Local.ToObservableCollection(); //устанавливаем данные в качестве контекста
+                MembersList.DataContext = db.Members.Local.ToBindingList();
             }
         }
 
         private void AddMember_Click(object sender, RoutedEventArgs e)
         {
-            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            ManualAddMembers manualAddWindow = new ManualAddMembers(new Member());
+            if(manualAddWindow.ShowDialog() == true)
             {
-                ManualAddMembers manualAddWindow = new ManualAddMembers(new Member());
-                if (manualAddWindow.ShowDialog() == true)
-                {
-                    Member Member = manualAddWindow.Member;
-                    db.Members.Add(Member);
-                    db.SaveChanges();
-                }
+                Member Member = manualAddWindow.Member;
+                db.Members.Add(Member);
+                db.SaveChanges();
             }
-               
         }
 
         private void AddFromExcel_Click(object sender, RoutedEventArgs e)
