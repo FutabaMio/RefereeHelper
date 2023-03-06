@@ -50,7 +50,11 @@ namespace RefereeHelper.Views
 
         void AddData()
         {
-            
+            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+
+                dbContext.SaveChanges();
+            }
         }
 
 
