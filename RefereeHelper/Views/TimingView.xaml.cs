@@ -231,7 +231,7 @@ namespace RefereeHelper.Views
                                     Tag = received,
                                     Time = _time
                                 });
-                                MessageBox.Show($"Tag:{received}");
+                                //MessageBox.Show($"Tag:{received}");
                             }
                             break;
                         }
