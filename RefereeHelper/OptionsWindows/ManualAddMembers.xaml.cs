@@ -36,10 +36,10 @@ namespace RefereeHelper.OptionsWindows
             Member.Name=nameTextBox.Text;
             if (girl.IsChecked==true)
             {
-                Member.gender=0;
+                Member.gender=false;
             }
             else {
-                Member.gender=1;
+                Member.gender=true;
             }
             Member.bornDate=bornDatePicker.SelectedDate.Value.Date;
             Member.FamilyName = familyNameTextBox.Text;

@@ -20,6 +20,7 @@ using Microsoft.Win32;
 using System.Data;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using RefereeHelper.EntityFramework;
 
 namespace RefereeHelper.Views
 {
@@ -28,7 +29,7 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class MembersView : UserControl
     {
-        ApplicationContext db = new ApplicationContext();
+        //ApplicationContext db = new ApplicationContext();
         public MembersView()
         {
             InitializeComponent();
@@ -38,10 +39,13 @@ namespace RefereeHelper.Views
 
         private void MembersView_Loaded(object sender, RoutedEventArgs e)
         {
-            db.Database.EnsureCreated(); //гарантия создания или подключения к бд
-            db.Members.Load(); //Загружаем участников из бд
-            DataContext = db.Members.Local.ToObservableCollection(); //устанавливаем данные в качестве контекста
-            MembersList.DataContext = db.Members.Local.ToBindingList();
+            using(var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated(); //гарантия создания или подключения к бд
+                db.Members.Load(); //Загружаем участников из бд
+                DataContext = db.Members.Local.ToObservableCollection(); //устанавливаем данные в качестве контекста
+                MembersList.DataContext = db.Members.Local.ToBindingList();
+            }
         }
 
         private void AddMember_Click(object sender, RoutedEventArgs e)

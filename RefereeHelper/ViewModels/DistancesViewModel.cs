@@ -1,5 +1,4 @@
-﻿using RefereeHelper.Domain.Models;
-using RefereeHelper.Models;
+﻿using RefereeHelper.Models;
 using RefereeHelper.ViewModels.Base;
 using System;
 using System.Collections.Generic;

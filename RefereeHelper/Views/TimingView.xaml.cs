@@ -63,7 +63,8 @@ namespace RefereeHelper.Views
             {
                 var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
                 var teams = dbContext.Teams.ToList();
-                foreach (var t in timings)
+                TeamTimer.DataContext = timings;
+                /*foreach (var t in timings)
                 {
                     i++;
                     Console.WriteLine($"{i}\n\tStart Number:{t.Start?.Number}" +
@@ -76,7 +77,7 @@ namespace RefereeHelper.Views
                                          $"\n\tTime of circle: {t.CircleTime}" +
                                          $"\n\tTeam:{t.Start?.Team?.Name}"); //+
                                        //$"\n\tisFinish?");
-                }
+                }*/
 
             }
 

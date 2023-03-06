@@ -1,8 +1,8 @@
 ﻿using RefereeHelper.Commands;
 using RefereeHelper.Commands.Base;
-using RefereeHelper.Domain.Models.Base;
+using RefereeHelper.Domain;
 using RefereeHelper.EntityFramework;
-using RefereeHelper.Models;
+using RefereeHelper.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
