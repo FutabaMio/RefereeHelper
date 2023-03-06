@@ -55,9 +55,15 @@ namespace RefereeHelper.Views
 
         void AddData()
         {
+            Timing t = new()
+            {
+                TimeNow = TimeOnly.FromDateTime(DateTime.Now)
+            };
+
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-
+                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
+                timings.Add(t);
                 dbContext.SaveChanges();
             }
         }
