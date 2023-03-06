@@ -11,7 +11,7 @@ namespace RefereeHelper.Models
     public class Region : BaseEntity
     {
         public string Name { get; set; }
-        public int codeNumber { get; set; }
+        public int СodeNumber { get; set; }
         public /*sk*/virtual IEnumerable<Club> Clubs { get; set; }
 
     }

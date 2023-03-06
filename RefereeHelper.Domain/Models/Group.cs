@@ -10,13 +10,10 @@ namespace RefereeHelper.Models
     public class Group : BaseEntity
     {
         public virtual Distance Distance { get; set; }
+        public bool Gender { get; set; }
         public string Name { get; set; }
-        public int StartAge { get; set; }
-        public int EndAge { get; set; }
+        public decimal StartAge { get; set; }
+        public decimal EndAge { get; set; }
         public /*sk*/virtual IEnumerable<Member> Members { get; set; }
-
-        //public List<Member> members { get; set; } <- уточнить
-        //public int distance { get; set; } <- уточнить
-
     }
 }
