@@ -35,6 +35,11 @@ namespace RefereeHelper.Views
             dt.Tick+=new EventHandler(dtTick);
             dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
             LoadEvents();
+
+            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                TimingsList = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
+            }
         }
 
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
@@ -47,7 +52,9 @@ namespace RefereeHelper.Views
 
         //тут я напишу как обращаться к разному через линкью
 
-
+        /// <summary>
+        /// Функция добавления данных в тайминг
+        /// </summary>
         void AddData()
         {
             Timing t = new()
@@ -160,18 +167,12 @@ namespace RefereeHelper.Views
         }
 
         //це Миё
-        class PeopleForTakeInfo
-        {
-            public string Tag { get; set; }
-            public DateTime Time { get; set; }
-        }
         int sportsmansCount;
         DateTime _time;
         UdpClient udpClient = new UdpClient(27069);             
         UdpReceiveResult result;                                
         byte[] datagram;
         string received;
-        List<PeopleForTakeInfo> sportsmans = new();
         int secondOfDifference;
         TimeSpan timeOfDifference = new(0, 0, 5);
         //
@@ -191,6 +192,7 @@ namespace RefereeHelper.Views
             //db.SaveChanges;
         }*/
         //full maё
+
         async void Reseive()
         {
             while (true)
@@ -203,11 +205,17 @@ namespace RefereeHelper.Views
                 _time = DateTime.Now;
                 received = received.Substring(received.IndexOf("Tag:") + 4);
                 received = received.Substring(0, received.IndexOf(" "));
-                if(!sportsmans.Exists(x => x.Tag == received))
+                using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
-                    sportsmans.Add(new PeopleForTakeInfo()
+                    var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
+                    timings.Add(t);
+                    dbContext.SaveChanges();
+                }
+                if (!TimingsList.Exists(x => x.Start?.Chip == received))
+                {
+                    TimingsList.Add(new Timing()
                     {
-                        Tag = received,
+                        Start = ,
                         Time = _time
                     });
                     MessageBox.Show($"Tag:{received}");
