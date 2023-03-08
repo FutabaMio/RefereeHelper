@@ -13,7 +13,7 @@ namespace RefereeHelper.EntityFramework
         public RefereeHelperDbContext CreateDbContext(string[] args = null)
         {
             var options = new DbContextOptionsBuilder<RefereeHelperDbContext>();
-            options.UseSqlite("Filename=SyclicSheck.db");
+            options.UseSqlite("Filename = SyclicSheck.db");
             return new RefereeHelperDbContext(options.Options);
         }
     }

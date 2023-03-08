@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RefereeHelper.EntityFramework.Services
 {
-    internal class GenericDataService<T> : IDataService<T> 
+    public class GenericDataService<T> : IDataService<T> 
         where T : BaseEntity
     {
         private readonly RefereeHelperDbContextFactory _dbContextFactory;

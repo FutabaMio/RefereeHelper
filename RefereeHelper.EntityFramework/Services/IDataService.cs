@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RefereeHelper.EntityFramework.Services
 {
-    internal interface IDataService<T>
+    public interface IDataService<T>
     {
         Task<IEnumerable<T>> GetAll();
         Task<T> Get(int id);

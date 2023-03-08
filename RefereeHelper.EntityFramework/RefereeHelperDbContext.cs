@@ -10,33 +10,22 @@ namespace RefereeHelper.EntityFramework
 {
     public class RefereeHelperDbContext : DbContext
     {
-        public RefereeHelperDbContext(DbContextOptions options) : base(options) {}
+        public RefereeHelperDbContext(DbContextOptions options) : base(options)
+        { 
+            Database.EnsureCreated();   
+        }
 
         public DbSet<Member> Members { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Distance> Distances { get; set; }
         public DbSet<Club> Clubs { get; set; }
-        public DbSet<competition> competition { get; set; }
+        public DbSet<Competition> Competitions { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Timing> Timings { get; set; }
         public DbSet<Discharge> Discharges { get; set; }
         public DbSet<Partisipation> Partisipations { get; set; }
         public DbSet<Start> Starts { get; set; }
         public DbSet<Team> Teams { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            
-
-            base.OnModelCreating(modelBuilder);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Filename=SyclicSheck.db");
-
-            base.OnConfiguring(optionsBuilder);
-        }
 
     }
 }
