@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using RefereeHelper.Models;
 using RefereeHelper.Models.Base;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,12 @@ namespace RefereeHelper.EntityFramework.Services
     public class GenericDataService<T> : IDataService<T> 
         where T : BaseEntity
     {
-        private readonly RefereeHelperDbContextFactory _dbContextFactory;
+        protected readonly RefereeHelperDbContextFactory _dbContextFactory;
         public GenericDataService(RefereeHelperDbContextFactory dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
         }
-        public async Task<IEnumerable<T>> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
             using (var dbContext = _dbContextFactory.CreateDbContext())
             {
@@ -27,7 +28,8 @@ namespace RefereeHelper.EntityFramework.Services
             }
         }
 
-        public async Task<T> Get(int id)
+
+        public virtual async Task<T> Get(int id)
         {
             using (var dbContext = _dbContextFactory.CreateDbContext())
             {
@@ -43,7 +45,7 @@ namespace RefereeHelper.EntityFramework.Services
             }
         }
 
-        public async Task<T> Create(T entity)
+        public virtual async Task<T> Create(T entity)
         {
             using (var dbContext = _dbContextFactory.CreateDbContext())
             {
@@ -53,7 +55,7 @@ namespace RefereeHelper.EntityFramework.Services
             }
         }
 
-        public async Task<T> Update(int id, T entity)
+        public virtual async Task<T> Update(int id, T entity)
         {
             using (var dbContext = _dbContextFactory.CreateDbContext())
             {
@@ -64,7 +66,7 @@ namespace RefereeHelper.EntityFramework.Services
             }
         }
 
-        public async Task<bool> Delete(int id)
+        public virtual async Task<bool> Delete(int id)
         {
             using (var dbContext = _dbContextFactory.CreateDbContext())
             {
@@ -75,4 +77,9 @@ namespace RefereeHelper.EntityFramework.Services
             }
         }
     }
+
+
+    
+
+    
 }

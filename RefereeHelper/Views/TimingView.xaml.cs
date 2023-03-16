@@ -14,6 +14,8 @@ using System.Windows.Threading;
 using System.Data;
 using RefereeHelper.EntityFramework;
 using System.Linq;
+using RefereeHelper.EntityFramework.Services;
+using System.Text.RegularExpressions;
 
 namespace RefereeHelper.Views
 {
@@ -24,7 +26,6 @@ namespace RefereeHelper.Views
     {
         
 
-        //ApplicationContext db = new ApplicationContext();
 
         
         public TimingView()
@@ -36,24 +37,16 @@ namespace RefereeHelper.Views
             dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
             LoadEvents();
 
-            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
-            {
-                TimingsList = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
-            }
+            
         }
-
+        int countOfStartingPeople = 0, countOfFinishingPeople = 0;
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
         {
-            /* using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
-             { 
-
-             }
-                 db.Database.EnsureCreated();
-             db.Timings.Load();
-             DataContext = db.Timings.Local.ToObservableCollection();
-             TeamTimer.DataContext = db.Timings.Local.ToBindingList();*/
-            LoadData();
-        }
+            //db.Database.EnsureCreated();
+            //db.Timings.Load();
+            //DataContext = db.Timings.Local.ToObservableCollection();
+            //TeamTimer.DataContext = db.Timings.Local.ToBindingList();
+        }// я это убрал потому что не пойму чё тут происходит, плюс теперь надо переписать под "сервисы"
 
         //тут я напишу как обращаться к разному через линкью
 
@@ -167,18 +160,13 @@ namespace RefereeHelper.Views
 
         public void LoadEvents()            //надо привести возвращаемые объекты к тексту, придумать, как по названию (или айди выбранного объекта) искать в базе и подгружать участников
         {
-            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
-            {
-                dbContext.competition.Load();
-                EventsListBox.DataContext = dbContext.competition.Local.ToBindingList();
-            }
-          //  db.competition.Load();
-            //EventsListBox.DataContext = db.competition.Local.ToBindingList();
-        }
+            //db.Competitions.Load();
+            //EventsListBox.DataContext = db.Competitions.Local.ToBindingList();
+        }// я это убрал потому что не пойму чё тут происходит, плюс теперь надо переписать под "сервисы"
 
         //це Миё
         int sportsmansCount;
-        DateTime _time;
+        TimeOnly _time;
         UdpClient udpClient = new UdpClient(27069);             
         UdpReceiveResult result;                                
         byte[] datagram;
@@ -188,21 +176,23 @@ namespace RefereeHelper.Views
         //
 
 
-       /* private void StartTimeAccepter_Click(object sender, RoutedEventArgs e) //Потенциальный фикс - асинхронный метод сравнения
-        {                                                                      //А лучше подумать, как можно постоянно (или через промежутки времени)
-            DateTime.TryParse(StartTimeBox.Text, out startTime);               //Сравнивать текущую дату с заданной, если они равны
-            //стартовое время хранится в distance
-        }
+        /* private void StartTimeAccepter_Click(object sender, RoutedEventArgs e) //Потенциальный фикс - асинхронный метод сравнения
+         {                                                                      //А лучше подумать, как можно постоянно (или через промежутки времени)
+             DateTime.TryParse(StartTimeBox.Text, out startTime);               //Сравнивать текущую дату с заданной, если они равны
+             //стартовое время хранится в distance
+         }
 
-        private void TimerDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            //Timing timing;
-            //db.Timings.Add(timing); //надо решить косяк с записью
-            //надо придумать, как перед записью подсосать данные из таблиц по номеру спортсмена
-            //db.SaveChanges;
-        }*/
+         private void TimerDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+         {
+             //Timing timing;
+             //db.Timings.Add(timing); //надо решить косяк с записью
+             //надо придумать, как перед записью подсосать данные из таблиц по номеру спортсмена
+             //db.SaveChanges;
+         }*/
         //full maё
-
+        GenericDataService<Timing> timingDataService = new(new RefereeHelperDbContextFactory());
+        GenericDataService<Start> startDataService = new(new RefereeHelperDbContextFactory());
+        decimal CountOfLapsForHim;//кол-во кругов для данного спортсмена, чтобы считать, финишировал чи як
         async void Reseive()
         {
             while (true)
@@ -212,50 +202,120 @@ namespace RefereeHelper.Views
                 result = await udpClient.ReceiveAsync();
                 datagram = result.Buffer;
                 received = Encoding.UTF8.GetString(datagram);
-                _time = DateTime.Now;
+                _time = TimeOnly.FromDateTime(DateTime.Now);
                 received = received.Substring(received.IndexOf("Tag:") + 4);
                 received = received.Substring(0, received.IndexOf(" "));
-                using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+                //using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+                //{
+                //    var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
+                //    timings.Add(t);
+                //    dbContext.SaveChanges();
+                //}
+
+
+
+                if (!timingDataService.GetAll().Result.Any(x => x.Start?.Chip == received))
                 {
-                    var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
-                    timings.Add(t);
-                    dbContext.SaveChanges();
-                }
-                if (!TimingsList.Exists(x => x.Start?.Chip == received))
-                {
-                    TimingsList.Add(new Timing()
-                    {
-                        Start = ,
-                        Time = _time
-                    });
-                    MessageBox.Show($"Tag:{received}");
+                    countOfStartingPeople++;
+                    var t = timingDataService.Create(new Timing() { TimeNow = _time,
+                        Start = startDataService.GetAll().Result.First(x => x.Chip == received) }).Result;
+
+                    t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
+                    t.Circle = GetOfLapsForHim(t.Id);
+                    t.CircleTime = GetTimeOfLap(t.Id);
+                    t.IsFinish = GetIsFinish(t.Id);
+                    RefrechPlace(t.Id);
+                    RefrechAbsolutePlace(t.Id);
+                    timingDataService?.Update(t.Id, t);
+                    CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
                 }
                 else
                 {
-                    sportsmansCount = sportsmans.Count;
-                    for (int i = sportsmans.Count - 1; i > -1; i--)
+
+                    for (int i = timingDataService.GetAll().Result.Count() - 1; i > -1; i--)
                     {
 
-                        if (sportsmans[i].Tag == received)
+                        if (timingDataService.Get(i).Result.Start?.Chip == received)
                         {
-                            if (_time - sportsmans[i].Time > timeOfDifference)
+                            if (_time - timingDataService.Get(i).Result.TimeNow > timeOfDifference)
                             {
-                                sportsmans.Add(new PeopleForTakeInfo()
+                                var t = timingDataService.Create(new Timing() { TimeNow = _time,
+                                                                                Start = startDataService.GetAll().Result.First(x => x.Chip == received)}).Result;
+                                t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
+                                timingDataService?.Update(t.Id, t);
+                                CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
+                                t.Circle = GetOfLapsForHim(t.Id);
+                                t.CircleTime = GetTimeOfLap(t.Id);
+                                t.IsFinish = GetIsFinish(t.Id);
+                                if(t.IsFinish.Value)
                                 {
-                                    Tag = received,
-                                    Time = _time
-                                });
-                                //MessageBox.Show($"Tag:{received}");
+                                    countOfFinishingPeople++;
+                                }
+                                RefrechPlace(t.Id);
+                                RefrechAbsolutePlace(t.Id);
+                                timingDataService?.Update(t.Id, t);
                             }
                             break;
                         }
                     }
+
                 }
-               // MessageBox.Show($"Tag:{received}");// дальше 111 строка в моём проекте
             }
-            
 
         }
+        private void RefrechPlace(int idOfTiming)                                                    
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            var ts = timingDataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance
+                                                && x.Start.Partisipation.Group          == t.Start.Partisipation.Group).Result.
+                                                   OrderBy(x => x.TimeFromStart);
+            int i = 0;
+            foreach(var k in ts)
+            {
+                k.Place = i + 1; i++;
+                timingDataService.Update(k.Id, k);
+            }
+        }                                                   
+        private void RefrechAbsolutePlace(int idOfTiming)                                                    
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            var ts = timingDataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance)
+                                                   .Result.OrderBy(x => x.TimeFromStart);
+            int i = 0;
+            foreach (var k in ts)
+            {
+                k.Place = i + 1; i++;
+                timingDataService.Update(k.Id, k);
+            }
+        }                                                   
+        private bool GetIsFinish(int idOfTiming)                                                    
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            if(t.Start?.Partisipation.Group?.Distance.Circles < t.Circle)
+                return false;
+            else
+                return true;
+        }
+        private TimeOnly GetTimeOfLap(int idOfTiming)
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            if (timingDataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
+                return t.TimeFromStart.Value;
+            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - timingDataService.GetAll(x => x.Start == t.Start).Result.Last(x => x.Id != t.Id).TimeFromStart.Value);
+        }
+        private int GetOfLapsForHim(int idOfTiming)
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            return timingDataService.GetAll(x => x.Start.Number == t.Start.Number).Result.Count() + 1;
+        }
+        private int GetCountPeopleOnThisLap(int idOfTiming)
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            return timingDataService.GetAll(x => x.Start.Partisipation.Competition == t.Start.Partisipation.Competition
+                                              && x.Start.Partisipation.Group       == t.Start.Partisipation.Group
+                                              && x.Circle                          == t.Circle).Result.Count();
+        }
+
         //ne maё
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
