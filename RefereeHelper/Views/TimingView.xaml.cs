@@ -14,6 +14,7 @@ using System.Windows.Threading;
 using System.Data;
 using RefereeHelper.EntityFramework;
 using System.Linq;
+using RefereeHelper.EntityFramework.Services;
 
 namespace RefereeHelper.Views
 {
@@ -168,7 +169,7 @@ namespace RefereeHelper.Views
 
         //це Миё
         int sportsmansCount;
-        DateTime _time;
+        TimeOnly _time;
         UdpClient udpClient = new UdpClient(27069);             
         UdpReceiveResult result;                                
         byte[] datagram;
@@ -202,45 +203,47 @@ namespace RefereeHelper.Views
                 result = await udpClient.ReceiveAsync();
                 datagram = result.Buffer;
                 received = Encoding.UTF8.GetString(datagram);
-                _time = DateTime.Now;
+                _time = TimeOnly.FromDateTime(DateTime.Now);
                 received = received.Substring(received.IndexOf("Tag:") + 4);
                 received = received.Substring(0, received.IndexOf(" "));
-                using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
-                {
-                    var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
-                    timings.Add(t);
-                    dbContext.SaveChanges();
-                }
-                if (!TimingsList.Exists(x => x.Start?.Chip == received))
-                {
-                    TimingsList.Add(new Timing()
-                    {
-                        Start = ,
-                        Time = _time
-                    });
-                    MessageBox.Show($"Tag:{received}");
-                }
-                else
-                {
-                    sportsmansCount = sportsmans.Count;
-                    for (int i = sportsmans.Count - 1; i > -1; i--)
-                    {
+                //using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+                //{
+                //    var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
+                //    timings.Add(t);
+                //    dbContext.SaveChanges();
+                //}
+                GenericDataService<Timing> timingDataService = new(new RefereeHelperDbContextFactory());
+                timingDataService.Create(new Timing() { TimeNow = _time, TimeFromStart = });
+                //if (!TimingsList.Exists(x => x.Start?.Chip == received))
+                //{
+                //    TimingsList.Add(new Timing()
+                //    {
+                //        Start = ,
+                //        Time = _time
+                //    });
+                //    MessageBox.Show($"Tag:{received}");
+                //}
+                //else
+                //{
+                //    sportsmansCount = sportsmans.Count;
+                //    for (int i = sportsmans.Count - 1; i > -1; i--)
+                //    {
 
-                        if (sportsmans[i].Tag == received)
-                        {
-                            if (_time - sportsmans[i].Time > timeOfDifference)
-                            {
-                                sportsmans.Add(new PeopleForTakeInfo()
-                                {
-                                    Tag = received,
-                                    Time = _time
-                                });
-                                //MessageBox.Show($"Tag:{received}");
-                            }
-                            break;
-                        }
-                    }
-                }
+                //        if (sportsmans[i].Tag == received)
+                //        {
+                //            if (_time - sportsmans[i].Time > timeOfDifference)
+                //            {
+                //                sportsmans.Add(new PeopleForTakeInfo()
+                //                {
+                //                    Tag = received,
+                //                    Time = _time
+                //                });
+                //                //MessageBox.Show($"Tag:{received}");
+                //            }
+                //            break;
+                //        }
+                //    }
+                //}
                // MessageBox.Show($"Tag:{received}");// дальше 111 строка в моём проекте
             }
             

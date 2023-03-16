@@ -13,6 +13,7 @@ namespace RefereeHelper.Models
         public virtual Team? Team { get; set; }
         public int Number { get; set; }
         public string? Chip { get; set; }
+        public TimeOnly? StartTime { get; set; }
         public /*sk*/virtual IEnumerable<Timing> Timings { get; set; }
 
     }
