@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RefereeHelper.OptionsWindows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,10 @@ namespace RefereeHelper.Controls
             InitializeComponent();
         }
 
-        
+        private void helpWindow_Checked(object sender, RoutedEventArgs e)
+        {
+            HelpWindow helpWindow = new HelpWindow();
+            helpWindow.ShowDialog();
+        }
     }
 }
