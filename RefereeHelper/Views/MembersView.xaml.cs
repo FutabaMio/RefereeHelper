@@ -41,11 +41,8 @@ namespace RefereeHelper.Views
         {
             using(var db = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                db.Database.EnsureCreated(); //гарантия создания или подключения к бд
-                db.Members.Load(); //Загружаем участников из бд
-                DataContext = db.Members.Local.ToObservableCollection(); //устанавливаем данные в качестве контекста
-                MembersList.DataContext = db.Members.Local.ToBindingList();
-                db.SaveChanges();
+               var Members=db.Members.Include(x => x.Name);
+                MembersList.DataContext= Members;
             }
         }
 
