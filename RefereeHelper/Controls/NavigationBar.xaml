@@ -15,7 +15,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Padding="10" FontSize="20" Foreground="#eddd47" Text="Судейский помощник" Background="{StaticResource Upper Title Bar Brush}" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock Grid.Row="0" Padding="10" FontSize="20" Foreground="#FFF" Text="Referee Helper" Background="{StaticResource Upper Title Bar Brush}" FontWeight="Bold" TextAlignment="Center"/>
         <Grid Grid.Row="1" Background="{StaticResource Upper Title Buttons Brush}">
             <Grid.Resources>
                 <Style TargetType="RadioButton" BasedOn="{StaticResource NavButton}"/>
