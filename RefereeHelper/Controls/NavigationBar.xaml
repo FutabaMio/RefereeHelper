@@ -51,9 +51,9 @@
                 <ColumnDefinition Width="103*"/>
             </Grid.ColumnDefinitions>
 
-            <RadioButton Grid.Column="0" Content="Старт" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <RadioButton Grid.Column="1" Content="Участие" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <RadioButton Grid.Column="3" Content="Помощь" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <RadioButton Grid.Column="0" Content="Старт" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" VerticalAlignment="Center"/>
+            <RadioButton Grid.Column="1" Content="Участие" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" VerticalAlignment="Center"/>
+            <RadioButton Name="helpWindow" Grid.Column="3" Content="Помощь" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="helpWindow_Checked"/>
         </Grid>
     </Grid>
 </UserControl>
