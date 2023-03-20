@@ -41,8 +41,8 @@ namespace RefereeHelper.Views
         {
             using(var db = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-               var Members=db.Members.Include(x => x.Name);
-                MembersList.DataContext= Members;
+                //var Members=db.Members.Include();
+                //MembersList.DataContext= Members;
             }
         }
 

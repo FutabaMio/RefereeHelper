@@ -39,10 +39,15 @@ namespace RefereeHelper.Views
 
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
         {
-            db.Database.EnsureCreated();
-            db.Timings.Load();
-            DataContext = db.Timings.Local.ToObservableCollection();
-            TeamTimer.DataContext = db.Timings.Local.ToBindingList();
+            /* using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+             { 
+
+             }
+                 db.Database.EnsureCreated();
+             db.Timings.Load();
+             DataContext = db.Timings.Local.ToObservableCollection();
+             TeamTimer.DataContext = db.Timings.Local.ToBindingList();*/
+            LoadData();
         }
 
         //тут я напишу как обращаться к разному через линкью

@@ -33,7 +33,7 @@ namespace RefereeHelper.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Context=SyclicSheck.db");
+            optionsBuilder.UseSqlite("Data Context=Zachet.db");
 
             base.OnConfiguring(optionsBuilder);
         }
