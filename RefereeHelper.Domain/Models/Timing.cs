@@ -11,7 +11,7 @@ namespace RefereeHelper.Models
     public class Timing : BaseEntity
     {
         public virtual Start? Start { get; set; }
-        public TimeOnly TimeNow { get; set; }
+        public TimeOnly? TimeNow { get; set; }
         public TimeOnly? TimeFromStart { get; set; }            // может быть и DateTime
         public TimeOnly? CircleTime { get; set; }
         public int? Circle { get; set; }
