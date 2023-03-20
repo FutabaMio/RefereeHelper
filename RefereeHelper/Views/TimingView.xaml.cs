@@ -15,6 +15,7 @@ using System.Data;
 using RefereeHelper.EntityFramework;
 using System.Linq;
 using RefereeHelper.EntityFramework.Services;
+using System.Text.RegularExpressions;
 
 namespace RefereeHelper.Views
 {
@@ -179,21 +180,23 @@ namespace RefereeHelper.Views
         //
 
 
-       /* private void StartTimeAccepter_Click(object sender, RoutedEventArgs e) //Потенциальный фикс - асинхронный метод сравнения
-        {                                                                      //А лучше подумать, как можно постоянно (или через промежутки времени)
-            DateTime.TryParse(StartTimeBox.Text, out startTime);               //Сравнивать текущую дату с заданной, если они равны
-            //стартовое время хранится в distance
-        }
+        /* private void StartTimeAccepter_Click(object sender, RoutedEventArgs e) //Потенциальный фикс - асинхронный метод сравнения
+         {                                                                      //А лучше подумать, как можно постоянно (или через промежутки времени)
+             DateTime.TryParse(StartTimeBox.Text, out startTime);               //Сравнивать текущую дату с заданной, если они равны
+             //стартовое время хранится в distance
+         }
 
-        private void TimerDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            //Timing timing;
-            //db.Timings.Add(timing); //надо решить косяк с записью
-            //надо придумать, как перед записью подсосать данные из таблиц по номеру спортсмена
-            //db.SaveChanges;
-        }*/
+         private void TimerDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+         {
+             //Timing timing;
+             //db.Timings.Add(timing); //надо решить косяк с записью
+             //надо придумать, как перед записью подсосать данные из таблиц по номеру спортсмена
+             //db.SaveChanges;
+         }*/
         //full maё
-
+        GenericDataService<Timing> timingDataService = new(new RefereeHelperDbContextFactory());
+        GenericDataService<Start> startDataService = new(new RefereeHelperDbContextFactory());
+        decimal CountOfLapsForHim;//кол-во кругов для данного спортсмена, чтобы считать, финишировал чи як
         async void Reseive()
         {
             while (true)
@@ -212,42 +215,54 @@ namespace RefereeHelper.Views
                 //    timings.Add(t);
                 //    dbContext.SaveChanges();
                 //}
-                GenericDataService<Timing> timingDataService = new(new RefereeHelperDbContextFactory());
-                timingDataService.Create(new Timing() { TimeNow = _time, TimeFromStart = });
-                //if (!TimingsList.Exists(x => x.Start?.Chip == received))
-                //{
-                //    TimingsList.Add(new Timing()
-                //    {
-                //        Start = ,
-                //        Time = _time
-                //    });
-                //    MessageBox.Show($"Tag:{received}");
-                //}
-                //else
-                //{
-                //    sportsmansCount = sportsmans.Count;
-                //    for (int i = sportsmans.Count - 1; i > -1; i--)
-                //    {
 
-                //        if (sportsmans[i].Tag == received)
-                //        {
-                //            if (_time - sportsmans[i].Time > timeOfDifference)
-                //            {
-                //                sportsmans.Add(new PeopleForTakeInfo()
-                //                {
-                //                    Tag = received,
-                //                    Time = _time
-                //                });
-                //                //MessageBox.Show($"Tag:{received}");
-                //            }
-                //            break;
-                //        }
-                //    }
-                //}
-               // MessageBox.Show($"Tag:{received}");// дальше 111 строка в моём проекте
+
+
+                if (!timingDataService.GetAll().Result.Any(x => x.Start?.Chip == received))
+                {
+                    var t = timingDataService.Create(new Timing() { TimeNow = _time,
+                        Start = startDataService.GetAll().Result.First(x => x.Chip == received) }).Result;
+
+                    t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
+                    t.Circle = GetOfLapsForHim(t.Id);
+                    timingDataService?.Update(t.Id, t);
+                    CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
+
+                }
+                else
+                {
+
+                    for (int i = timingDataService.GetAll().Result.Count() - 1; i > -1; i--)
+                    {
+
+                        if (timingDataService.Get(i).Result.Start?.Chip == received)
+                        {
+                            if (_time - timingDataService.Get(i).Result.TimeNow > timeOfDifference)
+                            {
+                                var t = timingDataService.Create(new Timing() { TimeNow = _time,
+                                                                                Start = startDataService.GetAll().Result.First(x => x.Chip == received)}).Result;
+                                t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
+                                timingDataService?.Update(t.Id, t);
+                                CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
+                                t.Circle = GetOfLapsForHim(t.Id);
+                                timingDataService?.Update(t.Id, t);
+                            }
+                            break;
+                        }
+                    }
+                }
             }
-            
 
+        }
+        int GetOfLapsForHim(int idOfTiming)
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            return timingDataService.GetAll().Result.Count(x => x.Start.Number == t.Start.Number)+1;
+        }
+        int GetPositionOfHim(int idOfTiming)
+        {
+
+            return 0;
         }
         //ne maё
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
