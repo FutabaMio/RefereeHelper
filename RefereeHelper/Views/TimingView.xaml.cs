@@ -26,7 +26,6 @@ namespace RefereeHelper.Views
     {
         
 
-        ApplicationContext db = new ApplicationContext();
 
         
         public TimingView()
@@ -38,19 +37,16 @@ namespace RefereeHelper.Views
             dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
             LoadEvents();
 
-            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
-            {
-                TimingsList = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
-            }
+            
         }
 
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
         {
-            db.Database.EnsureCreated();
-            db.Timings.Load();
-            DataContext = db.Timings.Local.ToObservableCollection();
-            TeamTimer.DataContext = db.Timings.Local.ToBindingList();
-        }
+            //db.Database.EnsureCreated();
+            //db.Timings.Load();
+            //DataContext = db.Timings.Local.ToObservableCollection();
+            //TeamTimer.DataContext = db.Timings.Local.ToBindingList();
+        }// я это убрал потому что не пойму чё тут происходит, плюс теперь надо переписать под "сервисы"
 
         //тут я напишу как обращаться к разному через линкью
 
@@ -164,9 +160,9 @@ namespace RefereeHelper.Views
 
         public void LoadEvents()            //надо привести возвращаемые объекты к тексту, придумать, как по названию (или айди выбранного объекта) искать в базе и подгружать участников
         {
-            db.Competitions.Load();
-            EventsListBox.DataContext = db.Competitions.Local.ToBindingList();
-        }
+            //db.Competitions.Load();
+            //EventsListBox.DataContext = db.Competitions.Local.ToBindingList();
+        }// я это убрал потому что не пойму чё тут происходит, плюс теперь надо переписать под "сервисы"
 
         //це Миё
         int sportsmansCount;
