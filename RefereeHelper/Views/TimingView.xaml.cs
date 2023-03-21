@@ -225,6 +225,7 @@ namespace RefereeHelper.Views
 
                     t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
                     t.Circle = GetOfLapsForHim(t.Id);
+                    t.CircleTime = GetTimeOfLap(t.Id);
                     timingDataService?.Update(t.Id, t);
                     CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
 
@@ -241,10 +242,11 @@ namespace RefereeHelper.Views
                             {
                                 var t = timingDataService.Create(new Timing() { TimeNow = _time,
                                                                                 Start = startDataService.GetAll().Result.First(x => x.Chip == received)}).Result;
-                                t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
+                                t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
                                 timingDataService?.Update(t.Id, t);
                                 CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
                                 t.Circle = GetOfLapsForHim(t.Id);
+                                t.CircleTime = GetTimeOfLap(t.Id);
                                 timingDataService?.Update(t.Id, t);
                             }
                             break;
@@ -254,16 +256,26 @@ namespace RefereeHelper.Views
             }
 
         }
-        int GetOfLapsForHim(int idOfTiming)
+        private TimeOnly GetTimeOfLap(int idOfTiming)
         {
             var t = timingDataService.Get(idOfTiming).Result;
-            return timingDataService.GetAll().Result.Count(x => x.Start.Number == t.Start.Number)+1;
+            if (timingDataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
+                return t.TimeFromStart.Value;
+            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - timingDataService.GetAll(x => x.Start == t.Start).Result.Last(x => x.Id != t.Id).TimeFromStart.Value);
         }
-        int GetPositionOfHim(int idOfTiming)
+        private int GetOfLapsForHim(int idOfTiming)
         {
-
-            return 0;
+            var t = timingDataService.Get(idOfTiming).Result;
+            return timingDataService.GetAll(x => x.Start.Number == t.Start.Number).Result.Count() + 1;
         }
+        private int GetCountPeopleOnThisLap(int idOfTiming)
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            return timingDataService.GetAll(x => x.Start.Partisipation.Competition == t.Start.Partisipation.Competition
+                                              && x.Start.Partisipation.Group       == t.Start.Partisipation.Group
+                                              && x.Circle                          == t.Circle).Result.Count();
+        }
+
         //ne maё
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {

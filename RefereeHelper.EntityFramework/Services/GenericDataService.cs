@@ -5,6 +5,7 @@ using RefereeHelper.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,14 @@ namespace RefereeHelper.EntityFramework.Services
             }
         }
 
+        public virtual async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> predicate)
+        {
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                IEnumerable<T> values = await dbContext.Set<T>().Where(predicate).ToListAsync();
+                return values;
+            }
+        }
 
         public virtual async Task<T> Get(int id)
         {
