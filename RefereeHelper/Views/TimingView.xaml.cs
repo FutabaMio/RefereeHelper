@@ -39,7 +39,7 @@ namespace RefereeHelper.Views
 
             
         }
-
+        int countOfStartingPeople = 0, countOfFinishingPeople = 0;
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
         {
             //db.Database.EnsureCreated();
@@ -216,15 +216,18 @@ namespace RefereeHelper.Views
 
                 if (!timingDataService.GetAll().Result.Any(x => x.Start?.Chip == received))
                 {
+                    countOfStartingPeople++;
                     var t = timingDataService.Create(new Timing() { TimeNow = _time,
                         Start = startDataService.GetAll().Result.First(x => x.Chip == received) }).Result;
 
                     t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
                     t.Circle = GetOfLapsForHim(t.Id);
                     t.CircleTime = GetTimeOfLap(t.Id);
+                    t.IsFinish = GetIsFinish(t.Id);
+                    RefrechPlace(t.Id);
+                    RefrechAbsolutePlace(t.Id);
                     timingDataService?.Update(t.Id, t);
                     CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
-
                 }
                 else
                 {
@@ -243,14 +246,55 @@ namespace RefereeHelper.Views
                                 CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
                                 t.Circle = GetOfLapsForHim(t.Id);
                                 t.CircleTime = GetTimeOfLap(t.Id);
+                                t.IsFinish = GetIsFinish(t.Id);
+                                if(t.IsFinish.Value)
+                                {
+                                    countOfFinishingPeople++;
+                                }
+                                RefrechPlace(t.Id);
+                                RefrechAbsolutePlace(t.Id);
                                 timingDataService?.Update(t.Id, t);
                             }
                             break;
                         }
                     }
+
                 }
             }
 
+        }
+        private void RefrechPlace(int idOfTiming)                                                    
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            var ts = timingDataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance
+                                                && x.Start.Partisipation.Group          == t.Start.Partisipation.Group).Result.
+                                                   OrderBy(x => x.TimeFromStart);
+            int i = 0;
+            foreach(var k in ts)
+            {
+                k.Place = i + 1; i++;
+                timingDataService.Update(k.Id, k);
+            }
+        }                                                   
+        private void RefrechAbsolutePlace(int idOfTiming)                                                    
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            var ts = timingDataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance)
+                                                   .Result.OrderBy(x => x.TimeFromStart);
+            int i = 0;
+            foreach (var k in ts)
+            {
+                k.Place = i + 1; i++;
+                timingDataService.Update(k.Id, k);
+            }
+        }                                                   
+        private bool GetIsFinish(int idOfTiming)                                                    
+        {
+            var t = timingDataService.Get(idOfTiming).Result;
+            if(t.Start?.Partisipation.Group?.Distance.Circles < t.Circle)
+                return false;
+            else
+                return true;
         }
         private TimeOnly GetTimeOfLap(int idOfTiming)
         {
