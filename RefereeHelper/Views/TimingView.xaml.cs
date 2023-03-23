@@ -263,6 +263,7 @@ namespace RefereeHelper.Views
                 }
             }
 
+            return 0;
         }
         private void RefrechPlace(int idOfTiming)                                                    
         {
