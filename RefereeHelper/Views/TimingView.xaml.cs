@@ -24,7 +24,7 @@ namespace RefereeHelper.Views
     {
         
 
-        ApplicationContext db = new ApplicationContext();
+        //ApplicationContext db = new ApplicationContext();
 
         
         public TimingView()
@@ -147,8 +147,13 @@ namespace RefereeHelper.Views
 
         public void LoadEvents()            //надо привести возвращаемые объекты к тексту, придумать, как по названию (или айди выбранного объекта) искать в базе и подгружать участников
         {
-            db.Competitions.Load();
-            EventsListBox.DataContext = db.Competitions.Local.ToBindingList();
+            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                dbContext.competition.Load();
+                EventsListBox.DataContext = dbContext.competition.Local.ToBindingList();
+            }
+          //  db.competition.Load();
+            //EventsListBox.DataContext = db.competition.Local.ToBindingList();
         }
 
         //це Миё

@@ -7,7 +7,7 @@ using RefereeHelper.Models.Base;
 
 namespace RefereeHelper.Models
 {
-    public class Competition : BaseEntity
+    public class competition : BaseEntity
     {
         public string Name { get; set; }
         public DateTime Date { get; set; }

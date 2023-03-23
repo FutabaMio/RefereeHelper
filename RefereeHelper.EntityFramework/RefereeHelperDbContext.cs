@@ -16,7 +16,7 @@ namespace RefereeHelper.EntityFramework
         public DbSet<Group> Groups { get; set; }
         public DbSet<Distance> Distances { get; set; }
         public DbSet<Club> Clubs { get; set; }
-        public DbSet<Competition> Competitions { get; set; }
+        public DbSet<competition> competition { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Timing> Timings { get; set; }
         public DbSet<Discharge> Discharges { get; set; }
@@ -33,7 +33,7 @@ namespace RefereeHelper.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Context=Zachet.db");
+            optionsBuilder.UseSqlite("Filename=SyclicSheck.db");
 
             base.OnConfiguring(optionsBuilder);
         }

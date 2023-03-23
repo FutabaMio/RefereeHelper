@@ -11,7 +11,7 @@ namespace RefereeHelper.Models
     public class Partisipation : BaseEntity
     {
         public virtual Member? Member { get; set; }
-        public virtual Competition Competition { get; set; }
+        public virtual competition Competition { get; set; }
         public virtual Group? Group { get; set; }
         public /*sk*/virtual IEnumerable<Start> Starts { get; set; }
 
