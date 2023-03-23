@@ -24,10 +24,6 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class TimingView : UserControl
     {
-        
-
-
-        
         public TimingView()
         {
             InitializeComponent();
@@ -42,17 +38,13 @@ namespace RefereeHelper.Views
         int countOfStartingPeople = 0, countOfFinishingPeople = 0;
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
         {
-            //db.Database.EnsureCreated();
-            //db.Timings.Load();
-            //DataContext = db.Timings.Local.ToObservableCollection();
-            //TeamTimer.DataContext = db.Timings.Local.ToBindingList();
-        }// я это убрал потому что не пойму чё тут происходит, плюс теперь надо переписать под "сервисы"
-        //напиши шаблон, как работает сервис, я перепишу все обращения
-
-        //тут я напишу как обращаться к разному через линкью
-
+         
+         
+         
+         
+        }
         /// <summary>
-        /// Функция добавления данных в тайминг
+        /// Функция ручного добавления добавления данных в тайминг
         /// </summary>
         void AddData()
         {
