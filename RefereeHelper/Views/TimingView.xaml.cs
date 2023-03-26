@@ -44,28 +44,18 @@ namespace RefereeHelper.Views
          
         }
         /// <summary>
-        /// Функция ручного добавления добавления данных в тайминг
+        /// Функция ручного добавления добавления данных в тайминг.
         /// </summary>
-        void AddData()
+        /// <returns>Возвращает объект типа Timing, который был добавлен в базу данных.</returns>
+        Timing AddData()
         {
-            Timing t = new()
-            {
-                TimeNow = TimeOnly.FromDateTime(DateTime.Now)
-            };
-
-            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
-            {
-                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
-                timings.Add(t);
-                dbContext.SaveChanges();
-            }
+            return DataService.Create(new Timing { TimeNow = TimeOnly.FromDateTime(DateTime.Now) }).Result;
         }
 
 
 
 
         int i = 0;
-
         //DateTable для записи тайминга в бд
         void LoadData()//я создал эту фунцкию для обновления таблицы, вывода данных
         {
@@ -158,12 +148,15 @@ namespace RefereeHelper.Views
         }// я это убрал потому что не пойму чё тут происходит, плюс теперь надо переписать под "сервисы"
 
         //це Миё
-        int sportsmansCount;
         TimeOnly _time;
         UdpClient udpClient = new UdpClient(27069);             
         UdpReceiveResult result;                                
         byte[] datagram;
         string received;
+
+        /// <summary>
+        /// Время, в момент которого не будет записываться.
+        /// </summary>
         int secondOfDifference;
         TimeSpan timeOfDifference = new(0, 0, 5);
         //
@@ -183,13 +176,18 @@ namespace RefereeHelper.Views
              //db.SaveChanges;
          }*/
         //full maё
-        GenericDataService<Timing> timingDataService = new(new RefereeHelperDbContextFactory());
+        GenericDataService<Timing> DataService = new(new RefereeHelperDbContextFactory());
         GenericDataService<Start> startDataService = new(new RefereeHelperDbContextFactory());
         decimal CountOfLapsForHim;//кол-во кругов для данного спортсмена, чтобы считать, финишировал чи як
-        async void Reseive()
+        
+        /// <summary>
+        /// Функция считывания номера метки и последующего заполнения базы данных.
+        /// </summary>
+        async void Receive()
         {
             while (true)
             {
+                
                 secondOfDifference = Int32.Parse(textBox_TimeOfDifference.Text);
                 timeOfDifference = new(0, 0, secondOfDifference);
                 result = await udpClient.ReceiveAsync();
@@ -207,36 +205,36 @@ namespace RefereeHelper.Views
 
 
 
-                if (!timingDataService.GetAll().Result.Any(x => x.Start?.Chip == received))
+                if (!DataService.GetAll().Result.Any(x => x.Start?.Chip == received))
                 {
                     countOfStartingPeople++;
-                    var t = timingDataService.Create(new Timing() { TimeNow = _time,
+                    var t = DataService.Create(new Timing() { TimeNow = _time,
                         Start = startDataService.GetAll().Result.First(x => x.Chip == received) }).Result;
 
+                    CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
                     t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
                     t.Circle = GetOfLapsForHim(t.Id);
                     t.CircleTime = GetTimeOfLap(t.Id);
                     t.IsFinish = GetIsFinish(t.Id);
                     RefrechPlace(t.Id);
                     RefrechAbsolutePlace(t.Id);
-                    timingDataService?.Update(t.Id, t);
-                    CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
+                    DataService?.Update(t.Id, t);
                 }
                 else
                 {
 
-                    for (int i = timingDataService.GetAll().Result.Count() - 1; i > -1; i--)
+                    for (int i = DataService.GetAll().Result.Count() - 1; i > -1; i--)
                     {
 
-                        if (timingDataService.Get(i).Result.Start?.Chip == received)
+                        if (DataService.Get(i).Result.Start?.Chip == received)
                         {
-                            if (_time - timingDataService.Get(i).Result.TimeNow > timeOfDifference)
+                            if (_time - DataService.Get(i).Result.TimeNow > timeOfDifference)
                             {
-                                var t = timingDataService.Create(new Timing() { TimeNow = _time,
+                                var t = DataService.Create(new Timing() { TimeNow = _time,
                                                                                 Start = startDataService.GetAll().Result.First(x => x.Chip == received)}).Result;
                                 t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
-                                timingDataService?.Update(t.Id, t);
-                                CountOfLapsForHim = timingDataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
+                                DataService?.Update(t.Id, t);
+                                CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
                                 t.Circle = GetOfLapsForHim(t.Id);
                                 t.CircleTime = GetTimeOfLap(t.Id);
                                 t.IsFinish = GetIsFinish(t.Id);
@@ -246,7 +244,7 @@ namespace RefereeHelper.Views
                                 }
                                 RefrechPlace(t.Id);
                                 RefrechAbsolutePlace(t.Id);
-                                timingDataService?.Update(t.Id, t);
+                                DataService?.Update(t.Id, t);
                             }
                             break;
                         }
@@ -254,60 +252,88 @@ namespace RefereeHelper.Views
 
                 }
             }
-
-            return 0;
         }
+        /// <summary>
+        /// Обновляет все позиции
+        /// </summary>
+        /// <param name="idOfTiming"> - идентификационный номер Timing, относительно которого будут обновляться позиции</param>
         private void RefrechPlace(int idOfTiming)                                                    
         {
-            var t = timingDataService.Get(idOfTiming).Result;
-            var ts = timingDataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance
-                                                && x.Start.Partisipation.Group          == t.Start.Partisipation.Group).Result.
-                                                   OrderBy(x => x.TimeFromStart);
+            var t = DataService.Get(idOfTiming).Result;
+            var ts = DataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance
+                                          && x.Start.Partisipation.Group          == t.Start.Partisipation.Group).Result.
+                                             OrderBy(x => x.TimeFromStart);
             int i = 0;
             foreach(var k in ts)
             {
                 k.Place = i + 1; i++;
-                timingDataService.Update(k.Id, k);
+                DataService.Update(k.Id, k);
             }
-        }                                                   
+        }
+
+        /// <summary>
+        /// Обновляет все абсолютные позиции
+        /// </summary>
+        /// <param name="idOfTiming"> - идентификационный номер Timing, относительно которого будут обновляться абсолютные позиции</param>
         private void RefrechAbsolutePlace(int idOfTiming)                                                    
         {
-            var t = timingDataService.Get(idOfTiming).Result;
-            var ts = timingDataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance)
+            var t = DataService.Get(idOfTiming).Result;
+            var ts = DataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance)
                                                    .Result.OrderBy(x => x.TimeFromStart);
             int i = 0;
             foreach (var k in ts)
             {
                 k.Place = i + 1; i++;
-                timingDataService.Update(k.Id, k);
+                DataService.Update(k.Id, k);
             }
-        }                                                   
+        }
+
+        /// <summary>
+        /// Определяет, финишировал ли или нет.
+        /// </summary>
+        /// <param name="idOfTiming"> - идентификационный номер Timing, для которого будет определяться финишировал ли спортсмен</param>
+        /// <returns>True в случае, если финишировал, False в ином случае</returns>
         private bool GetIsFinish(int idOfTiming)                                                    
         {
-            var t = timingDataService.Get(idOfTiming).Result;
+            var t = DataService.Get(idOfTiming).Result;
             if(t.Start?.Partisipation.Group?.Distance.Circles < t.Circle)
                 return false;
             else
                 return true;
         }
+        /// <summary>
+        /// Определяет время круга для определённого спортсмена.
+        /// </summary>
+        /// <param name="idOfTiming"> - идентификационный номер Timing, по которому будет определяться время круга.</param>
+        /// <returns>Время круга.</returns>
         private TimeOnly GetTimeOfLap(int idOfTiming)
         {
-            var t = timingDataService.Get(idOfTiming).Result;
-            if (timingDataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
+            var t = DataService.Get(idOfTiming).Result;
+            if (DataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
                 return t.TimeFromStart.Value;
-            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - timingDataService.GetAll(x => x.Start == t.Start).Result.Last(x => x.Id != t.Id).TimeFromStart.Value);
+            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - DataService.GetAll(x => x.Start == t.Start).Result.Last(x => x.Id != t.Id).TimeFromStart.Value);
         }
+        /// <summary>
+        /// Определяет количество кругов для определённого человека.
+        /// </summary>
+        /// <param name="idOfTiming"> - идентификационный номер Timing, по которому будет определяться количество кругов для определённого спортсмена.</param>
+        /// <returns>количество кругов.</returns>
         private int GetOfLapsForHim(int idOfTiming)
         {
-            var t = timingDataService.Get(idOfTiming).Result;
-            return timingDataService.GetAll(x => x.Start.Number == t.Start.Number).Result.Count() + 1;
+            var t = DataService.Get(idOfTiming).Result;
+            return DataService.GetAll(x => x.Start.Number == t.Start.Number).Result.Count() + 1;
         }
+        /// <summary>
+        /// Определяет количество людей на определённом круге
+        /// </summary>
+        /// <param name="idOfTiming"> - ификационный номер Timing, по которому будет определяться количество людей на определённом кругу.</param>
+        /// <returns></returns>
         private int GetCountPeopleOnThisLap(int idOfTiming)
         {
-            var t = timingDataService.Get(idOfTiming).Result;
-            return timingDataService.GetAll(x => x.Start.Partisipation.Competition == t.Start.Partisipation.Competition
-                                              && x.Start.Partisipation.Group       == t.Start.Partisipation.Group
-                                              && x.Circle                          == t.Circle).Result.Count();
+            var t = DataService.Get(idOfTiming).Result;
+            return DataService.GetAll(x => x.Start.Partisipation.Competition == t.Start.Partisipation.Competition
+                                        && x.Start.Partisipation.Group       == t.Start.Partisipation.Group
+                                        && x.Circle                          == t.Circle).Result.Count();
         }
 
         //ne maё
@@ -316,7 +342,7 @@ namespace RefereeHelper.Views
             timeOfDifference = new(0, 0, secondOfDifference);
             if (automode.IsChecked == true) 
             {
-                Reseive();
+                Receive();
             }
             else
             {
