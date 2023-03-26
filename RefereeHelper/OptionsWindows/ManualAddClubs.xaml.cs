@@ -1,4 +1,5 @@
-﻿using RefereeHelper.Models;
+﻿using RefereeHelper.EntityFramework;
+using RefereeHelper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class ManualAddClub : Window
     {
-        ApplicationContext db = new ApplicationContext();
+        //ApplicationContext db = new ApplicationContext();
         public Club Club { get; private set; }
         public ManualAddClub(Club club)
         {
@@ -44,13 +45,17 @@ namespace RefereeHelper.OptionsWindows
 
         private void RegionAdd_Click(object sender, RoutedEventArgs e)
         {
-            ManualAddRegion manualAddRegion = new ManualAddRegion(new Region());
-            if(manualAddRegion.ShowDialog() == true)
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                Region Region = manualAddRegion.Region;
-                db.Regions.Add(Region);
-                db.SaveChanges();
+                ManualAddRegion manualAddRegion = new ManualAddRegion(new Region());
+                if (manualAddRegion.ShowDialog() == true)
+                {
+                    Region Region = manualAddRegion.Region;
+                    db.Regions.Add(Region);
+                    db.SaveChanges();
+                }
             }
+              
         }
     }
 }

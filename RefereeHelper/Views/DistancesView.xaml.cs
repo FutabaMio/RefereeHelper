@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using RefereeHelper.OptionsWindows;
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
+using RefereeHelper.EntityFramework;
 
 namespace RefereeHelper.Views
 {
@@ -24,7 +25,7 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class DistancesView : UserControl
     {
-        ApplicationContext db = new ApplicationContext();
+        //ApplicationContext db = new ApplicationContext();
         public DistancesView()
         {
             InitializeComponent();
@@ -33,33 +34,45 @@ namespace RefereeHelper.Views
 
         private void DistancesView_Loaded(object sender, RoutedEventArgs e)
         {
-            db.Database.EnsureCreated();
-            db.Distances.Load();
-            DataContext = db.Distances.Local.ToObservableCollection();
-            distanceTable.DataContext = db.Distances.Local.ToBindingList();
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                db.Distances.Load();
+                DataContext = db.Distances.Local.ToObservableCollection();
+                distanceTable.DataContext = db.Distances.Local.ToBindingList();
+            }
+           
         }
 
         private void AddDistanceButton_Click(object sender, RoutedEventArgs e)
         {
             ManualAddDistances manualAddDistances = new ManualAddDistances(new Distance());
-            if (manualAddDistances.ShowDialog()==true)
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                Distance Distance = manualAddDistances.Distance;
-                db.Distances.Add(Distance);
-                db.SaveChanges();
+                if (manualAddDistances.ShowDialog()==true)
+                {
+                    Distance Distance = manualAddDistances.Distance;
+                    db.Distances.Add(Distance);
+                    db.SaveChanges();
+                }
             }
+               
             
         }
 
         private void distanceTable_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             ManualAddDistances manualAddDistances = new ManualAddDistances(new Distance());
-            if (manualAddDistances.ShowDialog()==true)
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                Distance Distance = manualAddDistances.Distance;
-                db.Distances.Add(Distance);
-                db.SaveChanges();
+                if (manualAddDistances.ShowDialog()==true)
+                {
+                    Distance Distance = manualAddDistances.Distance;
+                    db.Distances.Add(Distance);
+                    db.SaveChanges();
+                }
             }
+               
         }
     }
 }
