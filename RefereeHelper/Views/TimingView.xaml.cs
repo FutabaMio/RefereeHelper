@@ -233,7 +233,6 @@ namespace RefereeHelper.Views
                                 var t = DataService.Create(new Timing() { TimeNow = _time,
                                                                                 Start = startDataService.GetAll().Result.First(x => x.Chip == received)}).Result;
                                 t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
-                                DataService?.Update(t.Id, t);
                                 CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
                                 t.Circle = GetOfLapsForHim(t.Id);
                                 t.CircleTime = GetTimeOfLap(t.Id);
