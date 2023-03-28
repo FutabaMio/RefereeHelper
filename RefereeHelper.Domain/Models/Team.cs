@@ -10,6 +10,9 @@ namespace RefereeHelper.Models
 {
     public class Team : BaseEntity
     {
+        /// <summary>
+        /// Название команды
+        /// </summary>
         public string Name { get; set; }
         public /*sk*/virtual IEnumerable<Start> Starts { get; set; }
     }

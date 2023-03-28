@@ -9,10 +9,25 @@ namespace RefereeHelper.Models
 {
     public class Start : BaseEntity
     {
+        /// <summary>
+        /// Участие
+        /// </summary>
         public virtual Partisipation Partisipation { get; set; }
+        /// <summary>
+        /// Команда
+        /// </summary>
         public virtual Team? Team { get; set; }
+        /// <summary>
+        /// Стартовый номер
+        /// </summary>
         public int Number { get; set; }
+        /// <summary>
+        /// Чип
+        /// </summary>
         public string? Chip { get; set; }
+        /// <summary>
+        /// Стартовое время
+        /// </summary>
         public TimeOnly? StartTime { get; set; }
         public /*sk*/virtual IEnumerable<Timing> Timings { get; set; }
 

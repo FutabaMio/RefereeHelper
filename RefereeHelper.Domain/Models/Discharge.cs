@@ -9,6 +9,9 @@ namespace RefereeHelper.Models
 {
     public class Discharge : BaseEntity
     {
+        /// <summary>
+        /// Название разряда
+        /// </summary>
         public string Name { get; set; }
         public /*sk*/virtual IEnumerable<Member>? Members { get; set; }
 
