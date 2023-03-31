@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RefereeHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +20,28 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class ManualAddDistances : Window
     {
-        public ManualAddDistances()
+        public Distance Distance { get; private set; }
+        public ManualAddDistances(Distance distance)
         {
             InitializeComponent();
+            Distance = distance;
+            DataContext = Distance;
+
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            Distance.Name = distanceNameTextBox.Text;
+            Decimal.TryParse(lengthNameTextBox.Text, out decimal lenght);
+            Distance.Length= lenght;
+            Decimal.TryParse(heightNameTextBox.Text, out decimal height);
+            Distance.Height= height;
+            DialogResult=true;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RefereeHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +20,33 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class ManualAddMembers : Window
     {
-        public ManualAddMembers()
+        public Member Member { get; private set; }
+        public ManualAddMembers(Member member)
         {
             InitializeComponent();
+            Member = member;
+            DataContext= Member;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            //DateOnly born = new(bornDatePicker.SelectedDate.Value.Year, bornDatePicker.SelectedDate.Value.Month, bornDatePicker.SelectedDate.Value.Day);
+            Member.Surname = secondNameTextBox.Text;
+            Member.Name=nameTextBox.Text;
+            if (girl.IsChecked==true)
+            {
+                Member.gender=0;
+            }
+            else {
+                Member.gender=1;
+            }
+            Member.bornDate=bornDatePicker.SelectedDate.Value.Date;
+            Member.FamilyName = familyNameTextBox.Text;
+            DialogResult=true;
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

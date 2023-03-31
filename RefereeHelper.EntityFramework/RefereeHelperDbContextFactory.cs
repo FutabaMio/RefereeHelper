@@ -10,7 +10,7 @@ namespace RefereeHelper.EntityFramework
 {
     public class RefereeHelperDbContextFactory : IDesignTimeDbContextFactory<RefereeHelperDbContext>
     {
-        public RefereeHelperDbContext CreateDbContext(string[] args)
+        public RefereeHelperDbContext CreateDbContext(string[] args = null)
         {
             var options = new DbContextOptionsBuilder<RefereeHelperDbContext>();
             options.UseSqlite("Data Context=SyclicSheck.db");

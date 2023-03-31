@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RefereeHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +20,37 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class ManualAddClub : Window
     {
-        public ManualAddClub()
+        ApplicationContext db = new ApplicationContext();
+        public Club Club { get; private set; }
+        public ManualAddClub(Club club)
         {
             InitializeComponent();
+            Club = club;
+            DataContext = Club;
+            //regionsList.ItemsSource = db.Regions.Local.ToBindingList();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            Club.Name = clubNameTextBox.Text;
+            Club.Couch = couchTextBox.Text;
+            DialogResult=true;
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void RegionAdd_Click(object sender, RoutedEventArgs e)
+        {
+            ManualAddRegion manualAddRegion = new ManualAddRegion(new Region());
+            if(manualAddRegion.ShowDialog() == true)
+            {
+                Region Region = manualAddRegion.Region;
+                db.Regions.Add(Region);
+                db.SaveChanges();
+            }
         }
     }
 }

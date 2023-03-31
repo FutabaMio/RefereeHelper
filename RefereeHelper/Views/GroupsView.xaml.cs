@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using RefereeHelper.OptionsWindows;
+using Microsoft.EntityFrameworkCore;
+using RefereeHelper.Models;
 
 namespace RefereeHelper.Views
 {
@@ -22,27 +24,41 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class GroupsView : UserControl
     {
+        ApplicationContext db = new ApplicationContext();
         public GroupsView()
         {
             InitializeComponent();
-            RefreshData();
+            Loaded+=GroupsView_Loaded;
         }
 
-        public void RefreshData()
+        private void GroupsView_Loaded(object sender, RoutedEventArgs e)
         {
-            SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
-            con.Open();
-
-            SqliteCommand command = new SqliteCommand(@"SELECT * FROM [group]", con);
-            SqliteDataReader dataReader = command.ExecuteReader();
-            groupsTable.ItemsSource= dataReader;
-
+            db.Database.EnsureCreated();
+            db.Groups.Load();
+            DataContext = db.Groups.Local.ToObservableCollection();
+            groupsTable.DataContext = db.Groups.Local.ToBindingList();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ManualAddGroup manualAddGroup = new ManualAddGroup();
-            manualAddGroup.ShowDialog();
+            ManualAddGroup manualAddGroup = new ManualAddGroup(new Group());
+            if (manualAddGroup.ShowDialog()==true)
+            {
+                Group Group = manualAddGroup.Group;
+                db.Groups.Add(Group);
+                db.SaveChanges();
+            }
+        }
+
+        private void groupsTable_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ManualAddGroup manualAddGroup = new ManualAddGroup(new Group());
+            if (manualAddGroup.ShowDialog()==true)
+            {
+                Group Group = manualAddGroup.Group;
+                db.Groups.Add(Group);
+                db.SaveChanges();
+            }
         }
     }
 }

@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using RefereeHelper.OptionsWindows;
+using Microsoft.EntityFrameworkCore;
+using RefereeHelper.Models;
 
 namespace RefereeHelper.Views
 {
@@ -22,26 +24,52 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class ClubsViews : UserControl
     {
+        ApplicationContext db = new ApplicationContext();
         public ClubsViews()
         {
             InitializeComponent();
-            RefreshData();
+
+            Loaded+=ClubsViews_Loaded;
         }
 
-        public void RefreshData()
+        private void ClubsViews_Loaded(object sender, RoutedEventArgs e)
         {
-            SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
-            con.Open();
-
-            SqliteCommand command = new SqliteCommand(@"SELECT * FROM club", con);
-        SqliteDataReader dataReader = command.ExecuteReader();
-        clubDataGrid.ItemsSource = dataReader;
+            db.Database.EnsureCreated();
+            db.Clubs.Load();
+            DataContext = db.Clubs.Local.ToObservableCollection();
+            clubDataGrid.DataContext = db.Clubs.Local.ToBindingList();
         }
 
         private void AddClubButton_Click(object sender, RoutedEventArgs e)
         {
-            ManualAddClub manualAddClub = new ManualAddClub();
-            manualAddClub.ShowDialog();
+            ManualAddClub manualAddClub = new ManualAddClub(new Club());
+            if (manualAddClub.ShowDialog()==true)
+            {
+                Club Club = manualAddClub.Club;
+                db.Clubs.Add(Club);
+                db.SaveChanges();
+            }
+        }
+
+        private void clubDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            //форма редактирования (не нужно! везде удалить)
+        }
+
+        private void clubDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ManualAddClub manualAddClub = new ManualAddClub(new Club());
+            if(manualAddClub.ShowDialog() == true)
+            {
+                Club Club = manualAddClub.Club;
+                db.Add(Club);
+                db.SaveChanges();
+            }
+        }
+
+        private void clubDataGrid_CurrentCellChanged(object sender, EventArgs e)
+        {
+           // db.SaveChanges();   <- не так, не сохраняет
         }
     }
 }

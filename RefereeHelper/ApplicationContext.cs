@@ -6,12 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RefereeHelper.EntityFramework
+namespace RefereeHelper
 {
-    public class RefereeHelperDbContext : DbContext
+    public class ApplicationContext : DbContext
     {
-        public RefereeHelperDbContext(DbContextOptions options) : base(options) {}
-
         public DbSet<Member> Members { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Distance> Distances { get; set; }
@@ -20,19 +18,9 @@ namespace RefereeHelper.EntityFramework
         public DbSet<Region> Regions { get; set; }
         public DbSet<Timing> Timings { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            
-
-            base.OnModelCreating(modelBuilder);
-        }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Context=SyclicSheck.db");
-
-            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseSqlite("Data Source=Zachet.db");
         }
-
     }
 }

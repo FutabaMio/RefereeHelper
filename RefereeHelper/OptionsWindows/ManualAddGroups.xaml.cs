@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RefereeHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +20,27 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class ManualAddGroup : Window
     {
-        public ManualAddGroup()
+        public Group Group { get;private set; }
+        public ManualAddGroup(Group group)
         {
             InitializeComponent();
+            Group = group;
+            DataContext= Group;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            Group.Name = nameTextBox.Text;
+            int.TryParse(minAgeBox.Text, out int minAge);
+            int.TryParse(maxAgeBox.Text, out int maxAge);
+            Group.StartAge = minAge;
+            Group.EndAge = maxAge;
+            DialogResult=true;
         }
     }
 }
