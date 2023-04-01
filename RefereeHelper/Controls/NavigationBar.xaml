@@ -12,9 +12,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Padding="10" FontSize="20" Foreground="#eddd47" Text="Судейский помощник" Background="{StaticResource Upper Title Bar Brush}" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock Grid.Row="0" Padding="10" FontSize="20" Foreground="#FFF" Text="Referee Helper" Background="{StaticResource Upper Title Bar Brush}" FontWeight="Bold" TextAlignment="Center"/>
         <Grid Grid.Row="1" Background="{StaticResource Upper Title Buttons Brush}">
             <Grid.Resources>
                 <Style TargetType="RadioButton" BasedOn="{StaticResource NavButton}"/>
@@ -37,7 +38,22 @@
             <RadioButton Grid.Column="4" Content="Дистанции" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Distances}"/>
             <RadioButton Grid.Column="5" Content="Тайминги" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Timings}"/>
             <RadioButton Grid.Column="6" Content="Команды" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Comands}"/>
-            
+
+        </Grid>
+        <Grid Grid.Row="2" Background="{StaticResource Upper Title Buttons Brush}" Height="30">
+            <Grid.Resources>
+                <Style TargetType="RadioButton" BasedOn="{StaticResource NavButton}"/>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="107*"/>
+                <ColumnDefinition Width="157*"/>
+                <ColumnDefinition Width="433*"/>
+                <ColumnDefinition Width="103*"/>
+            </Grid.ColumnDefinitions>
+
+            <RadioButton Grid.Column="0" Content="Старт" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Start}" VerticalAlignment="Center"/>
+            <RadioButton Grid.Column="1" Content="Участие" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Participation}" VerticalAlignment="Center"/>
+            <RadioButton Name="helpWindow" Grid.Column="3" Content="Помощь" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="helpWindow_Checked"/>
         </Grid>
     </Grid>
 </UserControl>

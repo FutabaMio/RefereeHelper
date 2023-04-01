@@ -53,6 +53,12 @@ namespace RefereeHelper.Commands
                     case ViewType.Comands:
                         _navigator.CurrentViewModel = new ComandViewModel();
                         break;
+                    case ViewType.Start:
+                        _navigator.CurrentViewModel = new StartViewModel();
+                        break;
+                    case ViewType.Participation:
+                        _navigator.CurrentViewModel = new ParticipationViewModel();
+                        break;
                     default:
                         break;
                 }

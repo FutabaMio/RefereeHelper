@@ -6,8 +6,8 @@
 
     <!--Colors-->
     <Color x:Key="Upper Title Bar">#BDB76B</Color>
-    <Color x:Key="Upper Title Bar Main">#0c0d0d</Color>
-    <Color x:Key="Upper Buttons Bar">#bab9b3</Color>
+    <Color x:Key="Upper Title Bar Main">#BDB76B</Color>
+    <Color x:Key="Upper Buttons Bar">#F0E68C</Color>
     <Color x:Key="Basic Background UC">#F0E68C</Color>
 
 

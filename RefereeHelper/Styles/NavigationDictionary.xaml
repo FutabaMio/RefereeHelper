@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="NavButton" TargetType="RadioButton">
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="#000"/>
         <Setter Property="Padding" Value="10 5"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="Background" Value="{StaticResource Upper Title Buttons Brush}"/>
@@ -28,7 +28,7 @@
             <EventTrigger RoutedEvent="MouseEnter">
                 <BeginStoryboard>
                     <Storyboard>
-                        <ColorAnimation To="Black" Duration="0:0:0.3" Storyboard.TargetProperty="Background.Color"/>
+                        <ColorAnimation To="{StaticResource Upper Title Bar}" Duration="0:0:0.3" Storyboard.TargetProperty="Background.Color"/>
                         <ColorAnimation To="White" Duration="0:0:0.3" Storyboard.TargetProperty="Foreground.Color"/>
                     </Storyboard>
                 </BeginStoryboard>
@@ -38,7 +38,7 @@
                 <BeginStoryboard>
                     <Storyboard>
                         <ColorAnimation To="{StaticResource Upper Buttons Bar}" Duration="0:0:0.3" Storyboard.TargetProperty="Background.Color"/>
-                        <ColorAnimation To="Black" Duration="0:0:0.3" Storyboard.TargetProperty="Foreground.Color"/>
+                        <ColorAnimation To="{StaticResource Upper Title Bar}" Duration="0:0:0.3" Storyboard.TargetProperty="Foreground.Color"/>
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>

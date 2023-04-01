@@ -18,6 +18,8 @@ namespace RefereeHelper.State.Navigators
         Regions,
         Timings,
         Comands,
+        Start,
+        Participation
     }
 
     public interface iNavigator

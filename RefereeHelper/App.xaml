@@ -33,7 +33,12 @@
             <DataTemplate DataType="{x:Type viewmodels:ComandViewModel}">
                 <views:ComandsView/>
             </DataTemplate>
-
+            <DataTemplate DataType="{x:Type viewmodels:StartViewModel}">
+                <views:Start/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:ParticipationViewModel}">
+                <views:Participation/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>   
 </Application>
