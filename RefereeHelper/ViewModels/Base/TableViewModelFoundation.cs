@@ -1,6 +1,5 @@
 ﻿using RefereeHelper.Commands;
 using RefereeHelper.Commands.Base;
-using RefereeHelper.Domain;
 using RefereeHelper.EntityFramework;
 using RefereeHelper.Models.Base;
 using System;

@@ -32,16 +32,16 @@ namespace RefereeHelper.OptionsWindows
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             //DateOnly born = new(bornDatePicker.SelectedDate.Value.Year, bornDatePicker.SelectedDate.Value.Month, bornDatePicker.SelectedDate.Value.Day);
-            Member.Surname = secondNameTextBox.Text;
+            Member.FamilyName = secondNameTextBox.Text;
             Member.Name=nameTextBox.Text;
             if (girl.IsChecked==true)
             {
-                Member.gender=false;
+                Member.Gender=false;
             }
             else {
-                Member.gender=true;
+                Member.Gender=true;
             }
-            Member.bornDate=bornDatePicker.SelectedDate.Value.Date;
+            Member.BornDate =bornDatePicker.SelectedDate.Value.Date;
             Member.FamilyName = familyNameTextBox.Text;
             DialogResult=true;
         }
