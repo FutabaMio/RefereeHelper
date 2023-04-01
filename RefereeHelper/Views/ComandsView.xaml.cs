@@ -37,7 +37,7 @@ namespace RefereeHelper.Views
                 db.Database.EnsureCreated();
                 db.Groups.Load();
                 DataContext = db.Groups.Local.ToObservableCollection();
-                clubDataGrid.DataContext = db.Groups.Local.ToBindingList();
+                //clubDataGrid.DataContext = db.Groups.Local.ToBindingList();
             }
         }
 
