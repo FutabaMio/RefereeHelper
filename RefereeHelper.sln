@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RefereeHelper.EntityFramewo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{98D3F03F-332A-4A0B-B2F8-53E75223DA7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefereeHelper.Test", "RefereeHelper.Test\RefereeHelper.Test.csproj", "{4E068213-13B8-41F5-BFB0-671F6EE3296E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RefereeHelper.Test", "RefereeHelper.Test\RefereeHelper.Test.csproj", "{4E068213-13B8-41F5-BFB0-671F6EE3296E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Class", "Class", "{BDFD5EAC-D9B7-40E1-8EA8-33E8973573EE}"
+	ProjectSection(SolutionItems) = preProject
+		Receive.cs = Receive.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
