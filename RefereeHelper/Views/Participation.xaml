@@ -9,6 +9,21 @@
       Title="Participation">
 
     <Grid>
-        <TextBlock Text="This is Participation view"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35*"/>
+            <RowDefinition Height="367*"/>
+            <RowDefinition Height="48*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Name="manualAddParticipation" Content="Добавить вручную" FontSize="20" Click="manualAddStart_Click"/>
+            <!--Не уверен, что кнопки вообще нужны - добавить по ПКМ, изменить по двойному клику(?)-->
+        </Grid>
+        <Label Grid.Row="0" Content="Участие (вспомогательная таблица)" FontSize="20"/>
+        <DataGrid Grid.Row="1" Name="participationTable" ItemsSource="{Binding}"/>
     </Grid>
 </Page>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using RefereeHelper.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,19 @@ namespace RefereeHelper.Views
         public Participation()
         {
             InitializeComponent();
+            Loaded+=Participation_Loaded;
+        }
+
+        private void Participation_Loaded(object sender, RoutedEventArgs e)
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                db.Partisipations.Load();
+                DataContext = db.Starts.Local.ToObservableCollection();
+                participationTable.DataContext=db.Starts.Local.ToBindingList();
+                db.SaveChanges();
+            }
         }
     }
 }
