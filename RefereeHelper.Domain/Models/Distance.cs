@@ -28,7 +28,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Стартовое время дистанции
         /// </summary>
-        public DateTime startTime { get; set; }
+        public TimeOnly StartTime { get; set; }
         public /*sk*/virtual IEnumerable<Group> Groups { get; set; }
 
     }

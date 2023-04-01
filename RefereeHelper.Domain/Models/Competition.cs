@@ -34,7 +34,7 @@ namespace RefereeHelper.Models
         /// </summary>
         public string? Secretary { get; set; }
         /// <summary>
-        /// 
+        /// true - отсчитывается с дня рождения, false - с нового года
         /// </summary>
         public bool TypeAge { get; set; }
         public virtual IEnumerable<Partisipation> Partisipations { get; set; }
