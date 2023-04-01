@@ -119,9 +119,9 @@ namespace RefereeHelper.Views
 
         private void MembersList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            using(var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            ManualAddMembers manualAddWindow = new ManualAddMembers(new Member());
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                ManualAddMembers manualAddWindow = new ManualAddMembers(new Member());
                 if (manualAddWindow.ShowDialog() == true)
                 {
                     Member Member = manualAddWindow.Member;
@@ -129,7 +129,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
-           
+                
         }
     }
 }

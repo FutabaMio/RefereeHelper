@@ -27,19 +27,5 @@ namespace RefereeHelper.EntityFramework
         public DbSet<Start> Starts { get; set; }
         public DbSet<Team> Teams { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            
-
-            base.OnModelCreating(modelBuilder);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Context=Zachet.db");
-
-            base.OnConfiguring(optionsBuilder);
-        }
-
     }
 }
