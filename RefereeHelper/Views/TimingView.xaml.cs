@@ -28,20 +28,20 @@ namespace RefereeHelper.Views
         {
             InitializeComponent();
 
-            Loaded+= TimingView_Loaded;
-            dt.Tick+=new EventHandler(dtTick);
+            Loaded += TimingView_Loaded;
+            dt.Tick += new EventHandler(dtTick);
             dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
             LoadEvents();
 
-            
+
         }
         int countOfStartingPeople = 0, countOfFinishingPeople = 0;
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
         {
-         
-         
-         
-         
+
+
+
+
         }
         /// <summary>
         /// Функция ручного добавления добавления данных в тайминг.
@@ -102,7 +102,7 @@ namespace RefereeHelper.Views
                 new DataColumn("PlaceAbsolute", typeof(int)),
                 new DataColumn("currentTime", typeof(string))
             };
-            
+
         }
 
         //конец
@@ -119,7 +119,7 @@ namespace RefereeHelper.Views
             if (sw.IsRunning)
             {
                 TimeSpan ts = sw.Elapsed;
-                currentTime=String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds/10);
+                currentTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 secundomer.Text = currentTime;
             }
         }
@@ -149,8 +149,8 @@ namespace RefereeHelper.Views
 
         //це Миё
         TimeOnly _time;
-        UdpClient udpClient = new UdpClient(27069);             
-        UdpReceiveResult result;                                
+        UdpClient udpClient = new UdpClient(27069);
+        UdpReceiveResult result;
         byte[] datagram;
         string received;
 
@@ -179,15 +179,76 @@ namespace RefereeHelper.Views
         GenericDataService<Timing> DataService = new(new RefereeHelperDbContextFactory());
         GenericDataService<Start> startDataService = new(new RefereeHelperDbContextFactory());
         decimal CountOfLapsForHim;//кол-во кругов для данного спортсмена, чтобы считать, финишировал чи як
-        
-        /// <summary>
-        /// Функция считывания номера метки и последующего заполнения базы данных.
-        /// </summary>
-        async void Receive()
+
+
+        UDPReceive u = new(27069);
+        void Received()
         {
             while (true)
             {
+                u.secondOfDifference = Int32.Parse(textBox_TimeOfDifference.Text);
+                string received = u.Receive().Result.ToString();
                 
+                if (!DataService.GetAll().Result.Any(x => x.Start?.Chip == received))
+                {
+                    countOfStartingPeople++;
+                    var t = DataService.Create(new Timing()
+                    {
+                        TimeNow = _time,
+                        Start = startDataService.GetAll().Result.First(x => x.Chip == received)
+                    }).Result;
+
+                    CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
+                    t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
+                    t.Circle = GetOfLapsForHim(t.Id);
+                    t.CircleTime = GetTimeOfLap(t.Id);
+                    t.IsFinish = GetIsFinish(t.Id);
+                    RefrechPlace(t.Id);
+                    RefrechAbsolutePlace(t.Id);
+                    DataService?.Update(t.Id, t);
+                }
+                else
+                {
+
+                    for (int i = DataService.GetAll().Result.Count() - 1; i > -1; i--)
+                    {
+
+                        if (DataService.Get(i).Result.Start?.Chip == received)
+                        {
+                            if (u.time - DataService.Get(i).Result.TimeNow > u.timeOfDifference)
+                            {
+                                var t = DataService.Create(new Timing()
+                                {
+                                    TimeNow = u.time,
+                                    Start = startDataService.GetAll().Result.First(x => x.Chip == received)
+                                }).Result;
+                                t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
+                                CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
+                                t.Circle = GetOfLapsForHim(t.Id);
+                                t.CircleTime = GetTimeOfLap(t.Id);
+                                t.IsFinish = GetIsFinish(t.Id);
+                                if (t.IsFinish.Value)
+                                {
+                                    countOfFinishingPeople++;
+                                }
+                                RefrechPlace(t.Id);
+                                RefrechAbsolutePlace(t.Id);
+                                DataService?.Update(t.Id, t);
+                            }
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+    /// <summary>
+    /// Функция считывания номера метки и последующего заполнения базы данных.
+    /// </summary>
+    async void Receive()
+        {
+            while (true)
+            {
                 secondOfDifference = Int32.Parse(textBox_TimeOfDifference.Text);
                 timeOfDifference = new(0, 0, secondOfDifference);
                 result = await udpClient.ReceiveAsync();
@@ -341,7 +402,7 @@ namespace RefereeHelper.Views
             timeOfDifference = new(0, 0, secondOfDifference);
             if (automode.IsChecked == true) 
             {
-                Receive();
+                Received();
             }
             else
             {
