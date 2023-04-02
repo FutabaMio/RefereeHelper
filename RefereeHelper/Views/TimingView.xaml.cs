@@ -177,7 +177,7 @@ namespace RefereeHelper.Views
          }*/
         //full maё
         GenericDataService<Timing> DataService = new(new RefereeHelperDbContextFactory());
-        GenericDataService<Start> startDataService = new(new RefereeHelperDbContextFactory());
+        GenericDataService<RefereeHelper.Models.Start> startDataService = new(new RefereeHelperDbContextFactory());
         decimal CountOfLapsForHim;//кол-во кругов для данного спортсмена, чтобы считать, финишировал чи як
 
 

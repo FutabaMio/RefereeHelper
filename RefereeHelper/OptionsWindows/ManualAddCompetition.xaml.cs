@@ -20,8 +20,8 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class ManualAddCompetition : Window
     {
-        public competition Competition { get; private set; }
-        public ManualAddCompetition(competition competition)
+        public Competition Competition { get; private set; }
+        public ManualAddCompetition(Competition competition)
         {
             InitializeComponent();
             Competition = competition;

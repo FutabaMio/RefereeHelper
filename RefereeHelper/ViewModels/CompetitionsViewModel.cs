@@ -10,10 +10,10 @@ namespace RefereeHelper.ViewModels
 {
     public class CompetitionsViewModel : ViewModelBase
     {
-        private List<competition> _competitions;
+        private List<Competition> _competitions;
         private List<Group> _group;
 
-        public List<competition> Competitions
+        public List<Competition> Competitions
         {
             get => _competitions;
             set

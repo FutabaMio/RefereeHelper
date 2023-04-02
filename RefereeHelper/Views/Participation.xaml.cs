@@ -39,5 +39,10 @@ namespace RefereeHelper.Views
                 db.SaveChanges();
             }
         }
+
+        private void manualAddStart_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
