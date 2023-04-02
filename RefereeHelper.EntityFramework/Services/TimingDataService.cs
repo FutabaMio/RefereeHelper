@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RefereeHelper.EntityFramework.Services
 {
-    internal class TimingDataService : GenericDataService<Timing>
+    public class TimingDataService : GenericDataService<Timing>
     {
         public TimingDataService(RefereeHelperDbContextFactory dbContextFactory) : base(dbContextFactory)
         {
