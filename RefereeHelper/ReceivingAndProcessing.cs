@@ -168,12 +168,20 @@ namespace RefereeHelper
         /// <returns>Время круга.</returns>
         public TimeOnly GetTimeOfLap(int idOfTiming)
         {
-            var t = dbContext.Set<Timing>().First(x => x.Id == idOfTiming);
+            var t = dbContext.Set<Timing>().Select(x => new Timing
+            {
+                Id = x.Id,
+                TimeFromStart = x.TimeFromStart,
+                Start = new Start
+                {
+                    Id = x.Start.Id
+                }
+            }).First(x => x.Id == idOfTiming);
             if (dbContext.Set<Timing>().Select(x => new Timing
             {
                 Id = x.Id,
                 Start = x.Start
-            }).ToList().Count() == 0)
+            }).Where(x => x.Start == t.Start).ToList().Count() == 0)
             //if (DataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
                 return t.TimeFromStart.Value;
             return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - dbContext.Set<Timing>().Where(x => x.Start == t.Start).ToList().Last(x => x.Id != t.Id).TimeFromStart.Value);
