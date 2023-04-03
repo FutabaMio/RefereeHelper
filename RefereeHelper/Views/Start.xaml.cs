@@ -20,7 +20,7 @@ namespace RefereeHelper.Views
     /// <summary>
     /// Interaction logic for Start.xaml
     /// </summary>
-    public partial class Start : Page
+    public partial class Start : UserControl
     {
         public Start()
         {

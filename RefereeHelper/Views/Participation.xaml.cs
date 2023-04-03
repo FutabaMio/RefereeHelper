@@ -20,7 +20,7 @@ namespace RefereeHelper.Views
     /// <summary>
     /// Interaction logic for Participation.xaml
     /// </summary>
-    public partial class Participation : Page
+    public partial class Participation : UserControl
     {
         public Participation()
         {
