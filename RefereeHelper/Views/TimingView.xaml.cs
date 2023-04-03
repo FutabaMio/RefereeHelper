@@ -26,7 +26,7 @@ namespace RefereeHelper.Views
     {
         
 
-        ApplicationContext db = new ApplicationContext();
+        //ApplicationContext db = new ApplicationContext();
 
         
         public TimingView()
@@ -43,10 +43,14 @@ namespace RefereeHelper.Views
 
         private void TimingView_Loaded(object sender, RoutedEventArgs e)
         {
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
             db.Database.EnsureCreated();
             db.Timings.Load();
             DataContext = db.Timings.Local.ToObservableCollection();
             TeamTimer.DataContext = db.Timings.Local.ToBindingList();
+            }
+            
         }
 
 
