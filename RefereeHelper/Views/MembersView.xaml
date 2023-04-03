@@ -29,7 +29,7 @@
             <Button x:Name="AddFromExcel"  Content="Загрузить из Excel" FontSize="10" Grid.Column="1" Click="AddFromExcel_Click"/>
             <Button x:Name="AddToExcel"  Content="Выгрузить в Excel" FontSize="10" Grid.Column="2"/>
             <Button x:Name="DeleteMember" Content="Удалить" FontSize="10" Grid.Column="3"/>
-            <Button  x:Name="CategoryTable" Content="Открыть базу разрядов для редактирования" FontSize="10" Grid.Column="4"/>
+           <!-- <Button  x:Name="CategoryTable" Content="Открыть базу разрядов для редактирования" FontSize="10" Grid.Column="4"/> -->
         </Grid>
         <DataGrid Name="MembersList" Grid.Row="1" ItemsSource="{Binding}" MouseDoubleClick="MembersList_MouseDoubleClick" MouseRightButtonDown="MembersList_MouseRightButtonDown">
             
