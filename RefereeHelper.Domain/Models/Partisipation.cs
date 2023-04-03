@@ -17,7 +17,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Соревнование
         /// </summary>
-        public virtual Competition Competition { get; set; }
+        public virtual competition Competition { get; set; }
         /// <summary>
         /// Группа
         /// </summary>
