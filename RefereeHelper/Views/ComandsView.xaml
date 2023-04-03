@@ -20,9 +20,9 @@
         <Button Grid.Row="2" Margin="10,2,679,2" Content="Добавить команду" FontSize="10" Click="Button_Click"/>
         <Button Grid.Row="2" Margin="126,2,557,2" Content="Редактировать" FontSize="10"/>
         <Button Grid.Row="2" Margin="249,2,434,2" Content="Удалить" FontSize="10"/>
-        <Button Grid.Row="2" Margin="371,2,312,2" Content="Добавить вручную" FontSize="10" Click="Button_Click_1"/>
-        <Button Grid.Row="2" Margin="493,2,190,2" Content="Добавить из базы" FontSize="10" Click="Button_Click_2"/>
-        <Button Grid.Row="2" Margin="673,2,10,2" Content="Удалить" FontSize="10"/>
+        <!--  <Button Grid.Row="2" Margin="371,2,312,2" Content="Добавить вручную" FontSize="10" Click="Button_Click_1"/> -->
+        <Button Grid.Row="2" Margin="372,2,311,2" Content="Добавить из базы" FontSize="10" Click="Button_Click_2"/>
+       <!-- <Button Grid.Row="2" Margin="673,2,10,2" Content="Удалить" FontSize="10"/> -->
         <DataGrid Grid.Row="0" Margin="0,34,0,0"  Name="commandsDataGrid"/>
         <DataGrid Grid.Row="1" Margin="0,34,0,0"  Name="membersDataGrid"/>
     </Grid>
