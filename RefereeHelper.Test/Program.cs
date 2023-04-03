@@ -43,9 +43,9 @@ while (true)
 }
 void First()
 {
-
+    bool flag = true;
     countOfStartingPeople = 0;
-    while (true)
+    while (flag)
     {        
         Console.WriteLine("Введите команду (<<РВВ>> - разница во времени, по стандарту 5 секунд; <<демо>> для демонстрации):");
         string code = Console.ReadLine();
@@ -58,6 +58,8 @@ void First()
             case "демо":
                 Demo();
                 break;
+            case "exit":
+                flag = false; break;
             default:break;
         }       
         
@@ -78,14 +80,44 @@ TimeSpan RVV(string k)
 void Demo()
 {
     Process("Xi");
-    Thread.Sleep(10000);
+    Thread.Sleep(5001);
     Process("P4BK");
 
-    Thread.Sleep(330);
+    Thread.Sleep(5001);
     Process("Xi");
-    Thread.Sleep(10000);
+    Thread.Sleep(5001);
     Process("P4BK");
     Console.WriteLine("Имя\tТекущее время\tВремя со старта\tКруг\tПозиция\tВремя круга");
+    var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+    var ts = dbContext.Set<Timing>().Select(x => new Timing{
+        TimeNow = x.TimeNow,
+        TimeFromStart = x.TimeFromStart,
+        Circle = x.Circle,
+        Place = x.Place,
+        CircleTime = x.CircleTime,
+        Start = new Start
+        {
+            Partisipation = new Partisipation
+            {
+                Member = new Member
+                {
+                    Name = x.Start.Partisipation.Member.Name,
+                }
+            },
+            Number = x.Start.Number,
+            Chip = x.Start.Chip,
+            StartTime = x.Start.StartTime
+        }
+    }).ToList();
+    foreach (var s in ts)
+    {
+        Console.WriteLine($"{s.Start.Partisipation?.Member?.Name}" +
+                        $"\t{s.TimeNow}" +
+                        $"\t\t{s.TimeFromStart}" +
+                        $"\t\t{s.Circle}" +
+                        $"\t\t{s.CircleTime}");
+    }
+
 }
 void CheckDB()
 {
@@ -177,7 +209,7 @@ void Process(string received)
         t.Entity.CircleTime = t.Entity.TimeFromStart;
         t.Entity.IsFinish = p.GetIsFinish(t.Entity.Id);
         //p.RefrechPlace(t.Entity.Id);
-        p.RefrechAbsolutePlace(t.Entity.Id);
+        //p.RefrechAbsolutePlace(t.Entity.Id);
         p.dbContext.Update(t.Entity);
         //p.dbContext.Update(t.Entity);
         p.dbContext.SaveChanges();
@@ -197,7 +229,7 @@ void Process(string received)
                 }
             }).All(x => x.Start.Chip == received))
             {
-                if (TimeOnly.FromDateTime(DateTime.Now) - DataService.Get(i).Result.TimeNow > timeOfDifference)
+                if (TimeOnly.FromDateTime(DateTime.Now) - p.dbContext.Set<Timing>().First(x=>x.Id == i).TimeNow > timeOfDifference)
                 {
                     var t = p.dbContext.Add(new Timing
                     {
@@ -225,7 +257,6 @@ void Process(string received)
                     }).ToList().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
                     p.dbContext.SaveChanges();
                     t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start?.StartTime - t.Entity.TimeNow));
-                    Console.WriteLine($"{t.Entity.Id}");
                     t.Entity.Circle = p.GetOfLapsForHim(t.Entity.Id);
 
                     p.dbContext.SaveChanges();
@@ -235,9 +266,9 @@ void Process(string received)
                     {
                         CountOfFinishingPeople++;
                     }
-                    p.RefrechPlace(t.Entity.Id);
-                    p.RefrechAbsolutePlace(t.Entity.Id);
-                    p.dbContext.Update(t.Entity);
+                    //p.RefrechPlace(t.Entity.Id);
+                    //p.RefrechAbsolutePlace(t.Entity.Id);
+                    //p.dbContext.Update(t.Entity);
                     p.dbContext.SaveChanges();
                 }
                 break;
