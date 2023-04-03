@@ -21,9 +21,9 @@ namespace RefereeHelper
         public int secondOfDifference = 5;
         public TimeSpan timeOfDifference;
         UdpReceiveResult result;
-        UdpClient client;
         byte[]? datagram;
         string? received;
+        public UdpClient client = new UdpClient(27069);
 
         /// <summary>
         /// Конструктор класса. Создаёт UDPClient с портом и обновляет время разницы.
@@ -31,7 +31,6 @@ namespace RefereeHelper
         /// <param name="port"> - порт, с которым создаётся UDPClient</param>
         public UDPReceive(int port)
         {
-            client = new UdpClient(port);
             timeOfDifference = new(0, 0, secondOfDifference);
         }
 
@@ -81,6 +80,7 @@ namespace RefereeHelper
                     {
                         Group = new Group
                         {
+                            Name = x.Start.Partisipation.Group.Name,
                             Distance = x.Start.Partisipation.Group.Distance
                         }
                     }
@@ -93,7 +93,7 @@ namespace RefereeHelper
             foreach (var k in ts)
             {
                 k.Place = i + 1; i++;
-                DataService.Update(k.Id, k);
+                dbContext.Update(k);
             }
         }
 
@@ -108,25 +108,29 @@ namespace RefereeHelper
 
             var ts = dbContext.Set<Timing>().Select(x => new Timing
             {
+                
+                TimeFromStart = x.TimeFromStart,
+                PlaceAbsolute = x.PlaceAbsolute,
                 Start = new Start
                 {
                     Partisipation = new Partisipation
                     {
                         Group = new Group
                         {
+                            Name = x.Start.Partisipation.Group.Name,
                             Distance = x.Start.Partisipation.Group.Distance
                         }
                     }
                 }
-            }).ToList().OrderBy(x => x.TimeFromStart);
+            }).OrderBy(x => x.TimeFromStart).ToList();//
 
             //var ts = DataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance)
             //                                       .Result.OrderBy(x => x.TimeFromStart);
             int i = 0;
             foreach (var k in ts)
             {
-                k.Place = i + 1; i++;
-                DataService.Update(k.Id, k);
+                //k.PlaceAbsolute = i + 1; i++;
+                dbContext.Update(k);
             }
         }
 
@@ -148,7 +152,8 @@ namespace RefereeHelper
                         {
                             Distance = new Distance
                             {
-                                Name = x.Start.Partisipation.Group.Distance.Name
+                                Name = x.Start.Partisipation.Group.Distance.Name,
+                                Circles = x.Start.Partisipation.Group.Distance.Circles
                             }
                         }
                     }
@@ -157,9 +162,9 @@ namespace RefereeHelper
 
             //var t = DataService.Get(idOfTiming).Result;
             if (t.Start?.Partisipation.Group?.Distance.Circles < t.Circle)
-                return false;
-            else
                 return true;
+            else
+                return false;
         }
         /// <summary>
         /// Определяет время круга для определённого спортсмена.
@@ -168,6 +173,8 @@ namespace RefereeHelper
         /// <returns>Время круга.</returns>
         public TimeOnly GetTimeOfLap(int idOfTiming)
         {
+            dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
             var t = dbContext.Set<Timing>().Select(x => new Timing
             {
                 Id = x.Id,
@@ -181,10 +188,10 @@ namespace RefereeHelper
             {
                 Id = x.Id,
                 Start = x.Start
-            }).Where(x => x.Start == t.Start).ToList().Count() == 0)
+            }).Where(x => x.Start.Id == t.Start.Id).ToList().Count() == 0)
             //if (DataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
                 return t.TimeFromStart.Value;
-            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - dbContext.Set<Timing>().Where(x => x.Start == t.Start).ToList().Last(x => x.Id != t.Id).TimeFromStart.Value);
+            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - dbContext.Set<Timing>().Where(x => x.Start.Id == t.Start.Id).ToList().Last(x => x.Id != t.Id).TimeFromStart.Value);
         }
         /// <summary>
         /// Определяет количество кругов для определённого человека.
@@ -194,7 +201,7 @@ namespace RefereeHelper
         public int GetOfLapsForHim(int idOfTiming)
         {
             var t = dbContext.Set<Timing>().First(x => x.Id == idOfTiming);
-            return dbContext.Set<Timing>().Where(x => x.Start.Number == t.Start.Number).Count() + 1;
+            return dbContext.Set<Timing>().Where(x => x.Start.Number == t.Start.Number).Count();
         }
         /// <summary>
         /// Определяет количество людей на определённом круге

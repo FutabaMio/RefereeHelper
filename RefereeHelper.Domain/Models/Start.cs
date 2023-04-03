@@ -9,10 +9,17 @@ namespace RefereeHelper.Models
 {
     public class Start : BaseEntity
     {
+        public int PartisipationId { get; set; }
         /// <summary>
         /// Участие
         /// </summary>
         public virtual Partisipation Partisipation { get; set; }
+        
+        /// <summary>
+        /// Ключ Команды
+        /// </summary>
+        public int TeamId { get; set; }
+        
         /// <summary>
         /// Команда
         /// </summary>

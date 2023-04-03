@@ -15,6 +15,10 @@ namespace RefereeHelper.Models
         /// </summary>
         public virtual Region Region { get; set; }
         /// <summary>
+        /// Ключ региона
+        /// </summary>
+        public int RegionId { get; set; }
+        /// <summary>
         /// Тренер
         /// </summary>
         public string? Couch { get; set; }

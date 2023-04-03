@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RefereeHelper.EntityFramework\RefereeHelper.EntityFramework.csproj" />
     <ProjectReference Include="..\RefereeHelper\RefereeHelper.csproj" />
   </ItemGroup>

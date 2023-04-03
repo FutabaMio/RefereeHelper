@@ -149,7 +149,7 @@ namespace RefereeHelper.Views
 
         //це Миё
         TimeOnly _time;
-        UdpClient udpClient = new UdpClient(27069);
+        //UdpClient udpClient = new UdpClient(27069);
         UdpReceiveResult result;
         byte[] datagram;
         string received;
@@ -251,7 +251,7 @@ namespace RefereeHelper.Views
             {
                 secondOfDifference = Int32.Parse(textBox_TimeOfDifference.Text);
                 timeOfDifference = new(0, 0, secondOfDifference);
-                result = await udpClient.ReceiveAsync();
+                result = await u.client.ReceiveAsync();
                 datagram = result.Buffer;
                 received = Encoding.UTF8.GetString(datagram);
                 _time = TimeOnly.FromDateTime(DateTime.Now);
@@ -406,7 +406,7 @@ namespace RefereeHelper.Views
             }
             else
             {
-                udpClient.Close();
+                u.client.Close();
             }
         }
 

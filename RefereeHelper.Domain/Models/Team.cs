@@ -14,6 +14,7 @@ namespace RefereeHelper.Models
         /// Название команды
         /// </summary>
         public string Name { get; set; }
+
         public /*sk*/virtual IEnumerable<Start> Starts { get; set; }
     }
 }

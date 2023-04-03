@@ -10,6 +10,10 @@ namespace RefereeHelper.Models
     public class Group : BaseEntity
     {
         /// <summary>
+        /// Ключ дистанции
+        /// </summary>
+        public int DistanceId { get; set; }
+        /// <summary>
         /// Дистанция
         /// </summary>
         public virtual Distance Distance { get; set; }
