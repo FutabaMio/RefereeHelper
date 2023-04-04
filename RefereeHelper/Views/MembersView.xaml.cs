@@ -66,7 +66,7 @@ namespace RefereeHelper.Views
                
         }
 
-        private void AddFromExcel_Click(object sender, RoutedEventArgs e)
+        private void AddFromExcel_Click(object sender, RoutedEventArgs e) //неверно, EPplus 4.5.3.3 читать
         {
             /*OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Filter = "Файлы Excel 2003(.xls)|*.xls|Файлы Excel 2007+(.xlsx)|*.xlsx|All files (*.*)|*.*";
