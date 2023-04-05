@@ -10,7 +10,7 @@ namespace RefereeHelper.Models
 {
     public class Partisipation : BaseEntity
     {
-        public int MemberId { get; set; }
+        public int? MemberId { get; set; }
         /// <summary>
         /// Участник
         /// </summary>
@@ -20,7 +20,7 @@ namespace RefereeHelper.Models
         /// Соревнование
         /// </summary>
         public virtual Competition Competition { get; set; }
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; }
         /// <summary>
         /// Группа
         /// </summary>
