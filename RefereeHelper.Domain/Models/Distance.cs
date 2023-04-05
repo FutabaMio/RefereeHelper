@@ -24,7 +24,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Кол-во кругов дистанции
         /// </summary>
-        public decimal Circles { get; set; }
+        public int Circles { get; set; }
         /// <summary>
         /// Стартовое время дистанции
         /// </summary>

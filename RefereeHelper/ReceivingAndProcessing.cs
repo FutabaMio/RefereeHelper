@@ -68,70 +68,42 @@ namespace RefereeHelper
         /// Обновляет все позиции
         /// </summary>
         /// <param name="idOfTiming"> - идентификационный номер Timing, относительно которого будут обновляться позиции</param>
-        public void RefrechPlace(int idOfTiming)
+        public void RefrechPlace(DbContext dbContext, Timing t)
         {
-            //var t = DataService.Get(idOfTiming).Result;
-            var t = dbContext.Set<Timing>().First(x => x.Id == idOfTiming);
-            var ts = dbContext.Set<Timing>().Select(x => new Timing
-            {
-                Start = new Start
-                {
-                    Partisipation = new Partisipation
-                    {
-                        Group = new Group
-                        {
-                            Name = x.Start.Partisipation.Group.Name,
-                            Distance = x.Start.Partisipation.Group.Distance
-                        }
-                    }
-                }
-            }).ToList().OrderBy(x => x.TimeFromStart);
-            //var ts = DataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance
-            //                              && x.Start.Partisipation.Group == t.Start.Partisipation.Group).Result.
-            //                                 OrderBy(x => x.TimeFromStart);
+            var d = t;
+            d.Start.Partisipation = dbContext.Set<Partisipation>().First(x => x.Id == t.Start.PartisipationId);
+            d.Start.Partisipation.Group = dbContext.Set<Group>().First(x => x.Id == d.Start.Partisipation.GroupId);
+            d.Start.Partisipation.Group.Distance = dbContext.Set<Distance>().First(x => x.Id == d.Start.Partisipation.Group.DistanceId);
+            var ts = dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(c => c.Partisipation).ThenInclude(v => v.Group)
+                .Where(m => m.Start.Partisipation.Group.DistanceId == d.Start.Partisipation.Group.DistanceId && m.Circle == d.Circle)
+                .OrderByDescending(n => n.TimeFromStart).ToList();
             int i = 0;
             foreach (var k in ts)
             {
                 k.Place = i + 1; i++;
                 dbContext.Update(k);
             }
+            dbContext.SaveChanges();
         }
 
         /// <summary>
         /// Обновляет все абсолютные позиции
         /// </summary>
         /// <param name="idOfTiming"> - идентификационный номер Timing, относительно которого будут обновляться абсолютные позиции</param>
-        public void RefrechAbsolutePlace(int idOfTiming)
+        public void RefrechAbsolutePlace(DbContext dbContext, Timing t)
         {
-            var t = dbContext.Set<Timing>().First(x => x.Id == idOfTiming);
-            //var t = DataService.Get(idOfTiming).Result;
-
-            var ts = dbContext.Set<Timing>().Select(x => new Timing
-            {
-                
-                TimeFromStart = x.TimeFromStart,
-                PlaceAbsolute = x.PlaceAbsolute,
-                Start = new Start
-                {
-                    Partisipation = new Partisipation
-                    {
-                        Group = new Group
-                        {
-                            Name = x.Start.Partisipation.Group.Name,
-                            Distance = x.Start.Partisipation.Group.Distance
-                        }
-                    }
-                }
-            }).OrderBy(x => x.TimeFromStart).ToList();//
-
-            //var ts = DataService.GetAll(x => x.Start.Partisipation.Group.Distance == t.Start.Partisipation.Group.Distance)
-            //                                       .Result.OrderBy(x => x.TimeFromStart);
+            var d = t;
+            d.Start.Partisipation = dbContext.Set<Partisipation>().First(x => x.Id == t.Start.PartisipationId);
+            d.Start.Partisipation.Group = dbContext.Set<Group>().First(x => x.Id == d.Start.Partisipation.GroupId);
+            d.Start.Partisipation.Group.Distance = dbContext.Set<Distance>().First(x => x.Id == d.Start.Partisipation.Group.DistanceId);
+            var ts = dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(c => c.Partisipation).ThenInclude(v => v.Group).Where(m => m.Start.Partisipation.Group.DistanceId == d.Start.Partisipation.Group.DistanceId).OrderByDescending(n => n.TimeFromStart).ToList();
             int i = 0;
             foreach (var k in ts)
             {
-                //k.PlaceAbsolute = i + 1; i++;
+                k.PlaceAbsolute = i + 1; i++;
                 dbContext.Update(k);
             }
+            dbContext.SaveChanges();
         }
 
         /// <summary>
@@ -171,19 +143,9 @@ namespace RefereeHelper
         /// </summary>
         /// <param name="idOfTiming"> - идентификационный номер Timing, по которому будет определяться время круга.</param>
         /// <returns>Время круга.</returns>
-        public TimeOnly GetTimeOfLap(int idOfTiming)
+        public TimeOnly GetTimeOfLap(DbContext dbContext, Timing timing)
         {
-            dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var t = dbContext.Set<Timing>().Select(x => new Timing
-            {
-                Id = x.Id,
-                TimeFromStart = x.TimeFromStart,
-                Start = new Start
-                {
-                    Id = x.Start.Id
-                }
-            }).First(x => x.Id == idOfTiming);
+            var t = dbContext.Set<Timing>().Include(x => x.Start).First(z => z.Id == timing.Id);
             if (dbContext.Set<Timing>().Select(x => new Timing
             {
                 Id = x.Id,
@@ -191,17 +153,17 @@ namespace RefereeHelper
             }).Where(x => x.Start.Id == t.Start.Id).ToList().Count() == 0)
             //if (DataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
                 return t.TimeFromStart.Value;
-            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - dbContext.Set<Timing>().Where(x => x.Start.Id == t.Start.Id).ToList().Last(x => x.Id != t.Id).TimeFromStart.Value);
+            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - dbContext.Set<Timing>().Where(x => x.StartId == t.StartId).ToList().Last(z => z.Id != t.Id).TimeFromStart.Value);
         }
         /// <summary>
         /// Определяет количество кругов для определённого человека.
         /// </summary>
         /// <param name="idOfTiming"> - идентификационный номер Timing, по которому будет определяться количество кругов для определённого спортсмена.</param>
         /// <returns>количество кругов.</returns>
-        public int GetOfLapsForHim(int idOfTiming)
+        public int GetOfLapsForHim(DbContext dbContext, Timing t)
         {
-            var t = dbContext.Set<Timing>().First(x => x.Id == idOfTiming);
-            return dbContext.Set<Timing>().Where(x => x.Start.Number == t.Start.Number).Count();
+            var timingEntity = dbContext.Set<Timing>().Include(z => z.Start).First(x => x.Id == t.Id);
+            return dbContext.Set<Timing>().Where(x => x.Start.Number == timingEntity.Start.Number).Count();
         }
         /// <summary>
         /// Определяет количество людей на определённом круге

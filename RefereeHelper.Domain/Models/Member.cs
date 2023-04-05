@@ -9,7 +9,7 @@ namespace RefereeHelper.Models
 {
     public class Member : BaseEntity
     {
-        public int DischargeId { get; set; }
+        public int? DischargeId { get; set; }
         /// <summary>
         /// Разряд
         /// </summary>
@@ -17,7 +17,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Клуб
         /// </summary>
-        public int ClubId { get; set; }
+        public int? ClubId { get; set; }
         public virtual Club? Club { get; set; }
         /// <summary>
         /// Имя

@@ -10,7 +10,7 @@ namespace RefereeHelper.Models
 {
     public class Timing : BaseEntity
     {
-        public int StartId { get; set; }
+        public int? StartId { get; set; }
         /// <summary>
         /// Старт
         /// </summary>

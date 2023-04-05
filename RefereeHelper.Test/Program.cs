@@ -1,4 +1,5 @@
-﻿using RefereeHelper;
+﻿using Microsoft.EntityFrameworkCore;
+using RefereeHelper;
 using RefereeHelper.EntityFramework;
 using RefereeHelper.EntityFramework.Services;
 using RefereeHelper.Models;
@@ -7,10 +8,12 @@ using System.Net.Sockets;
 using System.Text;
 
 int countOfStartingPeople = 0;
-string[] codes = { "Первичная обработка данных", "Сбор", "Заполнить БД", "Проверить БД", "help", "close"};
-decimal CountOfLapsForHim;
+string[] codes = { "1- Первичная обработка данных", "2- Сбор", "3- Заполнить БД", "4- Проверить БД", "5- Тайминг", "6- Удалить Тайминг", "7- help", "close" };
+decimal CountOfLapsForHim = 0;
 int CountOfFinishingPeople = 0;
-TimeSpan timeOfDifference = new TimeSpan(0, 0, 5);
+List<string> idsOfFinishingPeople = new List<string>();
+Processing p = new();
+TimeSpan timeOfDifference = new TimeSpan(0, 0, 0);
 while (true)
 {
     Console.WriteLine("Введите запрос операции:");
@@ -21,24 +24,84 @@ while (true)
         case "1":
             First();
             break;
-        case "Сбор":
+        case "2":
             Second();
             break;
-        case "Заполнить БД":
+        case "3":
             Third();
             break;
-        case "Проверить БД":
+        case "4":
             CheckDB();
             break;
-        case "help":
+        case "5":
+            ViewTiming(p.dbContext);
+            break;
+        case "6":
+            ClearTiming(p.dbContext);
+            break;
+        case "7":
             GiveInfo();
             break;
         case "close":
+            Environment.Exit(228);
             break;            
         default:
             GiveInfo();
-            Console.WriteLine("TryNow");
+            Console.WriteLine("Try more");
             break;
+    }
+}
+void ViewTiming(DbContext dbContext)
+{
+    Console.WriteLine("Имя\tТекущее время\tВремя со старта\tКруг\tПозиция\tПозиция по кругу Время круга\tФинишировал");
+    var ts = dbContext.Set<Timing>().Select(x => new Timing
+    {
+        TimeNow = x.TimeNow,
+        TimeFromStart = x.TimeFromStart,
+        Circle = x.Circle,
+        PlaceAbsolute = x.PlaceAbsolute,
+        Place = x.Place,
+        CircleTime = x.CircleTime,
+        Start = new Start
+        {
+            Partisipation = new Partisipation
+            {
+                Member = new Member
+                {
+                    Name = x.Start.Partisipation.Member.Name,
+                },
+                Group = new Group
+                {
+                    Distance = new Distance
+                    {
+                        Circles = x.Start.Partisipation.Group.Distance.Circles
+                    }
+                }
+            },
+            Number = x.Start.Number,
+            Chip = x.Start.Chip,
+            StartTime = x.Start.StartTime
+        }
+    }).ToList();
+    foreach (var s in ts)
+    {
+        bool finish = false;
+        if (s.IsFinish == null)
+        {
+            finish = false;
+        }
+        else
+        {
+            finish = (bool)s.IsFinish;
+        }
+        Console.WriteLine($"{s?.Start?.Partisipation?.Member?.Name}" +
+                        $"\t{s?.TimeNow?.Hour}:{s?.TimeNow?.Minute}:{s?.TimeNow?.Second}.{s?.TimeNow?.Millisecond}" +
+                        $"\t{s?.TimeFromStart?.Hour}:{s?.TimeFromStart?.Minute}:{s?.TimeFromStart?.Second}.{s?.TimeFromStart?.Millisecond}" +
+                        $"\t{s?.Circle}/{s?.Start?.Partisipation?.Group?.Distance.Circles}" +
+                        $"\t{s?.PlaceAbsolute}" +
+                        $"\t{s?.Place}" +
+                        $"\t\t {s?.CircleTime?.Hour}:{s?.CircleTime?.Minute}:{s?.CircleTime?.Second}.{s?.CircleTime?.Millisecond}" +
+                        $"\t{finish}");
     }
 }
 void First()
@@ -79,44 +142,15 @@ TimeSpan RVV(string k)
 }
 void Demo()
 {
-    Process("Xi");
-    Thread.Sleep(5001);
-    Process("P4BK");
+    Process("Xi", p.dbContext);
+    Thread.Sleep(10);
+    Process("P4BK", p.dbContext);
 
-    Thread.Sleep(5001);
-    Process("Xi");
-    Thread.Sleep(5001);
-    Process("P4BK");
-    Console.WriteLine("Имя\tТекущее время\tВремя со старта\tКруг\tПозиция\tВремя круга");
-    var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-    var ts = dbContext.Set<Timing>().Select(x => new Timing{
-        TimeNow = x.TimeNow,
-        TimeFromStart = x.TimeFromStart,
-        Circle = x.Circle,
-        Place = x.Place,
-        CircleTime = x.CircleTime,
-        Start = new Start
-        {
-            Partisipation = new Partisipation
-            {
-                Member = new Member
-                {
-                    Name = x.Start.Partisipation.Member.Name,
-                }
-            },
-            Number = x.Start.Number,
-            Chip = x.Start.Chip,
-            StartTime = x.Start.StartTime
-        }
-    }).ToList();
-    foreach (var s in ts)
-    {
-        Console.WriteLine($"{s.Start.Partisipation?.Member?.Name}" +
-                        $"\t{s.TimeNow}" +
-                        $"\t\t{s.TimeFromStart}" +
-                        $"\t\t{s.Circle}" +
-                        $"\t\t{s.CircleTime}");
-    }
+    Thread.Sleep(10);
+    Process("Xi", p.dbContext);
+    Thread.Sleep(10);
+    Process("P4BK", p.dbContext);
+    
 
 }
 void CheckDB()
@@ -184,95 +218,84 @@ void GiveInfo()
         Console.WriteLine($"\t-{codes[i]}");
     }
 }
-void Process(string received)
+
+void ClearTiming(DbContext dbContext)
 {
-    Processing p = new();
-    TimeOnly to = TimeOnly.FromDateTime(DateTime.Now);
-    GenericDataService<Timing> DataService = new(new RefereeHelperDbContextFactory());
-    if (!p.dbContext.Set<Timing>().Any(x => x.Start.Chip == received))
+    dbContext.Set<Timing>().ExecuteDelete();
+}
+void Process(string received, DbContext dbContext)
+{
+    if (idsOfFinishingPeople.Any(x => x == received))
     {
-        to = TimeOnly.FromDateTime(DateTime.Now);
-        countOfStartingPeople++;
-        var t = p.dbContext.Set<Timing>().Add(new Timing
+        TimeOnly to = TimeOnly.FromDateTime(DateTime.Now);
+        GenericDataService<Timing> DataService = new(new RefereeHelperDbContextFactory());
+        if (!dbContext.Set<Timing>().Any(x => x.Start.Chip == received))
         {
-            TimeNow = to,
-            Start = p.dbContext.Set<Start>().First(x => x.Chip == received)
-        });
-
-        p.dbContext.SaveChanges();
-        Console.WriteLine(p.dbContext.Set<Timing>().First(x => x.Id == t.Entity.Id).Id);
-        //var t = p.dbContext.Set<Timing>().First(x => x.TimeNow == to);
-
-        //CountOfLapsForHim = p.dbContext.Set<Timing>().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
-        t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start.StartTime - t.Entity.TimeNow));
-        t.Entity.Circle = p.GetOfLapsForHim(t.Entity.Id);
-        t.Entity.CircleTime = t.Entity.TimeFromStart;
-        t.Entity.IsFinish = p.GetIsFinish(t.Entity.Id);
-        //p.RefrechPlace(t.Entity.Id);
-        //p.RefrechAbsolutePlace(t.Entity.Id);
-        p.dbContext.Update(t.Entity);
-        //p.dbContext.Update(t.Entity);
-        p.dbContext.SaveChanges();
-    }
-    else
-    {
-
-        for (int i = p.dbContext.Set<Timing>().Count() - 1; i > -1; i--)
-        {
-            if (p.dbContext.Set<Timing>().Select(x => new Timing
+            to = TimeOnly.FromDateTime(DateTime.Now);
+            countOfStartingPeople++;
+            var t = dbContext.Set<Timing>().Add(new Timing
             {
-                Id = x.Id,
-                Start = new Start
-                {
-                    Id = x.Start.Id,
-                    Chip = x.Start.Chip
-                }
-            }).All(x => x.Start.Chip == received))
-            {
-                if (TimeOnly.FromDateTime(DateTime.Now) - p.dbContext.Set<Timing>().First(x=>x.Id == i).TimeNow > timeOfDifference)
-                {
-                    var t = p.dbContext.Add(new Timing
-                    {
-                        TimeNow = to,
-                        
-                        Start = p.dbContext.Set<Start>().ToList().First(x => x.Chip == received)
-                    });
-                    p.dbContext.SaveChanges();
-                    CountOfLapsForHim = p.dbContext.Set<Timing>().Select(x => new Timing
-                    {
-                        Start = new Start
-                        {
-                            Partisipation = new Partisipation
-                            {
-                                Group = new Group
-                                {
-                                    Name = x.Start.Partisipation.Group.Name,
-                                    Distance = new Distance()
-                                    {
-                                        Circles = x.Start.Partisipation.Group.Distance.Circles
-                                    }
-                                }
-                            }
-                        }
-                    }).ToList().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
-                    p.dbContext.SaveChanges();
-                    t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start?.StartTime - t.Entity.TimeNow));
-                    t.Entity.Circle = p.GetOfLapsForHim(t.Entity.Id);
+                TimeNow = to,
+                Start = dbContext.Set<Start>().ToList().First(x => x.Chip == received)
+            });
 
-                    p.dbContext.SaveChanges();
-                    //t.Entity.CircleTime = p.GetTimeOfLap(t.Entity.Id);
-                    t.Entity.IsFinish = p.GetIsFinish(t.Entity.Id);
-                    if (t.Entity.IsFinish.Value)
-                    {
-                        CountOfFinishingPeople++;
-                    }
-                    //p.RefrechPlace(t.Entity.Id);
-                    //p.RefrechAbsolutePlace(t.Entity.Id);
-                    //p.dbContext.Update(t.Entity);
-                    p.dbContext.SaveChanges();
-                }
-                break;
+            dbContext.SaveChanges();
+            //var t = p.dbContext.Set<Timing>().First(x => x.TimeNow == to);
+
+            //CountOfLapsForHim = p.dbContext.Set<Timing>().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
+            t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start.StartTime - t.Entity.TimeNow));
+            t.Entity.Circle = p.GetOfLapsForHim(dbContext, t.Entity);
+
+            t.Entity.CircleTime = t.Entity.TimeFromStart;
+            t.Entity.IsFinish = p.GetIsFinish(t.Entity.Id);
+            if (t.Entity.IsFinish.Value)
+            {
+                CountOfFinishingPeople++;
+                idsOfFinishingPeople.Add(received);
             }
+
+            p.RefrechPlace(dbContext, t.Entity);
+            p.RefrechAbsolutePlace(dbContext, t.Entity);
+            //p.dbContext.Update(t.Entity);
+            //p.dbContext.SaveChanges();
+        }
+        else
+        {
+
+            for (int i = p.dbContext.Set<Timing>().ToList().Last().Id - 1; i > -1; i--)
+            {
+                if (p.dbContext.Set<Timing>().Include(z => z.Start).Any(x => x.Start.Chip == received))
+                {
+                    if (TimeOnly.FromDateTime(DateTime.Now) - p.dbContext.Set<Timing>().ToList().First(x => x.Id == i).TimeNow > timeOfDifference)
+                    {
+                        var t = p.dbContext.Add(new Timing
+                        {
+                            TimeNow = to,
+
+                            Start = p.dbContext.Set<Start>().ToList().First(x => x.Chip == received)
+                        });
+                        p.dbContext.SaveChanges();
+                        CountOfLapsForHim = p.dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(z => z.Partisipation).ThenInclude(c => c.Group).ThenInclude(v => v.Distance).ToList().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
+                        
+                        t.Entity.Circle = p.GetOfLapsForHim(p.dbContext, t.Entity);
+                        t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start?.StartTime - t.Entity.TimeNow));
+
+                        p.dbContext.SaveChanges();
+                        t.Entity.CircleTime = p.GetTimeOfLap(p.dbContext, t.Entity);
+                        t.Entity.IsFinish = p.GetIsFinish(t.Entity.Id);
+                        if (t.Entity.IsFinish.Value)
+                        {
+                            CountOfFinishingPeople++;
+                            idsOfFinishingPeople.Add(received);
+                        }
+                        p.RefrechPlace(p.dbContext, t.Entity);
+                        p.RefrechAbsolutePlace(p.dbContext, t.Entity);
+                        //p.dbContext.Update(t.Entity);
+                    }
+                    break;
+                }
+            }
+
         }
 
     }

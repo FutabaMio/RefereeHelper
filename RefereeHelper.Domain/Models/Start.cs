@@ -18,7 +18,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Ключ Команды
         /// </summary>
-        public int TeamId { get; set; }
+        public int? TeamId { get; set; }
         
         /// <summary>
         /// Команда
