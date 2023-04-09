@@ -138,7 +138,7 @@ void Demo()
     Process("Xi", p.dbContext);
     Thread.Sleep(10);
     Process("P4BK", p.dbContext);
-    Thread.Sleep(10);
+    Thread.Sleep(5000);
     Process("1", p.dbContext);
     Thread.Sleep(10);
     Process("Xi", p.dbContext);
