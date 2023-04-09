@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RefereeHelper;
 using RefereeHelper.EntityFramework;
 using RefereeHelper.EntityFramework.Services;
@@ -22,7 +23,7 @@ while (true)
     switch (code)
     {
         case "1":
-            First();
+            Demo();
             break;
         case "2":
             Second();
@@ -56,6 +57,7 @@ void ViewTiming(DbContext dbContext)
     Console.WriteLine("Имя\tТекущее время\tВремя со старта\tКруг\tПозиция\tПозиция по кругу Время круга\tФинишировал");
     var ts = dbContext.Set<Timing>().Select(x => new Timing
     {
+        IsFinish = x.IsFinish,
         TimeNow = x.TimeNow,
         TimeFromStart = x.TimeFromStart,
         Circle = x.Circle,
@@ -85,15 +87,6 @@ void ViewTiming(DbContext dbContext)
     }).ToList();
     foreach (var s in ts)
     {
-        bool finish = false;
-        if (s.IsFinish == null)
-        {
-            finish = false;
-        }
-        else
-        {
-            finish = (bool)s.IsFinish;
-        }
         Console.WriteLine($"{s?.Start?.Partisipation?.Member?.Name}" +
                         $"\t{s?.TimeNow?.Hour}:{s?.TimeNow?.Minute}:{s?.TimeNow?.Second}.{s?.TimeNow?.Millisecond}" +
                         $"\t{s?.TimeFromStart?.Hour}:{s?.TimeFromStart?.Minute}:{s?.TimeFromStart?.Second}.{s?.TimeFromStart?.Millisecond}" +
@@ -101,7 +94,7 @@ void ViewTiming(DbContext dbContext)
                         $"\t{s?.PlaceAbsolute}" +
                         $"\t{s?.Place}" +
                         $"\t\t {s?.CircleTime?.Hour}:{s?.CircleTime?.Minute}:{s?.CircleTime?.Second}.{s?.CircleTime?.Millisecond}" +
-                        $"\t{finish}");
+                        $"\t{s.IsFinish}");
     }
 }
 void First()
@@ -145,12 +138,14 @@ void Demo()
     Process("Xi", p.dbContext);
     Thread.Sleep(10);
     Process("P4BK", p.dbContext);
-
+    Thread.Sleep(10);
+    Process("1", p.dbContext);
     Thread.Sleep(10);
     Process("Xi", p.dbContext);
     Thread.Sleep(10);
     Process("P4BK", p.dbContext);
-    
+    Thread.Sleep(10);
+    Process("1", p.dbContext);
 
 }
 void CheckDB()
@@ -222,10 +217,11 @@ void GiveInfo()
 void ClearTiming(DbContext dbContext)
 {
     dbContext.Set<Timing>().ExecuteDelete();
+    idsOfFinishingPeople.Clear();
 }
 void Process(string received, DbContext dbContext)
 {
-    if (idsOfFinishingPeople.Any(x => x == received))
+    if (!idsOfFinishingPeople.Any(x => x == received))
     {
         TimeOnly to = TimeOnly.FromDateTime(DateTime.Now);
         GenericDataService<Timing> DataService = new(new RefereeHelperDbContextFactory());
@@ -253,7 +249,7 @@ void Process(string received, DbContext dbContext)
                 CountOfFinishingPeople++;
                 idsOfFinishingPeople.Add(received);
             }
-
+            dbContext.SaveChanges();
             p.RefrechPlace(dbContext, t.Entity);
             p.RefrechAbsolutePlace(dbContext, t.Entity);
             //p.dbContext.Update(t.Entity);
@@ -366,6 +362,18 @@ void Third()
         Discharge = discharge,
         Club = club
     };
+    Member Third = new()
+    {
+        Name = "Николай",
+        FamilyName = "Соболев",
+        SecondName = "Сергеевич",
+        Phone = "89964429706",
+        City = "Владимир",
+        BornDate = new DateTime(2002, 6, 1),
+        Gender = true,
+        Discharge = discharge,
+        Club = club
+    };
     Member Michle = new()
     {
         Name = "Михаил",
@@ -404,6 +412,12 @@ void Third()
         Secretary = "Злнск",
         TypeAge = true
     };
+    Partisipation partisipationThird = new()
+    {
+        Competition = competition,
+        Member = Third,
+        Group = group
+    };
     Partisipation partisipationMe = new()
     {
         Competition = competition,
@@ -428,6 +442,14 @@ void Third()
         Number = 88,
         Chip = "P4BK"
     };
+    Start startTh = new()
+    {
+        Partisipation = partisipationThird,
+        Team = team,
+        StartTime = distance.StartTime,
+        Number = 818,
+        Chip = "1"
+    };
     Start startMichle = new()
     {
         Partisipation = partisipationMichle,
@@ -440,6 +462,7 @@ void Third()
     {
         dbContext.Set<Start>().Add(startMe);
         dbContext.Set<Start>().Add(startMichle);
+        dbContext.Set<Start>().Add(startTh);
         dbContext.SaveChanges();
     }
 }
