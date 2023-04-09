@@ -75,7 +75,7 @@ namespace RefereeHelper
             d.Start.Partisipation.Group = dbContext.Set<Group>().First(x => x.Id == d.Start.Partisipation.GroupId);
             d.Start.Partisipation.Group.Distance = dbContext.Set<Distance>().First(x => x.Id == d.Start.Partisipation.Group.DistanceId);
             var ts = dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(c => c.Partisipation).ThenInclude(v => v.Group)
-                .Where(m => m.Start.Partisipation.Group.DistanceId == d.Start.Partisipation.Group.DistanceId && m.Circle == d.Circle)
+                .Where(m => m.Start.Partisipation.Group.Distance.Id == d.Start.Partisipation.Group.Distance.Id && m.Circle == d.Circle)
                 .OrderByDescending(n => n.TimeFromStart).ToList();
             int i = 0;
             foreach (var k in ts)
@@ -116,6 +116,7 @@ namespace RefereeHelper
             var t = dbContext.Set<Timing>().Select(x => new Timing
             {
                 Id = x.Id,
+                Circle = x.Circle,
                 Start = new Start
                 {
                     Partisipation = new Partisipation
@@ -133,10 +134,18 @@ namespace RefereeHelper
             }).ToList().First(x => x.Id == idOfTiming);
 
             //var t = DataService.Get(idOfTiming).Result;
-            if (t.Start?.Partisipation.Group?.Distance.Circles < t.Circle)
+            if (t.Start?.Partisipation.Group?.Distance.Circles-1 < t.Circle)
+            {
+                if(t.Start?.Partisipation.Group?.Distance.Circles == t.Circle)
+                {
+                    return true;
+                }
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
         /// <summary>
         /// Определяет время круга для определённого спортсмена.
