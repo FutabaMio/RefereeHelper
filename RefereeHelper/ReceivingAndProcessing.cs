@@ -160,9 +160,15 @@ namespace RefereeHelper
                 Id = x.Id,
                 Start = x.Start
             }).Where(x => x.Start.Id == t.Start.Id).ToList().Count() == 0)
-            //if (DataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
+            {
                 return t.TimeFromStart.Value;
-            return TimeOnly.FromTimeSpan(t.TimeFromStart.Value - dbContext.Set<Timing>().Where(x => x.StartId == t.StartId).ToList().Last(z => z.Id != t.Id).TimeFromStart.Value);
+            }
+            else
+            {
+                var k = dbContext.Set<Timing>().Where(x => x.StartId == t.StartId).ToList().Last(z => z.Id != t.Id);
+                return TimeOnly.FromTimeSpan(k.TimeFromStart.Value - t.TimeFromStart.Value);
+            }
+            //if (DataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
         }
         /// <summary>
         /// Определяет количество кругов для определённого человека.
