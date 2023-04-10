@@ -32,6 +32,9 @@ namespace RefereeHelper.OptionsWindows
             {
                 List<Club> clubs = db.Clubs.ToList();
                 clubsList.ItemsSource=clubs;
+
+                List<Discharge> discharges= db.Discharges.ToList();
+                dischargeList.ItemsSource=discharges;
             }
         }
 
