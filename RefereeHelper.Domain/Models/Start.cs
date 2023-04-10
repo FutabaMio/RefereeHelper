@@ -35,7 +35,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Стартовое время
         /// </summary>
-        public TimeOnly? StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
         public /*sk*/virtual IEnumerable<Timing> Timings { get; set; }
 
     }
