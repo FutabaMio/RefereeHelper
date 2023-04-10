@@ -1,4 +1,5 @@
-﻿using RefereeHelper.Models;
+﻿using RefereeHelper.EntityFramework;
+using RefereeHelper.Models;
 using RefereeHelper.Views;
 using System;
 using System.Collections.Generic;
@@ -29,18 +30,29 @@ namespace RefereeHelper.OptionsWindows
             InitializeComponent();
             Start=start;
             DataContext=Start;
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                List<Partisipation> partisipations = db.Partisipations.ToList();
+                List<Team> teams = db.Teams.ToList();
+
+                participationList.DataContext = partisipations;
+                participationList.ItemsSource = partisipations;
+                teamList.DataContext = teams;
+                teamList.ItemsSource = teams;
+            }
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            var p = (Participation)participationList.SelectedItem;
+            var p = (Partisipation)participationList.SelectedItem;
             Start.PartisipationId = p.Id;
             var t = (Team)teamList.SelectedItem;
             Start.TeamId = t.Id;
             Int32.TryParse(startNumberBox.Text, out int numb);
             Start.Number=numb;
             Start.Chip=chipBox.Text;
-
+            Start.StartTime = (DateTime)startTimePicker.Value;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
