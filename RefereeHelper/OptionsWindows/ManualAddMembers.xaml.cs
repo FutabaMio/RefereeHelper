@@ -46,7 +46,7 @@ namespace RefereeHelper.OptionsWindows
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             Member.Id= currentID;
-            Member.FamilyName = secondNameTextBox.Text;
+            Member.FamilyName = familyNameTextBox.Text;
             Member.Name=nameTextBox.Text;
             if (girl.IsChecked==true)
             {
@@ -56,13 +56,13 @@ namespace RefereeHelper.OptionsWindows
                 Member.Gender=true;
             }
             Member.BornDate = bornDatePicker.SelectedDate.Value.Date;
-            Member.FamilyName = familyNameTextBox.Text;
+            Member.SecondName = secondNameTextBox.Text;
             //Member.ClubId = clubsList.SelectedIndex;
-            Member.Club = (Club)clubsList.SelectedItem;
-            //Member.ClubId = Member.Club.Id;
+            var c = (Club)clubsList.SelectedItem;
+            Member.ClubId = c.Id;
             //Member.DischargeId = dischargeList.SelectedIndex;
-            Member.Discharge = (Discharge)dischargeList.SelectedItem;
-            //Member.DischargeId = Member.Discharge.Id;
+            var d = (Discharge)dischargeList.SelectedItem;
+            Member.DischargeId = d.Id;
             DialogResult=true;
         }
 

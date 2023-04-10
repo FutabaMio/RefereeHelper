@@ -34,12 +34,11 @@ namespace RefereeHelper.Views
         public MembersView()
         {
             InitializeComponent();
-            Loaded+=MembersView_Loaded;
-            
+            RefreshData();            
            
         }
         int ID = 0;
-        private void MembersView_Loaded(object sender, RoutedEventArgs e)
+        public void RefreshData()
         {
             using(var db = new RefereeHelperDbContextFactory().CreateDbContext())
             {
@@ -56,7 +55,6 @@ namespace RefereeHelper.Views
 
         private void AddMember_Click(object sender, RoutedEventArgs e)
         { 
-            MessageBox.Show("Айди добавления:" + ID);
             using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
             {
                 ManualAddMembers manualAddWindow = new ManualAddMembers(new Member(), ID);
@@ -67,6 +65,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
+            RefreshData();
         }
 
         private void AddFromExcel_Click(object sender, RoutedEventArgs e)
@@ -132,7 +131,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
-                
+            RefreshData();
         }
     }
 }
