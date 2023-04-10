@@ -47,12 +47,12 @@ namespace RefereeHelper.OptionsWindows
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            Partisipation.Member=(Member)membersList.SelectedItem;
-            Partisipation.MemberId=Partisipation.Member.Id;
-            Partisipation.Competition = (Competition)competitionsList.SelectedItem;
-            Partisipation.CompetitionId = Partisipation.Competition.Id;
-            Partisipation.Group = (Group)groupsList.SelectedItem;
-            Partisipation.GroupId=Partisipation.Group.Id;
+            var m=(Member)membersList.SelectedItem;
+            Partisipation.MemberId=m.Id;
+            var c = (Competition)competitionsList.SelectedItem;
+            Partisipation.CompetitionId = c.Id;
+            var g = (Group)groupsList.SelectedItem;
+            Partisipation.GroupId=g.Id;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
