@@ -49,8 +49,8 @@ namespace RefereeHelper.OptionsWindows
             int.TryParse(maxAgeBox.Text, out int maxAge);
             Group.StartAge = minAge;
             Group.EndAge = maxAge;
-            Group.Distance = (Distance)distancesList.SelectedItem;
-            Group.DistanceId = Group.Distance.Id;
+            var d = (Distance)distancesList.SelectedItem;
+            Group.DistanceId = d.Id;
             DialogResult=true;
         }
     }
