@@ -29,10 +29,10 @@ namespace RefereeHelper.Views
         public GroupsView()
         {
             InitializeComponent();
-            Loaded+=GroupsView_Loaded;
+            RefreshData();
         }
 
-        private void GroupsView_Loaded(object sender, RoutedEventArgs e)
+        public void RefreshData()
         {
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
@@ -56,7 +56,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
-                
+            RefreshData();
         }
 
         private void groupsTable_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -71,7 +71,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
-                
+            RefreshData();
         }
     }
 }

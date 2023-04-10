@@ -1,4 +1,6 @@
-﻿using RefereeHelper.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RefereeHelper.EntityFramework;
+using RefereeHelper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,13 @@ namespace RefereeHelper.OptionsWindows
             InitializeComponent();
             Group = group;
             DataContext= Group;
+            using(var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                List<Distance> distances = db.Distances.ToList();
+                distancesList.DataContext = distances;
+                distancesList.ItemsSource = distances;
+            }
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
@@ -40,6 +49,8 @@ namespace RefereeHelper.OptionsWindows
             int.TryParse(maxAgeBox.Text, out int maxAge);
             Group.StartAge = minAge;
             Group.EndAge = maxAge;
+            Group.Distance = (Distance)distancesList.SelectedItem;
+            Group.DistanceId = Group.Distance.Id;
             DialogResult=true;
         }
     }

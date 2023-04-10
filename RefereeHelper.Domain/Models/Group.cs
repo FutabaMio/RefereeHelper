@@ -28,11 +28,11 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Нижний порог возраста
         /// </summary>
-        public decimal StartAge { get; set; }
+        public int StartAge { get; set; }
         /// <summary>
         /// Верхний порог возраста
         /// </summary>
-        public decimal EndAge { get; set; }
+        public int EndAge { get; set; }
         public /*sk*/virtual IEnumerable<Member> Members { get; set; }
     }
 }
