@@ -30,13 +30,15 @@ namespace RefereeHelper.Views
     public partial class MembersView : UserControl
     {
         //ApplicationContext db = new ApplicationContext();
+        
         public MembersView()
         {
             InitializeComponent();
-
             Loaded+=MembersView_Loaded;
+            
+           
         }
-
+        int ID = 0;
         private void MembersView_Loaded(object sender, RoutedEventArgs e)
         {
             using(var db = new RefereeHelperDbContextFactory().CreateDbContext())
@@ -45,15 +47,19 @@ namespace RefereeHelper.Views
                 db.Members.Load(); //Загружаем участников из бд
                 DataContext = db.Members.Local.ToObservableCollection(); //устанавливаем данные в качестве контекста
                 MembersList.DataContext = db.Members.Local.ToBindingList();
+                ID=db.Members.Count()+1;
                 db.SaveChanges();
+                
             }
+            
         }
 
         private void AddMember_Click(object sender, RoutedEventArgs e)
-        {
+        { 
+            MessageBox.Show("Айди добавления:" + ID);
             using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                ManualAddMembers manualAddWindow = new ManualAddMembers(new Member());
+                ManualAddMembers manualAddWindow = new ManualAddMembers(new Member(), ID);
                 if (manualAddWindow.ShowDialog() == true)
                 {
                     Member Member = manualAddWindow.Member;
@@ -61,7 +67,6 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
-               
         }
 
         private void AddFromExcel_Click(object sender, RoutedEventArgs e)
@@ -117,7 +122,7 @@ namespace RefereeHelper.Views
 
         private void MembersList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ManualAddMembers manualAddWindow = new ManualAddMembers(new Member());
+            ManualAddMembers manualAddWindow = new ManualAddMembers(new Member(), ID);
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
                 if (manualAddWindow.ShowDialog() == true)

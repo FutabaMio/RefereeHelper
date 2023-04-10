@@ -28,13 +28,26 @@ namespace RefereeHelper.OptionsWindows
             InitializeComponent();
             Club = club;
             DataContext = Club;
-            //regionsList.ItemsSource = db.Regions.Local.ToBindingList();
+            RefreshData();
+                //regionsList.ItemsSource = db.Regions.Local.ToBindingList();
+        }
+
+        public void RefreshData()
+        {
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                List<Region> regions = db.Regions.ToList();
+                regionsList.DataContext = regions;
+                regionsList.ItemsSource = regions;
+            }
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             Club.Name = clubNameTextBox.Text;
             Club.Couch = couchTextBox.Text;
+            Club.Region = (Region)regionsList.SelectedItem;
             DialogResult=true;
         }
 
@@ -55,6 +68,7 @@ namespace RefereeHelper.OptionsWindows
                     db.SaveChanges();
                 }
             }
+            RefreshData();
               
         }
     }

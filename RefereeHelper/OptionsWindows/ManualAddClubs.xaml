@@ -24,14 +24,14 @@
         <TextBox Name="couchTextBox" Grid.Column="0" Grid.Row="1" Margin="0,35,266,45" Grid.ColumnSpan="2"/>
         <Label Grid.Column="0" Grid.Row="2" Content="Регион" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16" Grid.ColumnSpan="2" Margin="0,0,266,0"/>
         <ListBox Name="regionsList" Grid.Column="0" Grid.Row="2" Margin="0,35,0,0">
-            <ListBox.ItemTemplate>
+           <!-- <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
                         <TextBlock Text="{Binding Region.codeNumber}" Name="Number" FontSize="20"/>
                         <TextBlock Text="{Binding Region.Name}" Name="Name" FontSize="25"/>
                     </StackPanel>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
+            </ListBox.ItemTemplate> -->
         </ListBox>
         <Button Name="RegionAdd" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Height="30" Margin="20,35,20,0" Content="Добавить регион" Click="RegionAdd_Click"/>
         <Button Name="AcceptButton" Grid.Column="1" Grid.Row="3" Content="OK" Click="AcceptButton_Click"/>

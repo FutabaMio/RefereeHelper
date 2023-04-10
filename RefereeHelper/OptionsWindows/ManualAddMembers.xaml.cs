@@ -23,17 +23,21 @@ namespace RefereeHelper.OptionsWindows
     public partial class ManualAddMembers : Window
     {
         public Member Member { get; private set; }
-        public ManualAddMembers(Member member)
+        int currentID=0;
+        public ManualAddMembers(Member member, int ID)
         {
             InitializeComponent();
+            currentID=ID;
             Member = member;
             DataContext= Member;
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
                 List<Club> clubs = db.Clubs.ToList();
+                clubsList.DataContext = clubs;
                 clubsList.ItemsSource=clubs;
 
                 List<Discharge> discharges= db.Discharges.ToList();
+                dischargeList.DataContext = discharges;
                 dischargeList.ItemsSource=discharges;
             }
         }
@@ -41,7 +45,7 @@ namespace RefereeHelper.OptionsWindows
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            //DateOnly born = new(bornDatePicker.SelectedDate.Value.Year, bornDatePicker.SelectedDate.Value.Month, bornDatePicker.SelectedDate.Value.Day);
+            Member.Id= currentID;
             Member.FamilyName = secondNameTextBox.Text;
             Member.Name=nameTextBox.Text;
             if (girl.IsChecked==true)
@@ -51,9 +55,14 @@ namespace RefereeHelper.OptionsWindows
             else {
                 Member.Gender=true;
             }
-            Member.BornDate =bornDatePicker.SelectedDate.Value.Date;
+            Member.BornDate = bornDatePicker.SelectedDate.Value.Date;
             Member.FamilyName = familyNameTextBox.Text;
-            Member.ClubId = clubsList.SelectedIndex;
+            //Member.ClubId = clubsList.SelectedIndex;
+            Member.Club = (Club)clubsList.SelectedItem;
+            //Member.ClubId = Member.Club.Id;
+            //Member.DischargeId = dischargeList.SelectedIndex;
+            Member.Discharge = (Discharge)dischargeList.SelectedItem;
+            //Member.DischargeId = Member.Discharge.Id;
             DialogResult=true;
         }
 
