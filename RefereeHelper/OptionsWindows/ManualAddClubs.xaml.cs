@@ -47,7 +47,10 @@ namespace RefereeHelper.OptionsWindows
         {
             Club.Name = clubNameTextBox.Text;
             Club.Couch = couchTextBox.Text;
-            Club.Region = (Region)regionsList.SelectedItem;
+            //Club.Region = (Region)regionsList.SelectedItem;
+           var a= (Region)regionsList.SelectedItem;
+            Club.RegionId = a.Id;
+           // Club.Region=
             DialogResult=true;
         }
 

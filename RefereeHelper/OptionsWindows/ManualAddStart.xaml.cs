@@ -18,7 +18,7 @@ namespace RefereeHelper.OptionsWindows
     /// <summary>
     /// Логика взаимодействия для ManualAddStart.xaml
     /// </summary>
-    public partial class ManualAddStart : Page
+    public partial class ManualAddStart : Window
     {
         public ManualAddStart()
         {

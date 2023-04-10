@@ -62,9 +62,9 @@ namespace RefereeHelper.Views
 
         private void clubDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ManualAddClub manualAddClub = new ManualAddClub(new Club());
+           
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
-            {
+            { ManualAddClub manualAddClub = new ManualAddClub(new Club());
                 if (manualAddClub.ShowDialog() == true)
                 {
                     Club Club = manualAddClub.Club;
