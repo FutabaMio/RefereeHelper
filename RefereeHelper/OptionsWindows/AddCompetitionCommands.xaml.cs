@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using RefereeHelper.Models;
 
 namespace RefereeHelper.OptionsWindows
 {
@@ -19,12 +20,18 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class AddCompetitionCommands : Window
     {
+        public Team Team { get; private set; }
         public AddCompetitionCommands()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            Team.Name=teamNameTextBox.Text;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

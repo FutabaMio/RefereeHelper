@@ -19,11 +19,11 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0" Content="Название команды эстафеты" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
+        <Label Grid.Column="0" Grid.Row="0" Content="Название команды:" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
         <TextBox Name="teamNameTextBox" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Height="30" Grid.ColumnSpan="2"/>
-        <Label Grid.Column="0" Grid.Row="1" Content="Группа команды" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
-        <ListBox Name="groupList" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Height="30"/>
-        <Button Grid.Column="1" Grid.Row="3" Content="ОК"/>
-        <Button Grid.Column="2" Grid.Row="3" Content="Отмена" Click="Button_Click"/>
+       <!-- <Label Grid.Column="0" Grid.Row="1" Content="Группа команды" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
+        <ListBox Name="groupList" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Height="30"/> -->
+        <Button Grid.Column="1" Grid.Row="3" Name="AcceptButton" Content="ОК" Click="AcceptButton_Click"/>
+        <Button Grid.Column="2" Grid.Row="3" Name="CancelButton" Content="Отмена" Click="CancelButton_Click"/>
     </Grid>
 </Window>
