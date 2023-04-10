@@ -27,22 +27,15 @@ namespace RefereeHelper.Views
         public TimingView()
         {
             InitializeComponent();
-
-            Loaded += TimingView_Loaded;
             dt.Tick += new EventHandler(dtTick);
             dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
             LoadEvents();
+            LoadData();
 
 
         }
         int countOfStartingPeople = 0, countOfFinishingPeople = 0;
-        private void TimingView_Loaded(object sender, RoutedEventArgs e)
-        {
-
-
-
-
-        }
+       
         /// <summary>
         /// Функция ручного добавления добавления данных в тайминг.
         /// </summary>
@@ -62,9 +55,10 @@ namespace RefereeHelper.Views
             i = 0;
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
+                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member.Name).ToList();
                 var teams = dbContext.Teams.ToList();
                 TeamTimer.DataContext = timings;
+                TeamTimer.ItemsSource = timings;
                 /*foreach (var t in timings)
                 {
                     i++;
