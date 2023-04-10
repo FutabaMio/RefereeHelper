@@ -1,4 +1,6 @@
-﻿using RefereeHelper.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RefereeHelper.EntityFramework;
+using RefereeHelper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,11 @@ namespace RefereeHelper.OptionsWindows
             InitializeComponent();
             Member = member;
             DataContext= Member;
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                List<Club> clubs = db.Clubs.ToList();
+                clubsList.ItemsSource=clubs;
+            }
         }
 
 
@@ -43,6 +50,7 @@ namespace RefereeHelper.OptionsWindows
             }
             Member.BornDate =bornDatePicker.SelectedDate.Value.Date;
             Member.FamilyName = familyNameTextBox.Text;
+            Member.ClubId = clubsList.SelectedIndex;
             DialogResult=true;
         }
 
