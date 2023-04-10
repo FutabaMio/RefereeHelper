@@ -301,7 +301,7 @@ void Second()
 {
     Console.Write("Введите номер:");
     string msg = Console.ReadLine();
-    UDPReceive u = new(27069);
+    UDPReceive u = new();
     
     string receive;
     //Send(msg);
@@ -440,7 +440,7 @@ void Third()
         Team = team,
         StartTime = distance.StartTime,
         Number = 88,
-        Chip = "P4BK"
+        Chip = "fdsfdsfsd"
     };
     Start startTh = new()
     {
@@ -448,7 +448,7 @@ void Third()
         Team = team,
         StartTime = distance.StartTime,
         Number = 818,
-        Chip = "1"
+        Chip = "w24eresfs"
     };
     Start startMichle = new()
     {
@@ -456,7 +456,7 @@ void Third()
         Team = team,
         StartTime = distance.StartTime,
         Number = 54,
-        Chip = "Xi"
+        Chip = "A0000006888"
     };
     using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
     {

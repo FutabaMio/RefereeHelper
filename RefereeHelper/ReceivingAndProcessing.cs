@@ -17,21 +17,29 @@ namespace RefereeHelper
     /// </summary>
     public class UDPReceive
     {
+        private static UDPReceive instance;
         public TimeOnly time;
         public int secondOfDifference = 5;
         public TimeSpan timeOfDifference;
         UdpReceiveResult result;
         byte[]? datagram;
         string? received;
-        public UdpClient client = new UdpClient(27069);
+        public UdpClient client;
+
 
         /// <summary>
         /// Конструктор класса. Создаёт UDPClient с портом и обновляет время разницы.
         /// </summary>
-        /// <param name="port"> - порт, с которым создаётся UDPClient</param>
-        public UDPReceive(int port)
+        private UDPReceive()
         {
             timeOfDifference = new(0, 0, secondOfDifference);
+            client = new UdpClient(27069);
+        }
+        public static UDPReceive GetUdpClient()
+        {
+            if (instance == null)
+                instance = new UDPReceive();
+        return instance;
         }
 
         /// <summary>
