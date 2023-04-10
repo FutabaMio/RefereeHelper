@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RefereeHelper.EntityFramework;
+using RefereeHelper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,10 @@ namespace RefereeHelper.Views
         public Start()
         {
             InitializeComponent();
-            Loaded+=Start_Loaded;
+            RefreshData();
         }
 
-        private void Start_Loaded(object sender, RoutedEventArgs e)
+        public void RefreshData()
         {
             using (var db= new RefereeHelperDbContextFactory().CreateDbContext())
             {
