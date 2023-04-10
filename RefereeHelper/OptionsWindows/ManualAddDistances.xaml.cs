@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
 
 namespace RefereeHelper.OptionsWindows
 {
@@ -37,10 +38,11 @@ namespace RefereeHelper.OptionsWindows
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             Distance.Name = distanceNameTextBox.Text;
-            Decimal.TryParse(lengthNameTextBox.Text, out decimal lenght);
+            Int32.TryParse(lengthNameTextBox.Text, out int lenght);
             Distance.Length= lenght;
-            Decimal.TryParse(heightNameTextBox.Text, out decimal height);
+            Int32.TryParse(heightNameTextBox.Text, out int height);
             Distance.Height= height;
+            Distance.StartTime= (DateTime)startTimePicker.Value;
             DialogResult=true;
         }
     }

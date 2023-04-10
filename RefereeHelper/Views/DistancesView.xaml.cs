@@ -29,10 +29,11 @@ namespace RefereeHelper.Views
         public DistancesView()
         {
             InitializeComponent();
-            Loaded+=DistancesView_Loaded;
+            RefreshData();
+           
         }
 
-        private void DistancesView_Loaded(object sender, RoutedEventArgs e)
+        public void RefreshData()
         {
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
@@ -41,7 +42,6 @@ namespace RefereeHelper.Views
                 DataContext = db.Distances.Local.ToObservableCollection();
                 distanceTable.DataContext = db.Distances.Local.ToBindingList();
             }
-           
         }
 
         private void AddDistanceButton_Click(object sender, RoutedEventArgs e)
@@ -56,8 +56,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
-               
-            
+            RefreshData();
         }
 
         private void distanceTable_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -72,7 +71,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
-               
+            RefreshData();
         }
     }
 }

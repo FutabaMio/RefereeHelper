@@ -16,11 +16,11 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Длина дистанции
         /// </summary>
-        public decimal Length { get; set; }
+        public int Length { get; set; }
         /// <summary>
         /// Перепад высот дистанции
         /// </summary>
-        public decimal Height { get; set; }
+        public int Height { get; set; }
         /// <summary>
         /// Кол-во кругов дистанции
         /// </summary>
@@ -28,7 +28,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Стартовое время дистанции
         /// </summary>
-        public TimeOnly StartTime { get; set; }
+        public DateTime StartTime { get; set; }
         public /*sk*/virtual IEnumerable<Group> Groups { get; set; }
 
     }
