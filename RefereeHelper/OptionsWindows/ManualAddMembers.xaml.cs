@@ -46,7 +46,7 @@ namespace RefereeHelper.OptionsWindows
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             Member.Id= currentID;
-            Member.FamilyName = familyNameTextBox.Text;
+            Member.SecondName = familyNameTextBox.Text;
             Member.Name=nameTextBox.Text;
             if (girl.IsChecked==true)
             {
@@ -56,7 +56,7 @@ namespace RefereeHelper.OptionsWindows
                 Member.Gender=true;
             }
             Member.BornDate = bornDatePicker.SelectedDate.Value.Date;
-            Member.SecondName = secondNameTextBox.Text;
+            Member.FamilyName = secondNameTextBox.Text;
             //Member.ClubId = clubsList.SelectedIndex;
             var c = (Club)clubsList.SelectedItem;
             Member.ClubId = c.Id;
