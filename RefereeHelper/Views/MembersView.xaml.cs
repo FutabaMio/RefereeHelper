@@ -92,17 +92,17 @@ namespace RefereeHelper.Views
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
             Epplus.ExcelPackage package = new Epplus.ExcelPackage(new FileInfo(fileName));
-            var sheet = package.Workbook.Worksheets.Add("лист1");
+            var sheet = package.Workbook.Worksheets["лист1"];
             Member member = new()
             {
                 FamilyName = sheet.Cells[2, 1].Value.ToString(),
                 Name = sheet.Cells[2, 2].Value.ToString(),
                 SecondName=sheet.Cells[2, 3].Value.ToString(),
-                ClubId=(int)sheet.Cells[2, 4].Value,
-                DischargeId=(int)sheet.Cells[2, 5].Value,
-                BornDate=(DateTime)sheet.Cells[2, 6].Value,
+                ClubId=Convert.ToInt32(sheet.Cells[2, 4].Value),
+                DischargeId=Convert.ToInt32(sheet.Cells[2, 5].Value),
+                BornDate=Convert.ToDateTime(sheet.Cells[2, 6].Value),
                 City=sheet.Cells[2, 7].Value.ToString(),
-                Gender=(bool)sheet.Cells[2, 8].Value
+                Gender=Convert.ToBoolean(sheet.Cells[2, 8].Value)
             };
                 db.Set<Member>().Add(member);
                 db.SaveChanges();
