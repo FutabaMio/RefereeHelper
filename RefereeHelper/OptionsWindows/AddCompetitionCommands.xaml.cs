@@ -29,7 +29,7 @@ namespace RefereeHelper.OptionsWindows
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             int ID = 1;
-            //Team.Id = ID;
+            Team.Id = ID;
             ID++;
             Team.Name=teamNameTextBox.Text;
         }

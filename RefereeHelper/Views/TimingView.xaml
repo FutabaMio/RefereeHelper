@@ -11,9 +11,9 @@
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="28"/>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="157*"/>
-            <RowDefinition Height="125*"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="108*"/>
+            <RowDefinition Height="181*"/>
             <RowDefinition Height="27*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
@@ -23,7 +23,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-          <!--  <ComboBox Grid.Row="0" Name="EventsListBox" Grid.Column="2" ItemsSource="{Binding}"/> -->
+            <!--  <ComboBox Grid.Row="0" Name="EventsListBox" Grid.Column="2" ItemsSource="{Binding}"/> -->
         </Grid>
 
         <Grid Grid.Row="2">
@@ -32,14 +32,14 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox Name="secundomer" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBox Name="secundomer" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" IsReadOnly="True" BorderThickness="0"/>
             <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button Name="StartButton" Click="StartButton_Click" Content="Старт" Grid.Row="0" FontSize="20" Margin="10,10,10,10"/>
-                <Button Click="TimerStop" Content="Стоп" Grid.Row="1" FontSize="20" Margin="10,10,10,10"/>
+                <Button Name="StartButton" Click="StartButton_Click" Content="Старт" Grid.Row="0" FontSize="14" Margin="10,10,10,10"/>
+                <Button Name="StopButton" Click="TimerStop" Content="Стоп" Grid.Row="1" FontSize="14" Margin="10,10,10,10"/>
 
             </Grid>
         </Grid>
@@ -51,7 +51,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-           <!-- <Button Grid.Column="0" Content="Загрузить из файла"/> -->
+            <!-- <Button Grid.Column="0" Content="Загрузить из файла"/> -->
             <Button Grid.Column="0" Content="Добавить из базы"/>
             <Button Grid.Column="1" Content="Добавить вручную"/>
             <Button Grid.Column="2" Content="Печать стартового протокола"/>
@@ -63,7 +63,7 @@
                 <ColumnDefinition Width="17*"/>
                 <ColumnDefinition Width="63*"/>
             </Grid.ColumnDefinitions>
-            <CheckBox Grid.Column="3" Content="On|Off" Name="automode" HorizontalAlignment="Left" FontSize="20" Checked="CheckBox_Checked" Margin="126,0,0,0" Width="79"/>
+            <CheckBox Grid.Column="3" Content="Авт./Ручн." Name="automode" HorizontalAlignment="Left" FontSize="20" Checked="CheckBox_Checked" Margin="126,0,0,0" Width="119"/>
             <Button Grid.Row="0" Grid.Column="2" Content="OK" HorizontalAlignment="Left" Width="100" Grid.ColumnSpan="2"/>
             <TextBox Grid.Row="0" Grid.Column="1" Name="textBox_TimeOfDifference" Text="Таймер считывания меток" Margin="0,0,5,0"/>
         </Grid>
