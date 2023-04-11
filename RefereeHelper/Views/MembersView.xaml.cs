@@ -21,6 +21,9 @@ using System.Data;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.EntityFramework;
+using Epplus = OfficeOpenXml;
+using EpplusSyle = OfficeOpenXml.Style;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
 
 namespace RefereeHelper.Views
 {
@@ -70,18 +73,34 @@ namespace RefereeHelper.Views
 
         private void AddFromExcel_Click(object sender, RoutedEventArgs e)
         {
-            /*OpenFileDialog fileDialog = new OpenFileDialog();
+            //string FilePath = string.Empty;
+            OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Filter = "Файлы Excel 2003(.xls)|*.xls|Файлы Excel 2007+(.xlsx)|*.xlsx|All files (*.*)|*.*";
-            if(fileDialog.ShowDialog() == true)
+            if(fileDialog.ShowDialog()==true)
             {
-               fileName = fileDialog.FileName;
-                OpenExcelFile(fileName);
-            }*/
+                System.IO.Path.GetDirectoryName(fileDialog.FileName);
+                OpenExcelFile(fileDialog.FileName);
+                //fileName = fileDialog.FileName;
+                //OpenExcelFile(fileName);
+            }
         }
 
 
         private void OpenExcelFile(string path)
         {
+            Epplus.ExcelPackage package = new Epplus.ExcelPackage(new FileInfo(path));
+            var sheet = package.Workbook.Worksheets.Add("лист1");
+            Member member = new()
+            {
+                FamilyName = sheet.Cells[2, 1].Value.ToString(),
+                Name = sheet.Cells[2, 2].Value.ToString(),
+                SecondName=sheet.Cells[2, 3].Value.ToString(),
+                ClubId=(int)sheet.Cells[2, 5].Value,
+                DischargeId=(int)sheet.Cells[2, 6].Value,
+                BornDate=sheet.Cells[2, 7].Value.ToString(),
+                City=sheet.Cells[2,8].Value.ToString(),
+                Gender=sheet.Cells[2,9].Value.ToString(),
+            };
             /*FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read);
             IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream);
             DataSet db = reader.AsDataSet(new ExcelDataSetConfiguration()
