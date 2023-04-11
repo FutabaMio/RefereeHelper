@@ -93,23 +93,19 @@ namespace RefereeHelper.Views
             {
             Epplus.ExcelPackage package = new Epplus.ExcelPackage(new FileInfo(fileName));
             var sheet = package.Workbook.Worksheets["лист1"];
-                int rowsCounter = sheet.Dimension.End.Row;
-                for(int i=0; i<rowsCounter; i++)
-                {
  Member member = new()
                  {
-                FamilyName = sheet.Cells[2, 1].Value.ToString(),
-                Name = sheet.Cells[2, 2].Value.ToString(),
-                SecondName=sheet.Cells[2, 3].Value.ToString(),
-                ClubId=Convert.ToInt32(sheet.Cells[2, 4].Value),
-                DischargeId=Convert.ToInt32(sheet.Cells[2, 5].Value),
-                BornDate=Convert.ToDateTime(sheet.Cells[2, 6].Value),
-                City=sheet.Cells[2, 7].Value.ToString(),
-                Gender=Convert.ToBoolean(sheet.Cells[2, 8].Value)
+                FamilyName = sheet.Cells[1, 1].Value.ToString(),
+                Name = sheet.Cells[1, 2].Value.ToString(),
+                SecondName=sheet.Cells[1, 3].Value.ToString(),
+                ClubId=Convert.ToInt32(sheet.Cells[1, 4].Value),
+                DischargeId=Convert.ToInt32(sheet.Cells[1, 5].Value),
+                BornDate=Convert.ToDateTime(sheet.Cells[1, 6].Value),
+                City=sheet.Cells[1, 7].Value.ToString(),
+                Gender=Convert.ToBoolean(sheet.Cells[1, 8].Value)
                   };
                 db.Set<Member>().Add(member);  
                 db.SaveChanges();
-                }
                
                 RefreshData();
                 }
