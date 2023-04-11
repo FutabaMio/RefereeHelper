@@ -93,8 +93,11 @@ namespace RefereeHelper.Views
             {
             Epplus.ExcelPackage package = new Epplus.ExcelPackage(new FileInfo(fileName));
             var sheet = package.Workbook.Worksheets["лист1"];
-            Member member = new()
-            {
+                int rowsCounter = sheet.Dimension.End.Row;
+                for(int i=0; i<rowsCounter; i++)
+                {
+ Member member = new()
+                 {
                 FamilyName = sheet.Cells[2, 1].Value.ToString(),
                 Name = sheet.Cells[2, 2].Value.ToString(),
                 SecondName=sheet.Cells[2, 3].Value.ToString(),
@@ -103,10 +106,14 @@ namespace RefereeHelper.Views
                 BornDate=Convert.ToDateTime(sheet.Cells[2, 6].Value),
                 City=sheet.Cells[2, 7].Value.ToString(),
                 Gender=Convert.ToBoolean(sheet.Cells[2, 8].Value)
-            };
-                db.Set<Member>().Add(member);
+                  };
+                db.Set<Member>().Add(member);  
                 db.SaveChanges();
-            }
+                }
+               
+                RefreshData();
+                }
+           
            
             /*FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read);
             IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream);
