@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RefereeHelper"
         xmlns:controls="clr-namespace:RefereeHelper.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" WindowState="Maximized" WindowStyle="None">
+        Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

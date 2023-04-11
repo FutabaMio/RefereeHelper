@@ -55,7 +55,7 @@ namespace RefereeHelper.Views
             i = 0;
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member.Name).ToList();
+                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
                 var teams = dbContext.Teams.ToList();
                 TeamTimer.DataContext = timings;
                 TeamTimer.ItemsSource = timings;

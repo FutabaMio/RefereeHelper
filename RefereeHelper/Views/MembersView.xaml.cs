@@ -34,7 +34,7 @@ namespace RefereeHelper.Views
     public partial class MembersView : UserControl
     {
         //ApplicationContext db = new ApplicationContext();
-        
+        Member member;
         public MembersView()
         {
             InitializeComponent();
@@ -92,8 +92,13 @@ namespace RefereeHelper.Views
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
             Epplus.ExcelPackage package = new Epplus.ExcelPackage(new FileInfo(fileName));
-            var sheet = package.Workbook.Worksheets["лист1"];
- Member member = new()
+               
+            var sheet = package.Workbook.Worksheets["лист1"]; //var members = db.Set<Member>(){}
+                int rowsCounter = sheet.Dimension.End.Row;
+                //for(int i=1; i<=rowsCounter; i++)
+                //{
+                 //   int curRow = i;
+                member = new()
                  {
                 FamilyName = sheet.Cells[1, 1].Value.ToString(),
                 Name = sheet.Cells[1, 2].Value.ToString(),
@@ -106,6 +111,9 @@ namespace RefereeHelper.Views
                   };
                 db.Set<Member>().Add(member);  
                 db.SaveChanges();
+                    
+               // }
+ /*Member  */
                
                 RefreshData();
                 }
