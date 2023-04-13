@@ -212,10 +212,10 @@ namespace RefereeHelper.Views
                 {
                     to = TimeOnly.FromDateTime(DateTime.Now);
                     countOfStartingPeople++; 
-                    var t = dbContext.Set<Timing>().Add(new Timing
-                    {
-                        TimeNow = to
-                    });
+                    //var t = dbContext.Set<Timing>().Add(new Timing
+                    //{
+                    //    TimeNow = to
+                    //});
                     if (dbContext.Set<Models.Start>().ToList().Any(x => x.Chip == received)) 
                     {
                         t = dbContext.Set<Timing>().Add(new Timing
@@ -223,6 +223,7 @@ namespace RefereeHelper.Views
                             TimeNow = to,
                             Start = dbContext.Set<Models.Start>().ToList().First(x => x.Chip == received)
                         });
+                        dbContext.SaveChanges();
                         t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start.StartTime - t.Entity.TimeNow));
                         t.Entity.Circle = p.GetOfLapsForHim(dbContext, t.Entity);
 

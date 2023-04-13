@@ -121,25 +121,26 @@ namespace RefereeHelper
         /// <returns>True в случае, если финишировал, False в ином случае</returns>
         public bool GetIsFinish(int idOfTiming)
         {
-            var ts = dbContext.Set<Timing>().Select(x => new Timing
-            {
-                Id = x.Id,
-                Circle = x.Circle,
-                Start = new Start
-                {
-                    Partisipation = new Partisipation
-                    {
-                        Group = new Group
-                        {
-                            Distance = new Distance
-                            {
-                                Name = x.Start.Partisipation.Group.Distance.Name,
-                                Circles = x.Start.Partisipation.Group.Distance.Circles
-                            }
-                        }
-                    }
-                }
-            }).ToList();
+            var ts = dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(x => x.Partisipation).ThenInclude(x => x.Group).ThenInclude(x => x.Distance).ToList();
+            //    .Select(x => new Timing
+            //{
+            //    Id = x.Id,
+            //    Circle = x.Circle,
+            //    Start = new Start
+            //    {
+            //        Partisipation = new Partisipation
+            //        {
+            //            Group = new Group
+            //            {
+            //                Distance = new Distance
+            //                {
+            //                    Name = x.Start.Partisipation.Group.Distance.Name,
+            //                    Circles = x.Start.Partisipation.Group.Distance.Circles
+            //                }
+            //            }
+            //        }
+            //    }
+            //}).ToList();
             var t = ts.First(x => x.Id == idOfTiming);
 
             //var t = DataService.Get(idOfTiming).Result;
@@ -174,7 +175,7 @@ namespace RefereeHelper
             }
             else
             {
-                var k = dbContext.Set<Timing>().Where(x => x.StartId == t.StartId).ToList().Last(z => z.Id != t.Id);
+                var k = dbContext.Set<Timing>().Where(x => x.StartId == t.StartId).ToList().LastOrDefault(z => z.Id != t.Id);
                 return TimeOnly.FromTimeSpan(k.TimeFromStart.Value - t.TimeFromStart.Value);
             }
             //if (DataService.GetAll(x => x.Start == t.Start).Result.Count() == 0)
