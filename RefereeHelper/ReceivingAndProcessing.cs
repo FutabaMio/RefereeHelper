@@ -121,7 +121,7 @@ namespace RefereeHelper
         /// <returns>True в случае, если финишировал, False в ином случае</returns>
         public bool GetIsFinish(int idOfTiming)
         {
-            var t = dbContext.Set<Timing>().Select(x => new Timing
+            var ts = dbContext.Set<Timing>().Select(x => new Timing
             {
                 Id = x.Id,
                 Circle = x.Circle,
@@ -139,7 +139,8 @@ namespace RefereeHelper
                         }
                     }
                 }
-            }).ToList().First(x => x.Id == idOfTiming);
+            }).ToList();
+            var t = ts.First(x => x.Id == idOfTiming);
 
             //var t = DataService.Get(idOfTiming).Result;
             if (t.Start?.Partisipation.Group?.Distance.Circles-1 < t.Circle)
