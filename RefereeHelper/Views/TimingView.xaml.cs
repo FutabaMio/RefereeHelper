@@ -218,7 +218,7 @@ namespace RefereeHelper.Views
                     //});
                     if (dbContext.Set<Models.Start>().ToList().Any(x => x.Chip == received)) 
                     {
-                        t = dbContext.Set<Timing>().Add(new Timing
+                        var t = dbContext.Set<Timing>().Add(new Timing
                         {
                             TimeNow = to,
                             Start = dbContext.Set<Models.Start>().ToList().First(x => x.Chip == received)
