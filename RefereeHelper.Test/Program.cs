@@ -239,7 +239,7 @@ void Process(string received, DbContext dbContext)
             //var t = p.dbContext.Set<Timing>().First(x => x.TimeNow == to);
 
             //CountOfLapsForHim = p.dbContext.Set<Timing>().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
-            t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start.StartTime - t.Entity.TimeNow));
+            t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(TimeOnly.FromDateTime(t.Entity.Start.StartTime.Value) - t.Entity.TimeNow));
             t.Entity.Circle = p.GetOfLapsForHim(dbContext, t.Entity);
 
             t.Entity.CircleTime = t.Entity.TimeFromStart;
@@ -274,7 +274,7 @@ void Process(string received, DbContext dbContext)
                         CountOfLapsForHim = p.dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(z => z.Partisipation).ThenInclude(c => c.Group).ThenInclude(v => v.Distance).ToList().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
                         
                         t.Entity.Circle = p.GetOfLapsForHim(p.dbContext, t.Entity);
-                        t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start?.StartTime - t.Entity.TimeNow));
+                        t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(TimeOnly.FromDateTime((t.Entity.Start?.StartTime).Value) - t.Entity.TimeNow));
 
                         p.dbContext.SaveChanges();
                         t.Entity.CircleTime = p.GetTimeOfLap(p.dbContext, t.Entity);

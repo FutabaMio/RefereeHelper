@@ -57,7 +57,7 @@ namespace RefereeHelper.Views
             i = 0;
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member.Name).ToList();
+                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
                 var teams = dbContext.Teams.ToList();
                 TeamTimer.DataContext = timings;
                 TeamTimer.ItemsSource = timings;
@@ -218,7 +218,8 @@ namespace RefereeHelper.Views
                             Start = dbContext.Set<Models.Start>().ToList().First(x => x.Chip == received)
                         });
                         dbContext.SaveChanges();
-                        t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start.StartTime - t.Entity.TimeNow));
+                        var ll = TimeOnly.FromTimeSpan((TimeOnly.FromDateTime(t.Entity.Start.StartTime.Value) - t.Entity.TimeNow).Value);
+                        t.Entity.TimeFromStart = ll;
                         t.Entity.Circle = p.GetOfLapsForHim(dbContext, t.Entity);
 
                         t.Entity.CircleTime = t.Entity.TimeFromStart;
@@ -245,11 +246,11 @@ namespace RefereeHelper.Views
                 else
                 {
 
-                    for (int i = p.dbContext.Set<Timing>().ToList().Last().Id - 1; i > -1; i--)
+                    for (int i = p.dbContext.Set<Timing>().ToList().Last().Id; i > -1; i--)
                     {
                         if (p.dbContext.Set<Timing>().Include(z => z.Start).Any(x => x.Start.Chip == received))
                         {
-                            if (TimeOnly.FromDateTime(DateTime.Now) - p.dbContext.Set<Timing>().ToList().First(x => x.Id == i).TimeNow > timeOfDifference)
+                            if ((TimeOnly.FromDateTime(DateTime.Now)) - p.dbContext.Set<Timing>().ToList().First(x => x.Id == i).TimeNow > timeOfDifference)
                             {
                                 var t = p.dbContext.Add(new Timing
                                 {
@@ -261,7 +262,7 @@ namespace RefereeHelper.Views
                                 CountOfLapsForHim = p.dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(z => z.Partisipation).ThenInclude(c => c.Group).ThenInclude(v => v.Distance).ToList().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
 
                                 t.Entity.Circle = p.GetOfLapsForHim(p.dbContext, t.Entity);
-                                t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start?.StartTime - t.Entity.TimeNow));
+                                t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeOnly.FromDateTime((t.Entity.Start?.StartTime).Value) - t.Entity.TimeNow).Value);
 
                                 p.dbContext.SaveChanges();
                                 t.Entity.CircleTime = p.GetTimeOfLap(p.dbContext, t.Entity);
