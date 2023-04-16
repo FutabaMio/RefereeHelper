@@ -193,7 +193,7 @@ namespace RefereeHelper.Views
                     }).Result;
 
                     CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
-                    t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
+                   // t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
                     t.Circle = GetOfLapsForHim(t.Id);
                     t.CircleTime = GetTimeOfLap(t.Id);
                     t.IsFinish = GetIsFinish(t.Id);
@@ -216,7 +216,7 @@ namespace RefereeHelper.Views
                                     TimeNow = u.time,
                                     Start = startDataService.GetAll().Result.First(x => x.Chip == received)
                                 }).Result;
-                                t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
+                              //  t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
                                 CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
                                 t.Circle = GetOfLapsForHim(t.Id);
                                 t.CircleTime = GetTimeOfLap(t.Id);
@@ -267,7 +267,7 @@ namespace RefereeHelper.Views
                         Start = startDataService.GetAll().Result.First(x => x.Chip == received) }).Result;
 
                     CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
-                    t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
+                 //   t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
                     t.Circle = GetOfLapsForHim(t.Id);
                     t.CircleTime = GetTimeOfLap(t.Id);
                     t.IsFinish = GetIsFinish(t.Id);
@@ -287,7 +287,7 @@ namespace RefereeHelper.Views
                             {
                                 var t = DataService.Create(new Timing() { TimeNow = _time,
                                                                                 Start = startDataService.GetAll().Result.First(x => x.Chip == received)}).Result;
-                                t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
+                            //    t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
                                 CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
                                 t.Circle = GetOfLapsForHim(t.Id);
                                 t.CircleTime = GetTimeOfLap(t.Id);
