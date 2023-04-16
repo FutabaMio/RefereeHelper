@@ -16,6 +16,7 @@ using RefereeHelper.EntityFramework;
 using System.Linq;
 using RefereeHelper.EntityFramework.Services;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace RefereeHelper.Views
 {
@@ -47,6 +48,7 @@ namespace RefereeHelper.Views
 
 
 
+        List<string> idsOfFinishingPeople = new List<string>();
 
         int i = 0;
         //DateTable для записи тайминга в бд
@@ -98,7 +100,7 @@ namespace RefereeHelper.Views
             };
 
         }
-
+        
         //конец
 
         //
@@ -107,6 +109,7 @@ namespace RefereeHelper.Views
         DispatcherTimer dt = new DispatcherTimer();
         Stopwatch sw = new Stopwatch();
         string currentTime = string.Empty;
+        int CountOfFinishingPeople = 0;
 
         void dtTick(object sender, EventArgs e)
         {
@@ -174,137 +177,110 @@ namespace RefereeHelper.Views
         GenericDataService<RefereeHelper.Models.Start> startDataService = new(new RefereeHelperDbContextFactory());
         decimal CountOfLapsForHim;//кол-во кругов для данного спортсмена, чтобы считать, финишировал чи як
 
-
-        UDPReceive u = new(27069);
+        UDPReceive u = UDPReceive.GetUdpClient();
+        Processing p = new();
         void Received()
         {
-            while (true)
+            
+            u.secondOfDifference = Int32.Parse(textBox_TimeOfDifference.Text);
+            Task.Run(() =>
             {
-                u.secondOfDifference = Int32.Parse(textBox_TimeOfDifference.Text);
-                string received = u.Receive().Result.ToString();
-                
-                if (!DataService.GetAll().Result.Any(x => x.Start?.Chip == received))
+                while (true)
                 {
-                    countOfStartingPeople++;
-                    var t = DataService.Create(new Timing()
-                    {
-                        TimeNow = _time,
-                        Start = startDataService.GetAll().Result.First(x => x.Chip == received)
-                    }).Result;
+                    string received = u.Receive().Result.ToString();
 
-                    CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
-                    //t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
-                    t.Circle = GetOfLapsForHim(t.Id);
-                    t.CircleTime = GetTimeOfLap(t.Id);
-                    t.IsFinish = GetIsFinish(t.Id);
-                    RefrechPlace(t.Id);
-                    RefrechAbsolutePlace(t.Id);
-                    DataService?.Update(t.Id, t);
+                    Process(received, p.dbContext, u.secondOfDifference);
                 }
-                else
-                {
-
-                    for (int i = DataService.GetAll().Result.Count() - 1; i > -1; i--)
-                    {
-
-                        if (DataService.Get(i).Result.Start?.Chip == received)
-                        {
-                            if (u.time - DataService.Get(i).Result.TimeNow > u.timeOfDifference)
-                            {
-                                var t = DataService.Create(new Timing()
-                                {
-                                    TimeNow = u.time,
-                                    Start = startDataService.GetAll().Result.First(x => x.Chip == received)
-                                }).Result;
-                                //t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
-                                CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
-                                t.Circle = GetOfLapsForHim(t.Id);
-                                t.CircleTime = GetTimeOfLap(t.Id);
-                                t.IsFinish = GetIsFinish(t.Id);
-                                if (t.IsFinish.Value)
-                                {
-                                    countOfFinishingPeople++;
-                                }
-                                RefrechPlace(t.Id);
-                                RefrechAbsolutePlace(t.Id);
-                                DataService?.Update(t.Id, t);
-                            }
-                            break;
-                        }
-                    }
-
-                }
-            }
+            });
+            
+            
         }
-    /// <summary>
-    /// Функция считывания номера метки и последующего заполнения базы данных.
-    /// </summary>
-    async void Receive()
+        void Process(string received, DbContext dbContext, int SecondOfDifference)
         {
-            while (true)
+            timeOfDifference = new(0, 0, SecondOfDifference);
+            if (!idsOfFinishingPeople.Any(x => x == received))
             {
-                secondOfDifference = Int32.Parse(textBox_TimeOfDifference.Text);
-                timeOfDifference = new(0, 0, secondOfDifference);
-                result = await u.client.ReceiveAsync();
-                datagram = result.Buffer;
-                received = Encoding.UTF8.GetString(datagram);
-                _time = TimeOnly.FromDateTime(DateTime.Now);
-                received = received.Substring(received.IndexOf("Tag:") + 4);
-                received = received.Substring(0, received.IndexOf(" "));
-                //using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
-                //{
-                //    var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
-                //    timings.Add(t);
-                //    dbContext.SaveChanges();
-                //}
-
-
-
-                if (!DataService.GetAll().Result.Any(x => x.Start?.Chip == received))
+                TimeOnly to = TimeOnly.FromDateTime(DateTime.Now);
+                GenericDataService<Timing> DataService = new(new RefereeHelperDbContextFactory());
+                if (!dbContext.Set<Timing>().Any(x => x.Start.Chip == received))
                 {
-                    countOfStartingPeople++;
-                    var t = DataService.Create(new Timing() { TimeNow = _time,
-                        Start = startDataService.GetAll().Result.First(x => x.Chip == received) }).Result;
+                    to = TimeOnly.FromDateTime(DateTime.Now);
+                    countOfStartingPeople++; 
+                    //var t = dbContext.Set<Timing>().Add(new Timing
+                    //{
+                    //    TimeNow = to
+                    //});
+                    if (dbContext.Set<Models.Start>().ToList().Any(x => x.Chip == received)) 
+                    {
+                        var t = dbContext.Set<Timing>().Add(new Timing
+                        {
+                            TimeNow = to,
+                            Start = dbContext.Set<Models.Start>().ToList().First(x => x.Chip == received)
+                        });
+                        dbContext.SaveChanges();
+                        t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start.StartTime - t.Entity.TimeNow));
+                        t.Entity.Circle = p.GetOfLapsForHim(dbContext, t.Entity);
 
-                    CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
-                    //t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start.StartTime - t.TimeNow));
-                    t.Circle = GetOfLapsForHim(t.Id);
-                    t.CircleTime = GetTimeOfLap(t.Id);
-                    t.IsFinish = GetIsFinish(t.Id);
-                    RefrechPlace(t.Id);
-                    RefrechAbsolutePlace(t.Id);
-                    DataService?.Update(t.Id, t);
+                        t.Entity.CircleTime = t.Entity.TimeFromStart;
+                        t.Entity.IsFinish = p.GetIsFinish(t.Entity.Id);
+                        if (t.Entity.IsFinish.Value)
+                        {
+                            CountOfFinishingPeople++;
+                            idsOfFinishingPeople.Add(received);
+                        }
+                        dbContext.SaveChanges();
+                        p.RefrechPlace(dbContext, t.Entity);
+                        p.RefrechAbsolutePlace(dbContext, t.Entity);
+                    }
+                    
+
+                    dbContext.SaveChanges();
+                    //var t = p.dbContext.Set<Timing>().First(x => x.TimeNow == to);
+
+                    //CountOfLapsForHim = p.dbContext.Set<Timing>().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
+                    
+                    //p.dbContext.Update(t.Entity);
+                    //p.dbContext.SaveChanges();
                 }
                 else
                 {
 
-                    for (int i = DataService.GetAll().Result.Count() - 1; i > -1; i--)
+                    for (int i = p.dbContext.Set<Timing>().ToList().Last().Id - 1; i > -1; i--)
                     {
-
-                        if (DataService.Get(i).Result.Start?.Chip == received)
+                        if (p.dbContext.Set<Timing>().Include(z => z.Start).Any(x => x.Start.Chip == received))
                         {
-                            if (_time - DataService.Get(i).Result.TimeNow > timeOfDifference)
+                            if (TimeOnly.FromDateTime(DateTime.Now) - p.dbContext.Set<Timing>().ToList().First(x => x.Id == i).TimeNow > timeOfDifference)
                             {
-                                var t = DataService.Create(new Timing() { TimeNow = _time,
-                                                                                Start = startDataService.GetAll().Result.First(x => x.Chip == received)}).Result;
-                                //t.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Start?.StartTime - t.TimeNow));
-                                CountOfLapsForHim = DataService.Get(t.Id).Result.Start.Partisipation.Group.Distance.Circles;
-                                t.Circle = GetOfLapsForHim(t.Id);
-                                t.CircleTime = GetTimeOfLap(t.Id);
-                                t.IsFinish = GetIsFinish(t.Id);
-                                if(t.IsFinish.Value)
+                                var t = p.dbContext.Add(new Timing
                                 {
-                                    countOfFinishingPeople++;
+                                    TimeNow = to,
+
+                                    Start = p.dbContext.Set<Models.Start>().ToList().First(x => x.Chip == received)
+                                });
+                                p.dbContext.SaveChanges();
+                                CountOfLapsForHim = p.dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(z => z.Partisipation).ThenInclude(c => c.Group).ThenInclude(v => v.Distance).ToList().First(x => x.Id == t.Entity.Id).Start.Partisipation.Group.Distance.Circles;
+
+                                t.Entity.Circle = p.GetOfLapsForHim(p.dbContext, t.Entity);
+                                t.Entity.TimeFromStart = TimeOnly.FromTimeSpan((TimeSpan)(t.Entity.Start?.StartTime - t.Entity.TimeNow));
+
+                                p.dbContext.SaveChanges();
+                                t.Entity.CircleTime = p.GetTimeOfLap(p.dbContext, t.Entity);
+                                t.Entity.IsFinish = p.GetIsFinish(t.Entity.Id);
+                                if (t.Entity.IsFinish.Value)
+                                {
+                                    CountOfFinishingPeople++;
+                                    idsOfFinishingPeople.Add(received);
                                 }
-                                RefrechPlace(t.Id);
-                                RefrechAbsolutePlace(t.Id);
-                                DataService?.Update(t.Id, t);
+                                p.RefrechPlace(p.dbContext, t.Entity);
+                                p.RefrechAbsolutePlace(p.dbContext, t.Entity);
+                                //p.dbContext.Update(t.Entity);
                             }
                             break;
                         }
                     }
 
                 }
+
             }
         }
         /// <summary>
