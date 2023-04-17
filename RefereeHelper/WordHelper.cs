@@ -418,6 +418,9 @@ namespace RefereeHelper
             {
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
+                    TimeSpan timeSpan = TimeSpan.Zero;
+                    TimeOnly finishtime = TimeOnly.MinValue;
+                    string s = "";
                     List<int> partisipationIds = new List<int>();
                     float maxwidth = 0, width = 0, differencewidth = 0;
                     bool fl = true;
@@ -551,7 +554,7 @@ namespace RefereeHelper
                                         table.Cell(1, col).Range.Text = i.ToString() + "круг"; col++;
                                     }
                                     table.Cell(1, col).Range.Text = "Результат"; col++;
-                                    table.Cell(1, col).Range.Text = "Отстование"; col++;
+                                    table.Cell(1, col).Range.Text = "Отставание"; col++;
                                     table.Cell(1, col).Range.Text = "Место";
                                     row = 1;
                                     foreach (int partisipationId in partisipationIds)
@@ -578,6 +581,7 @@ namespace RefereeHelper
                                                         table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
                                                         if (timing.IsFinish == true)
                                                         {
+                                                            finishtime = (TimeOnly)timing.TimeFromStart;
                                                             table.Cell(row, col + 1).Range.Text = timing.Place.ToString();
                                                         }
                                                     }
@@ -585,20 +589,29 @@ namespace RefereeHelper
                                             }
                                         }
 
-                                    //table.Sort(table.Columns[col]);
+                                    table.Sort(true, col - 1);
                                     for (int i = 0; i < partisipationIds.Count; i++)
                                     {
                                         table.Cell(2 + i, 1).Range.Text = (i + 1).ToString();
-                                        
-                                        //if (table.Cell(2 + i, constcol - 2).Range.Text != null)
-                                        //    if (TimeOnly.TryParse(table.Cell(2 + i, constcol - 2).Range.Text, out buf))
-                                        //        table.Cell(2 + i, constcol - 1).Range.Text = (buf - TimeOnly.Parse(table.Cell(2 + i, constcol - 2).Range.Text)).ToString();
+                                        if (table.Cell(2 + i, constcol - 2).Range.Text != null)
+                                        {
+                                            s = table.Cell(2 + i, constcol - 2).Range.Text;
+                                            s = s.Trim('\a');
+                                            s = s.Trim('\r');
+                                            if (TimeOnly.TryParse(s, out buf))
+                                            {
+                                                timeSpan = buf - finishtime;
+                                                buf = TimeOnly.FromTimeSpan(timeSpan);
+                                                table.Cell(2 + i, constcol - 1).Range.Text = buf.ToLongTimeString();
+                                            }
+                                        }
+
                                     }
 
                                     table.Rows[1].Range.Font.Bold = 1;
                                     table.Rows[1].Borders[WdBorderType.wdBorderBottom].LineStyle = Word.WdLineStyle.wdLineStyleSingle;
-                                    table.Range.Font.Size = 8;
-                                    table.Cell(1, 1).Range.Font.Size = 14;
+                                    table.Range.Font.Size = 6;
+                                    //table.Cell(1, 1).Range.Font.Size = 14;
                                     maxwidth = table.Columns.Width;
                                     table.Columns.AutoFit();
                                     width = table.Columns.Width;
@@ -633,6 +646,7 @@ namespace RefereeHelper
                 doc.Close(ref falseObj, ref missingObj, ref missingObj);
                 word.Documents.Close();
                 word.Quit(ref missingObj, ref missingObj, ref missingObj);
+                
                 return true; 
             }
             catch (Exception ex) { return false; }

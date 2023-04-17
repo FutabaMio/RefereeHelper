@@ -351,6 +351,7 @@ namespace RefereeHelper
                     int row = 1, col = 7, constcol = 0, rowcost = 0;
                     List<int> partisipationIds = new List<int>();
                     TimeOnly buf;
+                    TimeSpan timeSpan = TimeSpan.Zero;
 
                     var distances = dbContext.Set<Distance>().Select(x => new Distance
                     {
@@ -452,7 +453,7 @@ namespace RefereeHelper
                                         sheet.Cells[row, col].Value = i.ToString() + "круг"; col++;
                                     }
                                     sheet.Cells[row, col].Value = "Результат"; col++;
-                                    sheet.Cells[row, col].Value = "Отстование"; col++;
+                                    sheet.Cells[row, col].Value = "Отставание"; col++;
                                     sheet.Cells[row, col].Value = "Место";
                                     constcol = col;
                                     sheet.Cells[row - 1, 1, row - 1, constcol].Merge = true;
@@ -493,9 +494,14 @@ namespace RefereeHelper
                                     for (int i = 0; i < partisipationIds.Count; i++)
                                     {
                                         sheet.Cells[rowcost + i, 1].Value = i + 1;
-                                        //if (sheet.Cells[rowcost + i, constcol - 2].Value != null)
-                                        //    if (TimeOnly.TryParse(sheet.Cells[rowcost + i, constcol - 2].Value.ToString(), out buf))
-                                        //        sheet.Cells[rowcost + i, constcol - 1].Value = buf - TimeOnly.Parse(sheet.Cells[rowcost, constcol - 2].Value.ToString());
+                                        if (sheet.Cells[rowcost + i, constcol - 2].Value != null)
+                                            if (TimeOnly.TryParse(sheet.Cells[rowcost + i, constcol - 2].Value.ToString(), out buf))
+                                            {
+                                                timeSpan = buf - TimeOnly.Parse(sheet.Cells[rowcost, constcol - 2].Value.ToString());
+                                                buf = TimeOnly.FromTimeSpan(timeSpan);
+                                                sheet.Cells[rowcost + i, constcol - 1].Value = buf.ToLongTimeString();
+                                            }
+
                                     }
                                     row = row + 2;
                                 }
