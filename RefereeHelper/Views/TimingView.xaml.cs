@@ -17,6 +17,7 @@ using System.Linq;
 using RefereeHelper.EntityFramework.Services;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using RefereeHelper.OptionsWindows;
 
 namespace RefereeHelper.Views
 {
@@ -383,17 +384,46 @@ namespace RefereeHelper.Views
 
         private void ProtocolDialogBut_Click(object sender, RoutedEventArgs e)
         {
-
+            ProtocolDialog f = new ProtocolDialog();
+            f.ShowDialog();
         }
 
         private void VisualGroupBut_Click(object sender, RoutedEventArgs e)
         {
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
 
+            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            {
+                Id = x.Id,
+                Organizer = x.Organizer,
+                Place = x.Place,
+                Date = x.Date,
+                Judge = x.Judge,
+                Secretary = x.Secretary,
+                TypeAge = x.TypeAge
+            }).ToList();
+
+            VisualData f = new VisualData(true, competition[0]);
+            f.Show();
         }
 
         private void VisualDistanceBut_Click(object sender, RoutedEventArgs e)
         {
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
 
+            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            {
+                Id = x.Id,
+                Organizer = x.Organizer,
+                Place = x.Place,
+                Date = x.Date,
+                Judge = x.Judge,
+                Secretary = x.Secretary,
+                TypeAge = x.TypeAge
+            }).ToList();
+
+            VisualData f = new VisualData(false, competition[0]);
+            f.Show();
         }
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
