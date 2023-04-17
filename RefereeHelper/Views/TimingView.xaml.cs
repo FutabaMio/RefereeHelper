@@ -381,6 +381,21 @@ namespace RefereeHelper.Views
             }
         }
 
+        private void ProtocolDialogBut_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void VisualGroupBut_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void VisualDistanceBut_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             //Timing timing;
