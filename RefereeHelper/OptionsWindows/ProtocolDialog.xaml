@@ -1,0 +1,38 @@
+﻿<Window x:Class="RefereeHelper.OptionsWindows.ProtocolDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RefereeHelper.OptionsWindows"
+        mc:Ignorable="d"
+        Title="ProtocolDialog" Height="165" Width="410">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44"/>
+            <RowDefinition Height="44"/>
+            <RowDefinition Height="44"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width ="200"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Button Name="ExcelSPBut" Content="Стартовый протокол в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelSPBut_Click"/>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Button Name="ExcelDPBut" Content="Протокол по дистанции в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelDPBut_Click"/>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Button Name="ExcelFPBut" Content="Финишний протокол в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelFPBut_Click"/>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Button Name="WordSpBut" Content="Стартовый протокол в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordSpBut_Click"/>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Button Name="WordDpBut" Content="Протокол по дистанции в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordDpBut_Click"/>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Button Name="WordFpBut" Content="Финишний протокол в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordFpBut_Click"/>
+        </Grid>
+    </Grid>
+</Window>
