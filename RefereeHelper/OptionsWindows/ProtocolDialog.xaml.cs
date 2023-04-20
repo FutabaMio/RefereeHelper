@@ -49,8 +49,14 @@ namespace RefereeHelper.OptionsWindows
             if(ex.StarProtocol(competition[0]))
             {
                 string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                file = file.Replace("\\\\","\\");
 
-                ex.saveAs(file);
+                if (ex.saveAs(file))
+                {
+                    MessageWindow message = new MessageWindow("Финишний протокол был сформировон и сохранён по пути:\n" + file, "Выполнено");
+                    message.Owner = this;
+                    message.ShowDialog();
+                }
             }
 
         }
@@ -75,8 +81,14 @@ namespace RefereeHelper.OptionsWindows
             if (ex.DistanceProtocol(competition[0]))
             {
                 string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                file = file.Replace("\\\\", "\\");
 
-                ex.saveAs(file);
+                if (ex.saveAs(file))
+                {
+                    MessageWindow message = new MessageWindow("Финишний протокол был сформировон и сохранён по пути:\n" + file, "Выполнено");
+                    message.Owner = this;
+                    message.ShowDialog();
+                }
             }
         }
 
@@ -100,8 +112,14 @@ namespace RefereeHelper.OptionsWindows
             if (ex.FinshProtocol(competition[0]))
             {
                 string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                file = file.Replace("\\\\", "\\");
 
-                ex.saveAs(file);
+                if (ex.saveAs(file))
+                {
+                    MessageWindow message = new MessageWindow("Финишний протокол был сформировон и сохранён по пути:\n" + file, "Выполнено");
+                    message.Owner = this;
+                    message.ShowDialog();
+                }
             }
         }
 

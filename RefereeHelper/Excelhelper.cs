@@ -11,6 +11,7 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using RefereeHelper.EntityFramework;
 using RefereeHelper.EntityFramework.Services;
 using RefereeHelper.Models;
+using RefereeHelper.OptionsWindows;
 using Epplus = OfficeOpenXml;
 using EpplusSyle = OfficeOpenXml.Style;
 
@@ -159,13 +160,23 @@ namespace RefereeHelper
                             row++;
                             cur = 1;
                         }
-                        else { return false; }
+                        else 
+                        {
+                            MessageWindow message = new MessageWindow("Невозможно сформировать стартовый протокол", "Ошибка");
+                            message.ShowDialog();
+                            return false; 
+                        }
                     }
                     sheet.Cells[1, 1, row, 8].AutoFitColumns(1, 150);
                     return true;
                 }
             }
-            catch (Exception ex){ return false; }
+            catch (Exception ex)
+            {
+                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
+                message.ShowDialog();
+                return false; 
+            }
         }
 
         public bool DistanceProtocol(Competition competition)
@@ -333,12 +344,22 @@ namespace RefereeHelper
                             row = row + 2;
                             cur = 1;
                         }
-                        else { return false; }
+                        else 
+                        {
+                            MessageWindow message = new MessageWindow("Невозможно сформировать протокол по дистанции", "Ошибка");
+                            message.ShowDialog();
+                            return false; 
+                        }
                     }
                     return true;
                 }
             }
-            catch(Exception ex) { return false; }
+            catch (Exception ex)
+            {
+                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
+                message.ShowDialog();
+                return false;
+            }
         }
 
         public bool FinshProtocol(Competition competition)
@@ -505,14 +526,24 @@ namespace RefereeHelper
                                     }
                                     row = row + 2;
                                 }
-                                else { return false; }
+                                else
+                                {
+                                    MessageWindow message = new MessageWindow("Невозможно сформировать финишний протокол", "Ошибка");
+                                    message.ShowDialog();
+                                    return false;
+                                }
                                 sheet.Cells[1, 1, row, constcol].AutoFitColumns(1, 150);
                             }
                     }
                     return true;
                 }
             }
-            catch(Exception ex) { return false; }
+            catch (Exception ex)
+            {
+                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
+                message.ShowDialog();
+                return false;
+            }
         }
 
         public bool saveAs(String file)
@@ -530,7 +561,12 @@ namespace RefereeHelper
                     
                 return true; 
             }
-            catch(Exception ex) { return false; }
+            catch (Exception ex)
+            {
+                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
+                message.ShowDialog();
+                return false;
+            }
         }
         private bool saveAs(String file,int i)
         {
@@ -546,7 +582,12 @@ namespace RefereeHelper
                 }
                 return true;
             }
-            catch (Exception ex) { return false; }
+            catch (Exception ex)
+            {
+                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
+                message.ShowDialog();
+                return false;
+            }
         }
     }
 }
