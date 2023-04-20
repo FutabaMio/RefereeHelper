@@ -519,6 +519,7 @@ namespace RefereeHelper
         {
             try 
             {
+                file = file.Replace("\\\\", "\\");
                 if (!File.Exists(file))
                     package.SaveAs(new FileInfo(file));
                 else
