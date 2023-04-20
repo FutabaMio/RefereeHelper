@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace RefereeHelper.OptionsWindows
 {
@@ -22,6 +24,21 @@ namespace RefereeHelper.OptionsWindows
         public HelpWindow()
         {
             InitializeComponent();
+            INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+            textBox.Text = manager.GetPrivateString("Option", "SaveExcelPath");
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+            dialog.IsFolderPicker = true;
+            if (CommonFileDialogResult.Ok == dialog.ShowDialog())
+            {
+                textBox.Text = dialog.FileName;
+                manager.WritePrivateString("Option", "SaveExcelPath", dialog.FileName);
+
+            }
         }
     }
 }
