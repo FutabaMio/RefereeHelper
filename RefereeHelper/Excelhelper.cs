@@ -518,11 +518,34 @@ namespace RefereeHelper
         public bool saveAs(String file)
         {
             try 
-            { 
-                package.SaveAs(new FileInfo(file));
+            {
+                if (!File.Exists(file))
+                    package.SaveAs(new FileInfo(file));
+                else
+                {
+                    file = file.Insert(file.Length - 5, "(1)");
+                    this.saveAs(file, 1);
+                }
+                    
                 return true; 
             }
             catch(Exception ex) { return false; }
+        }
+        private bool saveAs(String file,int i)
+        {
+            try
+            {
+                if (!File.Exists(file))
+                    package.SaveAs(new FileInfo(file));
+                else
+                {
+                    file = file.Replace("(" + i + ")", "(" + (i + 1) + ")");
+                    i++;
+                    this.saveAs(file, i);
+                }
+                return true;
+            }
+            catch (Exception ex) { return false; }
         }
     }
 }
