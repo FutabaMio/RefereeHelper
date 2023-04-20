@@ -33,6 +33,8 @@ namespace RefereeHelper.OptionsWindows
         {
             Excelhelper ex = new Excelhelper();
             var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+            INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+            string namefile = "Start_Protocol_Excel.xlsx";
 
             var competition = dbContext.Set<Competition>().Select(x => new Competition
             {
@@ -46,7 +48,7 @@ namespace RefereeHelper.OptionsWindows
             }).ToList();
             if(ex.StarProtocol(competition[0]))
             {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString() + "\\ExcelTesSP.xlsx";
+                string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
 
                 ex.saveAs(file);
             }
@@ -57,6 +59,8 @@ namespace RefereeHelper.OptionsWindows
         {
             Excelhelper ex = new Excelhelper();
             var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+            INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+            string namefile = "Distance_Protocol_Excel.xlsx";
 
             var competition = dbContext.Set<Competition>().Select(x => new Competition
             {
@@ -70,7 +74,7 @@ namespace RefereeHelper.OptionsWindows
             }).ToList();
             if (ex.DistanceProtocol(competition[0]))
             {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString() + "\\ExcelTestDP.xlsx";
+                string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
 
                 ex.saveAs(file);
             }
@@ -80,6 +84,8 @@ namespace RefereeHelper.OptionsWindows
         {
             Excelhelper ex = new Excelhelper();
             var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+            INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+            string namefile = "Finish_Protocol_Excel.xlsx";
 
             var competition = dbContext.Set<Competition>().Select(x => new Competition
             {
@@ -93,7 +99,7 @@ namespace RefereeHelper.OptionsWindows
             }).ToList();
             if (ex.FinshProtocol(competition[0]))
             {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString() + "\\ExcelTestFP.xlsx";
+                string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
 
                 ex.saveAs(file);
             }
