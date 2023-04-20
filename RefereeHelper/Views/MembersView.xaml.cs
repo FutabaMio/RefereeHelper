@@ -38,8 +38,15 @@ namespace RefereeHelper.Views
         public MembersView()
         {
             InitializeComponent();
-            RefreshData();            
-           
+            RefreshData();
+            
+            string file = System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini");
+            if (!File.Exists(file))
+            {
+                FileInfo fi1 = new FileInfo(file);
+                INIManager manager = new INIManager(file);
+                manager.WritePrivateString("Option","SaveExcelPath", Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString());
+            }
         }
         int ID = 0;
         public void RefreshData()
