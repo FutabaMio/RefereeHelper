@@ -20,7 +20,8 @@
                 <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Настройки формирования протоколов" VerticalAlignment="Top"/>
             </Grid>
             <Grid Grid.Row="1">
-                <TextBox x:Name="textBox" HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="780" IsReadOnly="True"/>
+                
+                <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="10,10,10,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="740" IsReadOnly="True"/>
                 <Button x:Name="button" Content="Обзор" HorizontalAlignment="Left" Margin="10,33,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.328,0.092" Width="72" Click="button_Click"/>
 
             </Grid>
