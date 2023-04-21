@@ -51,14 +51,8 @@ namespace RefereeHelper.OptionsWindows
                 string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
                 file = file.Replace("\\\\","\\");
 
-                if (ex.saveAs(file))
-                {
-                    MessageWindow message = new MessageWindow("Финишний протокол был сформировон и сохранён по пути:\n" + file, "Выполнено");
-                    message.Owner = this;
-                    message.ShowDialog();
-                }
+                ex.saveAs(file);
             }
-
         }
 
         private void ExcelDPBut_Click(object sender, RoutedEventArgs e)
@@ -83,12 +77,7 @@ namespace RefereeHelper.OptionsWindows
                 string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
                 file = file.Replace("\\\\", "\\");
 
-                if (ex.saveAs(file))
-                {
-                    MessageWindow message = new MessageWindow("Финишний протокол был сформировон и сохранён по пути:\n" + file, "Выполнено");
-                    message.Owner = this;
-                    message.ShowDialog();
-                }
+                ex.saveAs(file);
             }
         }
 
@@ -114,12 +103,7 @@ namespace RefereeHelper.OptionsWindows
                 string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
                 file = file.Replace("\\\\", "\\");
 
-                if (ex.saveAs(file))
-                {
-                    MessageWindow message = new MessageWindow("Финишний протокол был сформировон и сохранён по пути:\n" + file, "Выполнено");
-                    message.Owner = this;
-                    message.ShowDialog();
-                }
+                ex.saveAs(file);
             }
         }
 

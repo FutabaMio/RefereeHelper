@@ -162,8 +162,7 @@ namespace RefereeHelper
                         }
                         else 
                         {
-                            MessageWindow message = new MessageWindow("Невозможно сформировать стартовый протокол", "Ошибка");
-                            message.ShowDialog();
+                            MessageBox.Show("Невозможно сформировать стратовый протокол","Ошибка",MessageBoxButton.OK,MessageBoxImage.Error);
                             return false; 
                         }
                     }
@@ -173,8 +172,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
-                message.ShowDialog();
+                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false; 
             }
         }
@@ -346,8 +344,7 @@ namespace RefereeHelper
                         }
                         else 
                         {
-                            MessageWindow message = new MessageWindow("Невозможно сформировать протокол по дистанции", "Ошибка");
-                            message.ShowDialog();
+                            MessageBox.Show("Невозможно сформировать протокол по дистанции", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                             return false; 
                         }
                     }
@@ -356,8 +353,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
-                message.ShowDialog();
+                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -528,8 +524,7 @@ namespace RefereeHelper
                                 }
                                 else
                                 {
-                                    MessageWindow message = new MessageWindow("Невозможно сформировать финишний протокол", "Ошибка");
-                                    message.ShowDialog();
+                                    MessageBox.Show("Невозможно сформировать финишний протокол", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                                     return false;
                                 }
                                 sheet.Cells[1, 1, row, constcol].AutoFitColumns(1, 150);
@@ -540,8 +535,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
-                message.ShowDialog();
+                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -552,7 +546,10 @@ namespace RefereeHelper
             {
                 file = file.Replace("\\\\", "\\");
                 if (!File.Exists(file))
+                {
                     package.SaveAs(new FileInfo(file));
+                    MessageBox.Show("протокол был сформировон и сохранён по пути:\\n" + file, "Выполнено", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 else
                 {
                     file = file.Insert(file.Length - 5, "(1)");
@@ -563,8 +560,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
-                message.ShowDialog();
+                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -573,7 +569,10 @@ namespace RefereeHelper
             try
             {
                 if (!File.Exists(file))
+                {
                     package.SaveAs(new FileInfo(file));
+                    MessageBox.Show("протокол был сформировон и сохранён по пути:\\n" + file, "Выполнено", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 else
                 {
                     file = file.Replace("(" + i + ")", "(" + (i + 1) + ")");
@@ -584,8 +583,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageWindow message = new MessageWindow("Произошла ошибка:\n" + ex.Message, "Ошибка");
-                message.ShowDialog();
+                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }

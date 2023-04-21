@@ -17,7 +17,16 @@
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
-            <Button Name="ExcelSPBut" Content="Стартовый протокол в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelSPBut_Click"/>
+            <Button Name="ExcelSPBut" Content="Стартовый протокол в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelSPBut_Click">
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Attribute"/>
+                        <MenuItem Header="Setting"/>
+                        <Separator/>
+                        <MenuItem Header="Property"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <Button Name="ExcelDPBut" Content="Протокол по дистанции в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelDPBut_Click"/>
