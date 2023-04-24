@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -125,9 +127,22 @@ namespace RefereeHelper.OptionsWindows
 
             if (wd.StarProtocol(competition[0]))
             {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString() + "\\WordTestSP.docx";
+                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
 
-                wd.saveAs(file);
+                if (wd.saveAs(file))
+                {
+                    try
+                    {
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(file)
+                        {
+                            UseShellExecute = true
+                        };
+                        p.Start();
+                    }
+                    catch
+                    { }
+                }
             }
         }
 
@@ -149,9 +164,22 @@ namespace RefereeHelper.OptionsWindows
 
             if (wd.DistanceProtocol(competition[0]))
             {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString() + "\\WordTestDP.docx";
+                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
 
-                wd.saveAs(file);
+                if (wd.saveAs(file))
+                {
+                    try
+                    {
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(file)
+                        {
+                            UseShellExecute = true
+                        };
+                        p.Start();
+                    }
+                    catch
+                    { }
+                }
             }
         }
 
@@ -173,9 +201,22 @@ namespace RefereeHelper.OptionsWindows
 
             if (wd.FinshProtocol(competition[0]))
             {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString() + "\\WordTestFP.docx";
+                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
 
-                wd.saveAs(file);
+                if (wd.saveAs(file))
+                {
+                    try
+                    {
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(file)
+                        {
+                            UseShellExecute = true
+                        };
+                        p.Start();
+                    }
+                    catch
+                    { }
+                }
             }
         }
     }

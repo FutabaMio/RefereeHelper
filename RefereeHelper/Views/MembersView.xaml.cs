@@ -47,6 +47,21 @@ namespace RefereeHelper.Views
                 INIManager manager = new INIManager(file);
                 manager.WritePrivateString("Option","SaveExcelPath", Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString());
             }
+            if (!Directory.Exists(System.IO.Path.Combine(Environment.CurrentDirectory, "temp")))
+            {
+                Directory.CreateDirectory(System.IO.Path.Combine(Environment.CurrentDirectory, "temp"));
+            }
+            else 
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp"));
+
+                foreach (FileInfo f in di.GetFiles())
+                {
+                    f.Delete();
+                }
+            }
+            
+
         }
         int ID = 0;
         public void RefreshData()

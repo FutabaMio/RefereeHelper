@@ -644,8 +644,6 @@ namespace RefereeHelper
             { 
                 doc.SaveAs(file);
                 doc.Close(ref falseObj, ref missingObj, ref missingObj);
-                word.Documents.Close();
-                word.Quit(ref missingObj, ref missingObj, ref missingObj);
                 
                 return true; 
             }
