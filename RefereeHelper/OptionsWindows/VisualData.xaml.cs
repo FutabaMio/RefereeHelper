@@ -43,13 +43,13 @@ namespace RefereeHelper.OptionsWindows
             {
                 TimerCallback tm = new TimerCallback(FillGroup);
 
-                Timer timer = new Timer(tm, competition, 0, 500);
+                Timer timer = new Timer(tm, competition, 0, 1000);
             }
             else
             {
                 TimerCallback tm = new TimerCallback(FillDistance);
 
-                Timer timer = new Timer(tm, competition, 0, 500);
+                Timer timer = new Timer(tm, competition, 0, 1000);
             }
         }
 
