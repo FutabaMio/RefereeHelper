@@ -26,7 +26,15 @@
             <Button Name="ExcelFPBut" Content="Финишний протокол в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelFPBut_Click"/>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1">
-            <Button Name="WordSpBut" Content="Стартовый протокол в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordSpBut_Click"/>
+            <Button Name="WordSpBut" Content="Стартовый протокол в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordSpBut_Click">
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Открыть для редактирования" Click="WordSpBut_Click"/>
+                        <MenuItem Header="Печать" Name="PrintBut" Click="PrintSPBut_Click"/>
+                        <MenuItem Header="Печать как" Name="PrintAsBut" Click="PrintAsSPBut_Click"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="1">
             <Button Name="WordDpBut" Content="Протокол по дистанции в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordDpBut_Click"/>

@@ -127,22 +127,65 @@ namespace RefereeHelper.OptionsWindows
 
             if (wd.StarProtocol(competition[0]))
             {
+                try
+                {
+                    var p = new Process();
+                    p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx")
+                    {
+                        UseShellExecute = true
+                    };
+                    p.Start();
+                }
+                catch
+                { }
+            }
+        }
+
+        private void PrintSPBut_Click(object sender, RoutedEventArgs e)
+        {
+            WordHelper wd = new WordHelper();
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            {
+                Id = x.Id,
+                Organizer = x.Organizer,
+                Place = x.Place,
+                Date = x.Date,
+                Judge = x.Judge,
+                Secretary = x.Secretary,
+                TypeAge = x.TypeAge
+            }).ToList();
+
+            if (wd.StarProtocol(competition[0]))
+            {
                 string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
 
-                if (wd.saveAs(file))
-                {
-                    try
-                    {
-                        var p = new Process();
-                        p.StartInfo = new ProcessStartInfo(file)
-                        {
-                            UseShellExecute = true
-                        };
-                        p.Start();
-                    }
-                    catch
-                    { }
-                }
+                wd.Print(file);
+            }
+        }
+
+        private void PrintAsSPBut_Click(object sender, RoutedEventArgs e)
+        {
+            WordHelper wd = new WordHelper();
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            {
+                Id = x.Id,
+                Organizer = x.Organizer,
+                Place = x.Place,
+                Date = x.Date,
+                Judge = x.Judge,
+                Secretary = x.Secretary,
+                TypeAge = x.TypeAge
+            }).ToList();
+
+            if (wd.StarProtocol(competition[0]))
+            {
+                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
+
+                wd.PrintAs(file);
             }
         }
 
@@ -164,22 +207,17 @@ namespace RefereeHelper.OptionsWindows
 
             if (wd.DistanceProtocol(competition[0]))
             {
-                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
-
-                if (wd.saveAs(file))
+                try
                 {
-                    try
+                    var p = new Process();
+                    p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
                     {
-                        var p = new Process();
-                        p.StartInfo = new ProcessStartInfo(file)
-                        {
-                            UseShellExecute = true
-                        };
-                        p.Start();
-                    }
-                    catch
-                    { }
+                        UseShellExecute = true
+                    };
+                    p.Start();
                 }
+                catch
+                { }
             }
         }
 
@@ -201,22 +239,17 @@ namespace RefereeHelper.OptionsWindows
 
             if (wd.FinshProtocol(competition[0]))
             {
-                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
-
-                if (wd.saveAs(file))
+                try
                 {
-                    try
+                    var p = new Process();
+                    p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx")
                     {
-                        var p = new Process();
-                        p.StartInfo = new ProcessStartInfo(file)
-                        {
-                            UseShellExecute = true
-                        };
-                        p.Start();
-                    }
-                    catch
-                    { }
+                        UseShellExecute = true
+                    };
+                    p.Start();
                 }
+                catch
+                { }
             }
         }
     }
