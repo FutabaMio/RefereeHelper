@@ -47,7 +47,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// 
         /// </summary>
-        public TimeOnly? currentTime { get; set; }              //надо распарсить только время, поискать как (TimeOnly currentTime = DateOnly.FromDateTime(timer))
+        //public TimeOnly? currentTime { get; set; }              //надо распарсить только время, поискать как (TimeOnly currentTime = DateOnly.FromDateTime(timer))
      }
 }
 
