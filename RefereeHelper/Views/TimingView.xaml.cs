@@ -188,9 +188,16 @@ namespace RefereeHelper.Views
             {
                 while (true)
                 {
-                    string received = u.Receive().Result.ToString();
+                    try
+                    {
+                        string received = u.Receive().Result.ToString();
 
-                    Process(received, p.dbContext, u.secondOfDifference);
+                        Process(received, p.dbContext, u.secondOfDifference);
+                    }
+                    catch
+                    {
+
+                    }
                 }
             });
             
