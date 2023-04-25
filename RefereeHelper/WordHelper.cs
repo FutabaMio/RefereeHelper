@@ -35,7 +35,7 @@ namespace RefereeHelper
 
         public WordHelper()
         {
-            doc = word.Documents.Add();
+
 
         }
 
@@ -43,6 +43,10 @@ namespace RefereeHelper
         {
             try 
             {
+                Word._Application word = new Word.Application();
+                Word._Document doc = word.Documents.Add(); ;
+                Word.Range wordRange;
+                Word.Table table;
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     List<int> partisipationIds = new List<int>();
@@ -190,9 +194,17 @@ namespace RefereeHelper
                             wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
                             wordRange.Text = "\n";
                         }
-                        else { return false; }
+                        else
+                        {
+                            doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                            word.Quit();
+                            return false;
+                        }
 
                     }
+                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx");
+                    doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                    word.Quit();
                     return true;
                 }
             }
@@ -203,6 +215,10 @@ namespace RefereeHelper
         {
             try 
             {
+                Word._Application word = new Word.Application();
+                Word._Document doc = word.Documents.Add(); ;
+                Word.Range wordRange;
+                Word.Table table;
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     List<int> partisipationIds = new List<int>();
@@ -298,7 +314,7 @@ namespace RefereeHelper
                             if (fl)
                             {
                                 fl = false;
-                                Word.Table table = doc.Tables.Add(wordRange, 2, 3, ref missingObj, ref missingObj);
+                                table = doc.Tables.Add(wordRange, 2, 3, ref missingObj, ref missingObj);
 
                                 table.Cell(2, 1).Range.Text = competition.Organizer;
                                 table.Cell(1, 2).Range.Text = competition.Name;
@@ -404,8 +420,16 @@ namespace RefereeHelper
                             //table.Columns[6].Width = table.Columns[6].Width + (differencewidth / 10 * 6);
                             //table.Columns[4].Width = table.Columns[6].Width + (differencewidth / 10 * 4);
                         }
-                        else { return false; }
+                        else 
+                        {
+                            doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                            word.Quit();
+                            return false; 
+                        }
                     }
+                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx");
+                    doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                    word.Quit();
                     return true;
                 }
             }
@@ -416,6 +440,13 @@ namespace RefereeHelper
         {
             try 
             {
+                Word._Application word = new Word.Application();
+                Word._Document doc = word.Documents.Add(); ;
+                Word.Range wordRange;
+                Word.Table table;
+                wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
+                wordRange.Text = "\n";
+                wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     TimeSpan timeSpan = TimeSpan.Zero;
@@ -512,7 +543,7 @@ namespace RefereeHelper
                                     if (fl)
                                     {
                                         fl = false;
-                                        Word.Table table = doc.Tables.Add(wordRange, 3, 2, ref missingObj, ref missingObj);
+                                        table = doc.Tables.Add(wordRange, 3, 2, ref missingObj, ref missingObj);
 
                                         table.Cell(1, 1).Range.Text = competition.Name;
                                         table.Cell(1, 1).Merge(table.Cell(1, 2));
@@ -622,38 +653,57 @@ namespace RefereeHelper
                                 wordRange.Text = "\n";
                                 wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
                             }
-                            else { return false; }
+                            else 
+                            {
+                                doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                                word.Quit();
+                                return false;
+                            }
 
                     if (!fl)
                     {
-                        Word.Table table = doc.Tables.Add(wordRange, 2, 2, ref missingObj, ref missingObj);
+                        table = doc.Tables.Add(wordRange, 2, 2, ref missingObj, ref missingObj);
                         table.Cell(1, 1).Range.Text = "Главный судья";
                         table.Cell(2, 1).Range.Text = "Главный Секретарь";
                         table.Cell(1, 2).Range.Text = competition.Judge;
                         table.Cell(2, 2).Range.Text = competition.Secretary;
                     }
+                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx");
+                    doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                    word.Quit();
                     return true;
                 }
             }
             catch(Exception ex) { return false; }
         }
 
-        public bool saveAs(String file)
+        public bool Print(String file)
         {
-            try 
-            { 
-                doc.SaveAs(file);
+            try
+            {
+                Word._Application word = new Word.Application();
+                Word._Document doc = word.Documents.Open(file); 
+                doc.PrintOut();
                 doc.Close(ref falseObj, ref missingObj, ref missingObj);
-                
-                return true; 
+                word.Quit();
+
+                return true;
             }
             catch (Exception ex) { return false; }
         }
-        public void Colse()
+        public bool PrintAs(String file)
         {
-            doc.Close(ref falseObj, ref missingObj, ref missingObj);
-            
-            word.Quit(ref missingObj, ref missingObj, ref missingObj);
+            try
+            {
+                Word._Application word = new Word.Application();
+                Word._Document doc = word.Documents.Open(file);
+                int dialogResult = word.Dialogs[Microsoft.Office.Interop.Word.WdWordDialog.wdDialogFilePrint].Show();
+                doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                word.Quit();
+
+                return true;
+            }
+            catch (Exception ex) { return false; }
         }
     }
 }
