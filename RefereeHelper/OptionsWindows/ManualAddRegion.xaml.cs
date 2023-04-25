@@ -32,7 +32,7 @@ namespace RefereeHelper.OptionsWindows
         {
             Region.Name = regionNameBox.Text;
             Int32.TryParse(regionNumberBox.Text, out int codeNumber);
-            Region.codeNumber = codeNumber;
+            Region.СodeNumber = codeNumber;
             DialogResult = true;
         }
 

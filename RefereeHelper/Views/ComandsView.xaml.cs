@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using RefereeHelper.OptionsWindows;
+using RefereeHelper.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 
 namespace RefereeHelper.Views
 {
@@ -25,10 +27,21 @@ namespace RefereeHelper.Views
         public ComandsView()
         {
             InitializeComponent();
-            RefreshData();
+            Loaded+=ComandsView_Loaded;
         }
 
-        public void RefreshData()
+        private void ComandsView_Loaded(object sender, RoutedEventArgs e)
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                db.Groups.Load();
+                DataContext = db.Groups.Local.ToObservableCollection();
+                //clubDataGrid.DataContext = db.Groups.Local.ToBindingList();
+            }
+        }
+
+        /*public void RefreshData()
         {
          SqliteConnection con = new SqliteConnection("Data Source=C:\\Users\\User\\Downloads\\SyclicSheck.db");
         con.Open();
@@ -36,7 +49,7 @@ namespace RefereeHelper.Views
             SqliteCommand command = new SqliteCommand(@"SELECT * FROM [group]", con);
         SqliteDataReader dataReader = command.ExecuteReader();
         commandsDataGrid.ItemsSource = dataReader;
-        }
+        }*/
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

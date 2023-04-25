@@ -1,19 +1,38 @@
-﻿using RefereeHelper.Domain.Models.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RefereeHelper.Models.Base;
 
 namespace RefereeHelper.Models
 {
     public class Group : BaseEntity
     {
+        /// <summary>
+        /// Ключ дистанции
+        /// </summary>
+        public int DistanceId { get; set; }
+        /// <summary>
+        /// Дистанция
+        /// </summary>
+        public virtual Distance Distance { get; set; }
+        /// <summary>
+        /// Гендер группы: true - мужской, false - женский
+        /// </summary>
+        public bool Gender { get; set; }
+        /// <summary>
+        /// Имя
+        /// </summary>
         public string Name { get; set; }
-        public int startAge { get; set; }
-        public int endAge { get; set; }
-        public List<Member> members { get; set; }
-        public int distance { get; set; }
-
+        /// <summary>
+        /// Нижний порог возраста
+        /// </summary>
+        public decimal StartAge { get; set; }
+        /// <summary>
+        /// Верхний порог возраста
+        /// </summary>
+        public decimal EndAge { get; set; }
+        public /*sk*/virtual IEnumerable<Member> Members { get; set; }
     }
 }

@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using RefereeHelper.OptionsWindows;
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
+using RefereeHelper.EntityFramework;
 
 namespace RefereeHelper.Views
 {
@@ -24,7 +25,7 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class ClubsViews : UserControl
     {
-        ApplicationContext db = new ApplicationContext();
+        //ApplicationContext db = new ApplicationContext();
         public ClubsViews()
         {
             InitializeComponent();
@@ -34,37 +35,44 @@ namespace RefereeHelper.Views
 
         private void ClubsViews_Loaded(object sender, RoutedEventArgs e)
         {
-            db.Database.EnsureCreated();
-            db.Clubs.Load();
-            DataContext = db.Clubs.Local.ToObservableCollection();
-            clubDataGrid.DataContext = db.Clubs.Local.ToBindingList();
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                db.Clubs.Load();
+                DataContext = db.Clubs.Local.ToObservableCollection();
+                clubDataGrid.DataContext = db.Clubs.Local.ToBindingList();
+            }
+             
         }
 
         private void AddClubButton_Click(object sender, RoutedEventArgs e)
         {
             ManualAddClub manualAddClub = new ManualAddClub(new Club());
-            if (manualAddClub.ShowDialog()==true)
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                Club Club = manualAddClub.Club;
-                db.Clubs.Add(Club);
-                db.SaveChanges();
+                if (manualAddClub.ShowDialog()==true)
+                {
+                    Club Club = manualAddClub.Club;
+                    db.Clubs.Add(Club);
+                    db.SaveChanges();
+                }
             }
-        }
-
-        private void clubDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            //форма редактирования (не нужно! везде удалить)
+               
         }
 
         private void clubDataGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             ManualAddClub manualAddClub = new ManualAddClub(new Club());
-            if(manualAddClub.ShowDialog() == true)
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                Club Club = manualAddClub.Club;
-                db.Add(Club);
-                db.SaveChanges();
+                if (manualAddClub.ShowDialog() == true)
+                {
+                    Club Club = manualAddClub.Club;
+                    db.Add(Club);
+                    db.SaveChanges();
+                }
             }
+               
         }
 
         private void clubDataGrid_CurrentCellChanged(object sender, EventArgs e)

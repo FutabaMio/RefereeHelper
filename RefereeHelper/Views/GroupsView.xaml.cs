@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using RefereeHelper.OptionsWindows;
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
+using RefereeHelper.EntityFramework;
 
 namespace RefereeHelper.Views
 {
@@ -24,7 +25,7 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class GroupsView : UserControl
     {
-        ApplicationContext db = new ApplicationContext();
+        //ApplicationContext db = new ApplicationContext();
         public GroupsView()
         {
             InitializeComponent();
@@ -33,32 +34,44 @@ namespace RefereeHelper.Views
 
         private void GroupsView_Loaded(object sender, RoutedEventArgs e)
         {
-            db.Database.EnsureCreated();
-            db.Groups.Load();
-            DataContext = db.Groups.Local.ToObservableCollection();
-            groupsTable.DataContext = db.Groups.Local.ToBindingList();
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                db.Groups.Load();
+                DataContext = db.Groups.Local.ToObservableCollection();
+                groupsTable.DataContext = db.Groups.Local.ToBindingList();
+            }
+           
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ManualAddGroup manualAddGroup = new ManualAddGroup(new Group());
-            if (manualAddGroup.ShowDialog()==true)
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                Group Group = manualAddGroup.Group;
-                db.Groups.Add(Group);
-                db.SaveChanges();
+                if (manualAddGroup.ShowDialog()==true)
+                {
+                    Group Group = manualAddGroup.Group;
+                    db.Groups.Add(Group);
+                    db.SaveChanges();
+                }
             }
+                
         }
 
         private void groupsTable_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             ManualAddGroup manualAddGroup = new ManualAddGroup(new Group());
-            if (manualAddGroup.ShowDialog()==true)
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
-                Group Group = manualAddGroup.Group;
-                db.Groups.Add(Group);
-                db.SaveChanges();
+                if (manualAddGroup.ShowDialog()==true)
+                {
+                    Group Group = manualAddGroup.Group;
+                    db.Groups.Add(Group);
+                    db.SaveChanges();
+                }
             }
+                
         }
     }
 }
