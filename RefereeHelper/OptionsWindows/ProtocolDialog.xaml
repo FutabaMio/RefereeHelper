@@ -30,17 +30,33 @@
                 <Button.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Открыть для редактирования" Click="WordSpBut_Click"/>
-                        <MenuItem Header="Печать" Name="PrintBut" Click="PrintSPBut_Click"/>
-                        <MenuItem Header="Печать как" Name="PrintAsBut" Click="PrintAsSPBut_Click"/>
+                        <MenuItem Header="Печать" Name="PrintSPBut" Click="PrintSPBut_Click"/>
+                        <MenuItem Header="Печать как" Name="PrintAsSPBut" Click="PrintAsSPBut_Click"/>
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="1">
-            <Button Name="WordDpBut" Content="Протокол по дистанции в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordDpBut_Click"/>
+            <Button Name="WordDpBut" Content="Протокол по дистанции в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordDpBut_Click">
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Открыть для редактирования" Click="WordDpBut_Click"/>
+                        <MenuItem Header="Печать" Name="PrintDPBut" Click="PrintDPBut_Click"/>
+                        <MenuItem Header="Печать как" Name="PrintAsDPBut" Click="PrintAsDPBut_Click"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="1">
-            <Button Name="WordFpBut" Content="Финишний протокол в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordFpBut_Click"/>
+            <Button Name="WordFpBut" Content="Финишний протокол в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordFpBut_Click">
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Открыть для редактирования" Click="WordFpBut_Click"/>
+                        <MenuItem Header="Печать" Name="PrintFPBut" Click="PrintFPBut_Click"/>
+                        <MenuItem Header="Печать как" Name="PrintAsFPBut" Click="PrintAsFPBut_Click"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
         </Grid>
     </Grid>
 </Window>

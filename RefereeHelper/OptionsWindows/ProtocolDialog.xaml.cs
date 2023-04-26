@@ -160,8 +160,8 @@ namespace RefereeHelper.OptionsWindows
             if (wd.StarProtocol(competition[0]))
             {
                 string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
-
-                wd.Print(file);
+                if (File.Exists(file))
+                    wd.Print(file);
             }
         }
 
@@ -184,8 +184,8 @@ namespace RefereeHelper.OptionsWindows
             if (wd.StarProtocol(competition[0]))
             {
                 string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
-
-                wd.PrintAs(file);
+                if (File.Exists(file))
+                    wd.PrintAs(file);
             }
         }
 
@@ -221,6 +221,54 @@ namespace RefereeHelper.OptionsWindows
             }
         }
 
+        private void PrintDPBut_Click(object sender, RoutedEventArgs e)
+        {
+            WordHelper wd = new WordHelper();
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            {
+                Id = x.Id,
+                Organizer = x.Organizer,
+                Place = x.Place,
+                Date = x.Date,
+                Judge = x.Judge,
+                Secretary = x.Secretary,
+                TypeAge = x.TypeAge
+            }).ToList();
+
+            if (wd.StarProtocol(competition[0]))
+            {
+                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                if (File.Exists(file))
+                    wd.Print(file);
+            }
+        }
+
+        private void PrintAsDPBut_Click(object sender, RoutedEventArgs e)
+        {
+            WordHelper wd = new WordHelper();
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            {
+                Id = x.Id,
+                Organizer = x.Organizer,
+                Place = x.Place,
+                Date = x.Date,
+                Judge = x.Judge,
+                Secretary = x.Secretary,
+                TypeAge = x.TypeAge
+            }).ToList();
+
+            if (wd.StarProtocol(competition[0]))
+            {
+                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                if (File.Exists(file))
+                    wd.PrintAs(file);
+            }
+        }
+
         private void WordFpBut_Click(object sender, RoutedEventArgs e)
         {
             WordHelper wd = new WordHelper();
@@ -250,6 +298,54 @@ namespace RefereeHelper.OptionsWindows
                 }
                 catch
                 { }
+            }
+        }
+
+        private void PrintFPBut_Click(object sender, RoutedEventArgs e)
+        {
+            WordHelper wd = new WordHelper();
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            {
+                Id = x.Id,
+                Organizer = x.Organizer,
+                Place = x.Place,
+                Date = x.Date,
+                Judge = x.Judge,
+                Secretary = x.Secretary,
+                TypeAge = x.TypeAge
+            }).ToList();
+
+            if (wd.StarProtocol(competition[0]))
+            {
+                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
+                if (File.Exists(file))
+                    wd.Print(file);
+            }
+        }
+
+        private void PrintAsFPBut_Click(object sender, RoutedEventArgs e)
+        {
+            WordHelper wd = new WordHelper();
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            {
+                Id = x.Id,
+                Organizer = x.Organizer,
+                Place = x.Place,
+                Date = x.Date,
+                Judge = x.Judge,
+                Secretary = x.Secretary,
+                TypeAge = x.TypeAge
+            }).ToList();
+
+            if (wd.StarProtocol(competition[0]))
+            {
+                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
+                if (File.Exists(file))
+                    wd.PrintAs(file);
             }
         }
     }
