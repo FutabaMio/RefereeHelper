@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RefereeHelper.OptionsWindows"
         mc:Ignorable="d"
-        Title="ProtocolDialog" Height="165" Width="410">
+        Title="Протоколы" Height="165" Width="410">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="44"/>
