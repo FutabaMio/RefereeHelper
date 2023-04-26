@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using Word = Microsoft.Office.Interop.Word;
 
@@ -16,10 +17,6 @@ namespace RefereeHelper
 {
     internal class WordHelper
     {
-        static Word._Application word = new Word.Application();
-        static Word._Document doc;
-        static Word.Range wordRange;
-        Word.Table table;
         static Object missingObj = System.Reflection.Missing.Value;
         static Object trueObj = true;
         static Object falseObj = false;
@@ -41,10 +38,11 @@ namespace RefereeHelper
 
         public bool StarProtocol(Competition competition)
         {
+            Word._Application word = new Word.Application();
+            Word._Document doc = word.Documents.Add();
             try 
             {
-                Word._Application word = new Word.Application();
-                Word._Document doc = word.Documents.Add(); ;
+                
                 Word.Range wordRange;
                 Word.Table table;
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
@@ -198,6 +196,7 @@ namespace RefereeHelper
                         {
                             doc.Close(ref falseObj, ref missingObj, ref missingObj);
                             word.Quit();
+                            MessageBox.Show("Невозможно сформировать стратовый протокол", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                             return false;
                         }
 
@@ -208,15 +207,22 @@ namespace RefereeHelper
                     return true;
                 }
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                word.Quit();
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
 
         public bool DistanceProtocol(Competition competition)
         {
+            Word._Application word = new Word.Application();
+            Word._Document doc = word.Documents.Add();
             try 
             {
-                Word._Application word = new Word.Application();
-                Word._Document doc = word.Documents.Add(); ;
+                
                 Word.Range wordRange;
                 Word.Table table;
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
@@ -420,11 +426,12 @@ namespace RefereeHelper
                             //table.Columns[6].Width = table.Columns[6].Width + (differencewidth / 10 * 6);
                             //table.Columns[4].Width = table.Columns[6].Width + (differencewidth / 10 * 4);
                         }
-                        else 
+                        else
                         {
                             doc.Close(ref falseObj, ref missingObj, ref missingObj);
                             word.Quit();
-                            return false; 
+                            MessageBox.Show("Невозможно сформировать протокол по дистанции", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return false;
                         }
                     }
                     doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx");
@@ -433,15 +440,21 @@ namespace RefereeHelper
                     return true;
                 }
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                word.Quit();
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
 
         public bool FinshProtocol(Competition competition)
         {
+            Word._Application word = new Word.Application();
+            Word._Document doc = word.Documents.Add();
             try 
             {
-                Word._Application word = new Word.Application();
-                Word._Document doc = word.Documents.Add(); ;
                 Word.Range wordRange;
                 Word.Table table;
                 wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
@@ -653,10 +666,11 @@ namespace RefereeHelper
                                 wordRange.Text = "\n";
                                 wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
                             }
-                            else 
+                            else
                             {
                                 doc.Close(ref falseObj, ref missingObj, ref missingObj);
                                 word.Quit();
+                                MessageBox.Show("Невозможно сформировать финишний протокол", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                                 return false;
                             }
 
@@ -674,36 +688,57 @@ namespace RefereeHelper
                     return true;
                 }
             }
-            catch(Exception ex) { return false; }
+            catch(Exception ex)
+            {
+                doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                word.Quit();
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
 
         public bool Print(String file)
         {
+            
+            Word._Application word = new Word.Application();
+            Word._Document doc = word.Documents.Open(file);
             try
             {
-                Word._Application word = new Word.Application();
-                Word._Document doc = word.Documents.Open(file); 
                 doc.PrintOut();
                 doc.Close(ref falseObj, ref missingObj, ref missingObj);
                 word.Quit();
 
                 return true;
             }
-            catch (Exception ex) { return false; }
+            catch (Exception ex)
+            {
+                doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                word.Quit();
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
         public bool PrintAs(String file)
         {
+            Word._Application word = new Word.Application();
+            Word._Document doc = word.Documents.Open(file);
             try
             {
-                Word._Application word = new Word.Application();
-                Word._Document doc = word.Documents.Open(file);
                 int dialogResult = word.Dialogs[Microsoft.Office.Interop.Word.WdWordDialog.wdDialogFilePrint].Show();
+                word.Visible = false;
                 doc.Close(ref falseObj, ref missingObj, ref missingObj);
                 word.Quit();
 
                 return true;
             }
-            catch (Exception ex) { return false; }
+            catch (Exception ex)
+            {
+                word.Visible = false;
+                doc.Close(ref falseObj, ref missingObj, ref missingObj);
+                word.Quit();
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
     }
 }
