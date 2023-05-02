@@ -47,13 +47,21 @@ namespace RefereeHelper
         /// </summary>
         public async Task<string> Receive()
         {
-            result = await client.ReceiveAsync();
-            datagram = result.Buffer;
-            received = Encoding.UTF8.GetString(datagram);
-            time = TimeOnly.FromDateTime(DateTime.Now);
-            received = received.Substring(received.IndexOf("Tag:")+4);
-            received = received.Substring(0, received.IndexOf(" "));
-            return received;
+            try
+            {
+                result = await client.ReceiveAsync();
+                datagram = result.Buffer;
+                received = Encoding.UTF8.GetString(datagram);
+                time = TimeOnly.FromDateTime(DateTime.Now);
+                received = received.Substring(received.IndexOf("Tag:") + 4);
+                received = received.Substring(0, received.IndexOf(" "));
+                return received;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                return " ";
+            }
         }
         /// <summary>
         /// Закрывает UDPClient
