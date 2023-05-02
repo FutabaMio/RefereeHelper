@@ -57,8 +57,14 @@ namespace RefereeHelper.Views
             {
                 var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
                 var teams = dbContext.Teams.ToList();
-                TeamTimer.DataContext = timings;
+                var members = dbContext.Starts.Include(x => x.Partisipation).ThenInclude(y => y.Member).ToList();
+                
+                //TeamTimer.DataContext = timings;
                 TeamTimer.ItemsSource = timings;
+                foreach(var t in timings)
+                {
+
+                }
                 /*foreach (var t in timings)
                 {
                     i++;
@@ -73,17 +79,25 @@ namespace RefereeHelper.Views
                                          $"\n\tTeam:{t.Start?.Team?.Name}"); //+
                                        //$"\n\tisFinish?");
                 }*/
-
+                    if (teamsRB.IsChecked==true)
+                 {
+                    TeamTimer.ItemsSource=teams;
+                 } else if (membersRB.IsChecked==true)
+                {
+                    TeamTimer.ItemsSource=members;
+                } else if (timingRB.IsChecked==true)
+                {
+                    TeamTimer.ItemsSource=timings;
+                }/* else if (teamTimingRB.IsChecked==true)
+                {
+                    TeamTimer.ItemsSource=teamTimer;
+                }*/
             }
+            
 
         }
         private static void TimingDateTable()
         {
-
-
-
-
-
             DataColumn[] columns =
             {
                 new DataColumn("Id", typeof(int)),
@@ -102,7 +116,7 @@ namespace RefereeHelper.Views
         //конец
 
         //
-        //блок секундомер (не асинхронный)
+        //блок секундомер
         //
         DispatcherTimer dt = new DispatcherTimer();
         Stopwatch sw = new Stopwatch();
@@ -406,6 +420,7 @@ namespace RefereeHelper.Views
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            AddData();
             //Timing timing;
             //db.Timings.Add(timing); //пофиксить запись (почитать об ошибке)
             //почитать, как при записи в бд подсосать данные из таблиц по номеру участнику
