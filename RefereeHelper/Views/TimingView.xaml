@@ -82,13 +82,20 @@
            <!-- <Button Grid.Column="0" Content="Загрузить из файла"/> -->
             <Button Grid.Column="0" Content="Добавить из базы"/>
             <Button Grid.Column="1" Content="Добавить вручную"/>
-            <Button Grid.Column="2" Content="Выгрузить стартовый протокол" Name="ProtocolExcelBut" Click="ProtocolExcelBut_Click"/>
+            <Button Grid.Column="2" Content="Выгрузить стартовый протокол" Name="ProtocolExcelBut" Click="ProtocolExcelBut_Click">
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Выгрузить" Click="ProtocolExcelBut_Click"/>
+                        <MenuItem Header="Выгрузить как" Name="ExportAsBut" Click="ExportAsBut_Click"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
             <Button Grid.Column="3" Content="Распечатать стартовый протокол" Name="ProtocolWordBut" Click="ProtocolWordBut_Click">
                 <Button.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Открыть для редактирования" Click="ProtocolWordBut_Click"/>
-                        <MenuItem Header="Печать" Name="PrintSPBut" Click="PrintBut_Click"/>
-                        <MenuItem Header="Печать как" Name="PrintAsSPBut" Click="PrintAsBut_Click"/>
+                        <MenuItem Header="Печать" Name="PrintBut" Click="PrintBut_Click"/>
+                        <MenuItem Header="Печать как" Name="PrintAsBut" Click="PrintAsBut_Click"/>
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>

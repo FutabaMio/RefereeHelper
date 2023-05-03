@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using RefereeHelper.OptionsWindows;
 using System.Security.Policy;
 using System.Windows.Data;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace RefereeHelper.Views
 {
@@ -43,7 +44,9 @@ namespace RefereeHelper.Views
             public string ClubName { get; set; }
             public string DischargeName { get; set; }
         }
-
+        /// <summary>
+        /// Структура для заполнения таблицы группами
+        /// </summary>
         struct DistanceDataItem
         {
             public string GroupName { get; set; }
@@ -55,7 +58,9 @@ namespace RefereeHelper.Views
             public string Circles { get; set; }
             public string StartTime { get; set; }  
         }
-
+        /// <summary>
+        /// Структура для заполнения таблицы тиймингами
+        /// </summary>
         struct TimingDataItem
         {
             public string Id { get; set; }
@@ -136,9 +141,9 @@ namespace RefereeHelper.Views
                 
             }
         }
-        
+
         /// <summary>
-        /// заполнение таблицы участниками
+        /// Заполнение datagrid данными из участников
         /// </summary>
         void MembersFill()
         {
@@ -222,6 +227,10 @@ namespace RefereeHelper.Views
             }
         }
 
+
+        /// <summary>
+        /// Заполнение datagrid данными из групп
+        /// </summary>
         void DistanceFill()
         {
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
@@ -322,6 +331,9 @@ namespace RefereeHelper.Views
             }
         }
 
+        /// <summary>
+        /// Заполнение datagrid данными из тайминга
+        /// </summary>
         void TimingFill()
         {
             using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
@@ -434,14 +446,17 @@ namespace RefereeHelper.Views
                 {
                     if (competition.Id == timing.Start.Partisipation.Competition.Id)
                     {
-                        timebuf = (DateTime)timing.Start?.StartTime;
                         buf.Id = timing.Id.ToString();
                         buf.FamilyName = timing.Start?.Partisipation.Member?.FamilyName;
                         buf.MemberName = timing.Start?.Partisipation.Member?.Name;
                         buf.Team = timing.Start?.Team?.Name;
                         buf.Startnumber = timing.Start?.Number.ToString();
                         buf.Chip = timing.Start?.Chip;
-                        buf.StartTime = timebuf.ToShortTimeString();
+                        if(timing.Start?.StartTime != null)
+                        {
+                            timebuf = (DateTime)timing.Start?.StartTime;
+                            buf.StartTime = timebuf.ToShortTimeString();
+                        }
                         if (timing.TimeNow != null)
                         {
                             timenowbuf = (TimeOnly)timing.TimeNow;
@@ -517,11 +532,6 @@ namespace RefereeHelper.Views
         }
         private static void TimingDateTable()
         {
-
-
-
-
-
             DataColumn[] columns =
             {
                 new DataColumn("Id", typeof(int)),
@@ -845,7 +855,11 @@ namespace RefereeHelper.Views
             VisualData f = new VisualData(false, competition);
             f.Show();
         }
-
+        /// <summary>
+        /// смена вкладки на участники
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MemberFillBut_Click(object sender, RoutedEventArgs e)
         {
             position = 0;
@@ -853,7 +867,11 @@ namespace RefereeHelper.Views
             ProtocolExcelBut.Content = "Выгрузить стартовый протокол";
             ProtocolWordBut.Content = "Распечатать стартовый протокол";
         }
-
+        /// <summary>
+        /// смена вкладки на дистанции
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DistanceFillBut_Click(object sender, RoutedEventArgs e)
         {
             position = 1;
@@ -861,7 +879,11 @@ namespace RefereeHelper.Views
             ProtocolExcelBut.Content = "Выгрузить протокол по дистанции";
             ProtocolWordBut.Content = "Распечатать протокол по дистанции";
         }
-
+        /// <summary>
+        /// смена вкладки на результаты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TimingFillBut_Click(object sender, RoutedEventArgs e)
         {
             position = 2;
@@ -875,7 +897,11 @@ namespace RefereeHelper.Views
         {
             
         }
-
+        /// <summary>
+        /// формирование протокола и выгруза его по пути по умолчанию
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ProtocolExcelBut_Click(object sender, RoutedEventArgs e)
         {
             if (position == 0)
@@ -928,6 +954,75 @@ namespace RefereeHelper.Views
             }
         }
 
+        private void ExportAsBut_Click(object sender, EventArgs e)
+        {
+            if (position == 0)
+            {
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                string namefile = "Start_Protocol_Excel.xlsx";
+                CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+
+                dialog.IsFolderPicker = true;
+                if (CommonFileDialogResult.Ok == dialog.ShowDialog())
+                {
+                    Competition competition = (Competition)CompList.SelectedItem;
+                    if (ex.StarProtocol(competition))
+                    {
+                        string file = dialog.FileName + "\\" + namefile;
+                        file = file.Replace("\\\\", "\\");
+
+                        ex.saveAs(file);
+                    }
+                }
+            }
+            else if (position == 1)
+            {
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                string namefile = "Distance_Protocol_Excel.xlsx";
+                Competition competition = (Competition)CompList.SelectedItem;
+                CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+
+                dialog.IsFolderPicker = true;
+                if (CommonFileDialogResult.Ok == dialog.ShowDialog())
+                {
+                    if (ex.DistanceProtocol(competition))
+                    {
+                        string file = dialog.FileName + "\\" + namefile;
+                        file = file.Replace("\\\\", "\\");
+
+                        ex.saveAs(file);
+                    }
+                }   
+            }
+            else if (position == 2)
+            {
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                string namefile = "Finish_Protocol_Excel.xlsx";
+                Competition competition = (Competition)CompList.SelectedItem;
+                CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+
+                dialog.IsFolderPicker = true;
+                if (CommonFileDialogResult.Ok == dialog.ShowDialog())
+                {
+                    if (ex.FinshProtocol(competition))
+                    {
+                        string file = dialog.FileName + "\\" + namefile;
+                        file = file.Replace("\\\\", "\\");
+
+                        ex.saveAs(file);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// формирование документа и открытие его для редактирования
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ProtocolWordBut_Click(object sender, RoutedEventArgs e)
         {
             if (position == 0)
@@ -998,6 +1093,11 @@ namespace RefereeHelper.Views
             }
         }
 
+        /// <summary>
+        /// Быстрая печать документа
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PrintBut_Click(object sender, RoutedEventArgs e)
         {
             if (position == 0)
@@ -1043,7 +1143,11 @@ namespace RefereeHelper.Views
                 }
             }     
         }
-
+        /// <summary>
+        /// печать документа в диалоговом режиме
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PrintAsBut_Click(object sender, RoutedEventArgs e)
         {
             if (position == 0)
@@ -1094,18 +1198,6 @@ namespace RefereeHelper.Views
         {
             if (position == 2)
             {
-                //Timing timing = new()
-                //{
-                //    TimeNow = TimeOnly.Parse(DateTime.Now.ToShortTimeString())
-                //};
-                //using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
-                //{
-                //    dbContext.Add(timing);
-                //    dbContext.SaveChanges();
-                //    TimingDataItem item = new TimingDataItem();
-
-                //}
-                //TimingFill();
                 TimingDataItem item = new TimingDataItem();
                 item.TimeNow = DateTime.Now.ToLongTimeString();
                 TeamTimer.Items.Add(item);
