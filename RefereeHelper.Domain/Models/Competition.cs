@@ -38,5 +38,13 @@ namespace RefereeHelper.Models
         /// </summary>
         public bool TypeAge { get; set; }
         public virtual IEnumerable<Partisipation> Partisipations { get; set; }
+
+        public override string ToString()
+        {
+            if (Name != null)
+                return Name;
+            else
+                return "404";
+        }
     }
 }

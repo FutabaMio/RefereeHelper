@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
@@ -18,6 +19,8 @@ using RefereeHelper.EntityFramework.Services;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using RefereeHelper.OptionsWindows;
+using System.Security.Policy;
+using System.Windows.Data;
 
 namespace RefereeHelper.Views
 {
@@ -26,18 +29,450 @@ namespace RefereeHelper.Views
     /// </summary>
     public partial class TimingView : UserControl
     {
+        /// <summary>
+        /// Структура для заполнения таблицы участниками
+        /// </summary>
+        struct MemberDataItem
+        {
+            public string FamilyName { get; set; }
+            public string MemberName { get; set; }
+            public string SecondName { get; set; }
+            public string BornDate { get; set; }
+            public string City { get; set; }
+            public string Phone { get; set; }
+            public string ClubName { get; set; }
+            public string DischargeName { get; set; }
+        }
+
+        struct DistanceDataItem
+        {
+            public string GroupName { get; set; }
+            public string Gender { get; set; }
+            public string Age { get; set; }
+            public string DistanceName { get; set; }
+            public string Length { get; set; }
+            public string Height { get; set; }
+            public string Circles { get; set; }
+            public string StartTime { get; set; }  
+        }
+
+        struct TimingDataItem
+        {
+            public string Id { get; set; }
+            public string FamilyName { get; set; }
+            public string MemberName { get; set; }
+            public string Team { get; set; }
+            public string Startnumber { get; set; }
+            public string Chip { get; set; }
+            public string StartTime { get; set; }
+            public string TimeNow { get; set; }
+            public string TimeFromStart { get; set; }
+            public string Circle { get; set; }
+            public string CircleTime { get; set; }
+            public string Place { get; set; }
+            public string PlaceAbsolute { get; set; }
+            public string IsFinish { get; set; }     
+        }
+
+        //показатель указывающий на то чем заполнена сейчас таблица: участники = 0, дистанции = 1, результаты = 2 
+        byte position = 0;
+
         public TimingView()
         {
             InitializeComponent();
             dt.Tick += new EventHandler(dtTick);
             dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
-            LoadEvents();
-            LoadData();
-
+            if (FillCompList())
+            {
+                CompList.SelectedIndex = 0;
+                LoadEvents();
+                MembersFill();
+                //LoadData();
+            }
+            else
+            {
+                MemberFillBut.IsEnabled = false;
+                DistanceFillBut.IsEnabled = false;
+                TimingFillBut.IsEnabled = false;
+                ProtocolExcelBut.IsEnabled = false;
+                ProtocolWordBut.IsEnabled = false;
+                VisualGroupBut.IsEnabled = false;
+                VisualDistanceBut.IsEnabled = false;
+            }
 
         }
         int countOfStartingPeople = 0, countOfFinishingPeople = 0;
-       
+
+        /// <summary>
+        /// Заполнение списка мероприятий
+        /// </summary>
+        /// <returns>true если мероприятия есть, false если нет</returns>
+        bool FillCompList()
+        {
+            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                var competitions = dbContext.Set<Competition>().Select(x => new Competition
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Date = x.Date,
+                    Place = x.Place,
+                    Organizer = x.Organizer,
+                    Judge = x.Judge,
+                    Secretary = x.Secretary,
+                    TypeAge = x.TypeAge
+                }).ToList();
+
+                if (competitions.Count != 0)
+                {
+                    foreach (Competition competition in competitions)
+                    {
+                        CompList.Items.Add(competition);
+                    }
+                    return true;
+                }
+                else
+                    return false;
+                
+            }
+        }
+        
+        /// <summary>
+        /// заполнение таблицы участниками
+        /// </summary>
+        void MembersFill()
+        {
+            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                TeamTimer.Items.Clear();
+                TeamTimer.Columns.Clear();
+
+                var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
+                {
+                    Id = x.Id,
+                    Competition = new Competition
+                    {
+                        Id = x.Competition.Id,
+                    },
+                    Member = new Member
+                    {
+                        Id = x.Member.Id,
+                        FamilyName = x.Member.FamilyName,
+                        Name = x.Member.Name,
+                        SecondName= x.Member.SecondName,
+                        BornDate = x.Member.BornDate,
+                        City= x.Member.City,
+                        Phone= x.Member.Phone,
+                        Club = new Club
+                        {
+                            Name = x.Member.Club.Name
+                        },
+                        Discharge = new Discharge
+                        {
+                            Name = x.Member.Discharge.Name
+                        }
+                    }
+                }).ToList();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+                MemberDataItem buf = new MemberDataItem();
+                var column = new DataGridTextColumn();
+
+                column.Header = "Фамилия";
+                column.Binding = new Binding("FamilyName");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Имя";
+                column.Binding = new Binding("MemberName");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Отчество";
+                column.Binding = new Binding("SecondName");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Дата Рождения";
+                column.Binding = new Binding("BornDate");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Город";
+                column.Binding = new Binding("City");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Клуб";
+                column.Binding = new Binding("ClubName");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Разряд";
+                column.Binding = new Binding("DischargeName");
+                TeamTimer.Columns.Add(column);
+                foreach (Partisipation partisipation in partisipations)
+                {
+                    if (partisipation.Competition.Id == competition.Id)
+                    {
+                        buf.FamilyName = partisipation.Member?.FamilyName;
+                        buf.MemberName = partisipation.Member?.Name;
+                        buf.SecondName = partisipation.Member?.SecondName;
+                        buf.BornDate = partisipation.Member?.BornDate.ToShortDateString();
+                        buf.City = partisipation.Member?.Phone;
+                        buf.ClubName = partisipation.Member?.Club?.Name;
+                        buf.DischargeName= partisipation.Member?.Discharge?.Name;
+                        TeamTimer.Items.Add(buf);
+                    }
+                }
+            }
+        }
+
+        void DistanceFill()
+        {
+            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                TeamTimer.Items.Clear();
+                TeamTimer.Columns.Clear();
+                var groups = dbContext.Set<Models.Group>().Select(x => new Models.Group
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Gender = x.Gender,
+                    StartAge = x.StartAge,
+                    EndAge = x.EndAge,
+                    Distance = new Distance
+                    {
+                        Id = x.Distance.Id,
+                        Name = x.Distance.Name,
+                        Length = x.Distance.Length,
+                        Height = x.Distance.Height,
+                        Circles = x.Distance.Circles,
+                        StartTime = x.Distance.StartTime
+                    }
+                }).ToList();
+                var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
+                {
+                    Id = x.Id,
+                    Competition = new Competition
+                    {
+                        Id = x.Competition.Id,
+                    },
+                    Group = new Models.Group
+                    {
+                        Id = x.Group.Id
+                    }
+                }).ToList();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+                DistanceDataItem buf = new DistanceDataItem();
+                var column = new DataGridTextColumn();
+
+                column.Header = "Группа";
+                column.Binding = new Binding("GroupName");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Пол";
+                column.Binding = new Binding("Gender");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Возрост";
+                column.Binding = new Binding("Age");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Дистанция";
+                column.Binding = new Binding("DistanceName");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Длина";
+                column.Binding = new Binding("Length");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Высота";
+                column.Binding = new Binding("Height");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Круги";
+                column.Binding = new Binding("Circles");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Время старта";
+                column.Binding = new Binding("StartTime");
+                TeamTimer.Columns.Add(column);
+
+                foreach (Models.Group group in groups)
+                {
+                    foreach(Partisipation partisipation in partisipations)
+                    {
+                        if (group.Id == partisipation.Group?.Id)
+                        {
+                            if (partisipation.Competition.Id == competition.Id)
+                            {
+                                buf.GroupName = group.Name;
+                                if (group.Gender)
+                                    buf.Gender = "М";
+                                else
+                                    buf.Gender = "Ж";
+                                buf.Age = group.StartAge.ToString() + "-" + group.EndAge.ToString();
+                                buf.DistanceName = group.Distance.Name;
+                                buf.Length = group.Distance.Length.ToString() + " м.";
+                                buf.Height = group.Distance.Height.ToString() + " м.";
+                                buf.Circles = group.Distance.Circles.ToString();
+                                buf.StartTime = group.Distance.StartTime.ToShortTimeString();
+                                TeamTimer.Items.Add(buf);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void TimingFill()
+        {
+            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                TeamTimer.Items.Clear();
+                TeamTimer.Columns.Clear();
+
+                var timings = dbContext.Set<Timing>().Select(x => new Timing
+                {
+                    Id = x.Id,
+                    TimeNow = x.TimeNow,
+                    TimeFromStart = x.TimeFromStart,
+                    Circle = x.Circle,
+                    CircleTime = x.CircleTime,
+                    Place = x.Place,
+                    PlaceAbsolute = x.PlaceAbsolute,
+                    IsFinish = x.IsFinish,
+                    Start = new Models.Start
+                    {
+                        Id = x.Start.Id,
+                        Number = x.Start.Number,
+                        Chip = x.Start.Chip,
+                        StartTime = x.Start.StartTime,
+                        Team = new Team
+                        {
+                            Id = x.Start.Team.Id,
+                            Name = x.Start.Team.Name
+                        },
+                        Partisipation = new Partisipation
+                        {
+                            Id = x.Start.Partisipation.Id,
+                            Competition = new Competition
+                            {
+                                Id = x.Start.Partisipation.Competition.Id
+                            },
+                            Member = new Member
+                            {
+                                Id = x.Start.Partisipation.Member.Id,
+                                Name = x.Start.Partisipation.Member.Name,
+                                FamilyName = x.Start.Partisipation.Member.FamilyName
+                            }
+                        }
+                    }
+                }).ToList();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+                DateTime timebuf = DateTime.MinValue;
+                TimeOnly timenowbuf = new TimeOnly();
+                TimingDataItem buf = new TimingDataItem();
+                var column = new DataGridTextColumn();
+
+
+                column.Header = "Id";
+                column.Binding = new Binding("Id");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Фамилия";
+                column.Binding = new Binding("FamilyName");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Имя";
+                column.Binding = new Binding("MemberName");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Команда";
+                column.Binding = new Binding("Team");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Старт.№";
+                column.Binding = new Binding("Startnumber");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Чип";
+                column.Binding = new Binding("Chip");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Врямя старта";
+                column.Binding = new Binding("StartTime");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Время";
+                column.Binding = new Binding("TimeNow");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Время со страта";
+                column.Binding = new Binding("TimeFromStart");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Круг";
+                column.Binding = new Binding("Circle");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Время круга";
+                column.Binding = new Binding("CircleTime");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Место";
+                column.Binding = new Binding("Place");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Абсолютное место";
+                column.Binding = new Binding("PlaceAbsolute");
+                TeamTimer.Columns.Add(column);
+                column = new DataGridTextColumn();
+                column.Header = "Финиш";
+                column.Binding = new Binding("IsFinish");
+                TeamTimer.Columns.Add(column);
+
+                foreach (Timing timing in timings)
+                {
+                    if (competition.Id == timing.Start.Partisipation.Competition.Id)
+                    {
+                        timebuf = (DateTime)timing.Start?.StartTime;
+                        buf.Id = timing.Id.ToString();
+                        buf.FamilyName = timing.Start?.Partisipation.Member?.FamilyName;
+                        buf.MemberName = timing.Start?.Partisipation.Member?.Name;
+                        buf.Team = timing.Start?.Team?.Name;
+                        buf.Startnumber = timing.Start?.Number.ToString();
+                        buf.Chip = timing.Start?.Chip;
+                        buf.StartTime = timebuf.ToShortTimeString();
+                        if (timing.TimeNow != null)
+                        {
+                            timenowbuf = (TimeOnly)timing.TimeNow;
+                            buf.TimeNow = timenowbuf.ToLongTimeString();
+                        }
+                        if (timing.TimeFromStart != null)
+                        {
+                            timenowbuf = (TimeOnly)timing.TimeFromStart;
+                            buf.TimeFromStart = timenowbuf.ToLongTimeString();
+                        }
+                        buf.Circle = timing.Circle.ToString();
+                        if (timing.CircleTime != null)
+                        {
+                            timenowbuf = (TimeOnly)timing.CircleTime;
+                            buf.CircleTime = timenowbuf.ToLongTimeString();
+                        }
+                        buf.Place = timing.Place.ToString();
+                        buf.PlaceAbsolute = timing.PlaceAbsolute.ToString();
+                        if (timing.IsFinish != null)
+                        {
+                            if (timing.IsFinish == true)
+                                buf.IsFinish = "да";
+                            else
+                                buf.IsFinish = "нет";
+                        }
+                        TeamTimer.Items.Add(buf);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Функция ручного добавления добавления данных в тайминг.
         /// </summary>
@@ -397,44 +832,284 @@ namespace RefereeHelper.Views
 
         private void VisualGroupBut_Click(object sender, RoutedEventArgs e)
         {
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+            Competition competition = (Competition)CompList.SelectedItem;
 
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-
-            VisualData f = new VisualData(true, competition[0]);
+            VisualData f = new VisualData(true, competition);
             f.Show();
         }
 
         private void VisualDistanceBut_Click(object sender, RoutedEventArgs e)
         {
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+            Competition competition = (Competition)CompList.SelectedItem;
 
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-
-            VisualData f = new VisualData(false, competition[0]);
+            VisualData f = new VisualData(false, competition);
             f.Show();
+        }
+
+        private void MemberFillBut_Click(object sender, RoutedEventArgs e)
+        {
+            position = 0;
+            MembersFill();
+            ProtocolExcelBut.Content = "Выгрузить стартовый протокол";
+            ProtocolWordBut.Content = "Распечатать стартовый протокол";
+        }
+
+        private void DistanceFillBut_Click(object sender, RoutedEventArgs e)
+        {
+            position = 1;
+            DistanceFill();
+            ProtocolExcelBut.Content = "Выгрузить протокол по дистанции";
+            ProtocolWordBut.Content = "Распечатать протокол по дистанции";
+        }
+
+        private void TimingFillBut_Click(object sender, RoutedEventArgs e)
+        {
+            position = 2;
+            TimingFill();
+            TeamTimer.IsReadOnly = true;
+            ProtocolExcelBut.Content = "Выгрузить финишный протокол";
+            ProtocolWordBut.Content = "Распечатать финишный протокол";
+        }
+
+        private void TeamTimer_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void ProtocolExcelBut_Click(object sender, RoutedEventArgs e)
+        {
+            if (position == 0)
+            {
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+                string namefile = "Start_Protocol_Excel.xlsx";
+
+                Competition competition = (Competition)CompList.SelectedItem;
+                if (ex.StarProtocol(competition))
+                {
+                    string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                    file = file.Replace("\\\\", "\\");
+
+                    ex.saveAs(file);
+                }
+            }
+            else if (position == 1)
+            {
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+                string namefile = "Distance_Protocol_Excel.xlsx";
+
+                Competition competition = (Competition)CompList.SelectedItem;
+                if (ex.DistanceProtocol(competition))
+                {
+                    string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                    file = file.Replace("\\\\", "\\");
+
+                    ex.saveAs(file);
+                }
+            }
+            else if (position == 2)
+            {
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+                string namefile = "Finish_Protocol_Excel.xlsx";
+
+                Competition competition = (Competition)CompList.SelectedItem;
+                if (ex.FinshProtocol(competition))
+                {
+                    string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                    file = file.Replace("\\\\", "\\");
+
+                    ex.saveAs(file);
+                }
+            }
+        }
+
+        private void ProtocolWordBut_Click(object sender, RoutedEventArgs e)
+        {
+            if (position == 0)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.StarProtocol(competition))
+                {
+                    try
+                    {
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx")
+                        {
+                            UseShellExecute = true
+                        };
+                        p.Start();
+                    }
+                    catch
+                    { }
+                }
+            }
+            else if (position == 1)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.DistanceProtocol(competition))
+                {
+                    try
+                    {
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
+                        {
+                            UseShellExecute = true
+                        };
+                        p.Start();
+                    }
+                    catch
+                    { }
+                }
+            }
+            else if (position == 2)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.FinshProtocol(competition))
+                {
+                    try
+                    {
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx")
+                        {
+                            UseShellExecute = true
+                        };
+                        p.Start();
+                    }
+                    catch
+                    { }
+                }
+            }
+        }
+
+        private void PrintBut_Click(object sender, RoutedEventArgs e)
+        {
+            if (position == 0)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.StarProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
+                    if (File.Exists(file))
+                        wd.Print(file);
+                }
+            }
+            else if (position == 1)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.StarProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    if (File.Exists(file))
+                        wd.Print(file);
+                }
+            }
+            else if (position == 2)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.StarProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
+                    if (File.Exists(file))
+                        wd.Print(file);
+                }
+            }     
+        }
+
+        private void PrintAsBut_Click(object sender, RoutedEventArgs e)
+        {
+            if (position == 0)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.StarProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
+                    if (File.Exists(file))
+                        wd.PrintAs(file);
+                }
+            }
+            else if (position == 1)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.StarProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    if (File.Exists(file))
+                        wd.PrintAs(file);
+                }
+            }
+            else if (position == 2)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                Competition competition = (Competition)CompList.SelectedItem;
+
+                if (wd.StarProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
+                    if (File.Exists(file))
+                        wd.PrintAs(file);
+                }
+            }
         }
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (position == 2)
+            {
+                //Timing timing = new()
+                //{
+                //    TimeNow = TimeOnly.Parse(DateTime.Now.ToShortTimeString())
+                //};
+                //using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+                //{
+                //    dbContext.Add(timing);
+                //    dbContext.SaveChanges();
+                //    TimingDataItem item = new TimingDataItem();
+
+                //}
+                //TimingFill();
+                TimingDataItem item = new TimingDataItem();
+                item.TimeNow = DateTime.Now.ToLongTimeString();
+                TeamTimer.Items.Add(item);
+            }
             //Timing timing;
             //db.Timings.Add(timing); //пофиксить запись (почитать об ошибке)
             //почитать, как при записи в бд подсосать данные из таблиц по номеру участнику
