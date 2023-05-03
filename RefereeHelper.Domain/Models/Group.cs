@@ -34,5 +34,10 @@ namespace RefereeHelper.Models
         /// </summary>
         public int EndAge { get; set; }
         public /*sk*/virtual IEnumerable<Member> Members { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

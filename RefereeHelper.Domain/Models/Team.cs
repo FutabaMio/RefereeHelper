@@ -16,5 +16,10 @@ namespace RefereeHelper.Models
         public string Name { get; set; }
 
         public /*sk*/virtual IEnumerable<Start> Starts { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -31,5 +31,10 @@ namespace RefereeHelper.Models
         public DateTime StartTime { get; set; }
         public /*sk*/virtual IEnumerable<Group> Groups { get; set; }
 
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

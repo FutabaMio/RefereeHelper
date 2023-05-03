@@ -53,6 +53,7 @@ namespace RefereeHelper.OptionsWindows
             Partisipation.CompetitionId = c.Id;
             var g = (Group)groupsList.SelectedItem;
             Partisipation.GroupId=g.Id;
+            DialogResult=true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

@@ -23,6 +23,6 @@
             <!--Не уверен, что кнопки вообще нужны - добавить по ПКМ, изменить по двойному клику(?)-->
         </Grid>
         <Label Grid.Row="0" Content="Участие (вспомогательная таблица)" FontSize="20"/>
-        <DataGrid Grid.Row="1" Name="participationTable" ItemsSource="{Binding}"/>
+        <DataGrid Grid.Row="1" Name="partisipationTable" ItemsSource="{Binding}"/>
     </Grid>
 </UserControl>

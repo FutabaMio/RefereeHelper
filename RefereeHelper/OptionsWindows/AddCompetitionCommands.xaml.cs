@@ -21,17 +21,18 @@ namespace RefereeHelper.OptionsWindows
     public partial class AddCompetitionCommands : Window
     {
         public Team Team { get; private set; }
-        public AddCompetitionCommands()
+        public AddCompetitionCommands(Team team)
         {
             InitializeComponent();
+            Team = team;
+            DataContext = team;
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            int ID = 1;
-            Team.Id = ID;
-            ID++;
+            
             Team.Name=teamNameTextBox.Text;
+            DialogResult=true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

@@ -51,7 +51,11 @@ namespace RefereeHelper.Models
         //public string chipNumber { get; set;}
         public IEnumerable<Partisipation> Partisipations { get; set; }
 
-
+        public override string ToString()
+        {
+            string final = $"{FamilyName} {Name} {SecondName}";
+            return final;
+        }
 
     }
 }
