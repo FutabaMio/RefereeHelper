@@ -36,6 +36,7 @@ namespace RefereeHelper.Views
                 db.Partisipations.Load();
                 DataContext = db.Starts.Local.ToObservableCollection();
                 participationTable.DataContext=db.Starts.Local.ToBindingList();
+                participationTable.ItemsSource=db.Partisipations.Local.ToBindingList();
                 db.SaveChanges();
             }
         }

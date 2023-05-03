@@ -16,9 +16,21 @@ using RefereeHelper.EntityFramework;
 using System.Linq;
 using RefereeHelper.EntityFramework.Services;
 using System.Text.RegularExpressions;
+using Group = RefereeHelper.Models.Group;
+using OfficeOpenXml.ConditionalFormatting;
 
 namespace RefereeHelper.Views
 {
+    class DisplayInfo
+    {
+        public DisplayInfo() { }
+        public string F, I, O, Number, Chip;
+        public DateTime StartTime;
+        public bool IsFinish;
+        public string Place;
+        public TimeOnly CircleTime;
+        public TimeOnly TimeFromStart;
+    }
     /// <summary>
     /// Логика взаимодействия для TimingView.xaml
     /// </summary>
@@ -31,8 +43,6 @@ namespace RefereeHelper.Views
             dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
             LoadEvents();
             LoadData();
-
-
         }
         int countOfStartingPeople = 0, countOfFinishingPeople = 0;
        
@@ -53,18 +63,63 @@ namespace RefereeHelper.Views
         void LoadData()//я создал эту фунцкию для обновления таблицы, вывода данных
         {
             i = 0;
-            using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+            var st = dbContext.Set<Models.Timing>().Select(x => new Models.Timing
             {
-                var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
+                IsFinish = x.IsFinish,
+                TimeNow = x.TimeNow,
+                Place = x.Place,
+                PlaceAbsolute = x.PlaceAbsolute,
+                Circle = x.Circle,
+                CircleTime = x.CircleTime,
+                Start = new Models.Start
+                {
+                    Partisipation = new Partisipation
+                    {
+                        Group = new Group
+                        {
+                            Distance = new Distance
+                            {
+                                Circles = x.Start.Partisipation.Group.Distance.Circles
+                            }
+                            
+                        },
+                        Member = new Member
+                        {
+                            Name = x.Start.Partisipation.Member.Name,
+                            FamilyName= x.Start.Partisipation.Member.FamilyName,
+                            SecondName = x.Start.Partisipation.Member.SecondName,
+                           
+                        }
+                    },
+                    Number = x.Start.Number,
+                    Chip = x.Start.Chip,
+                    StartTime = x.Start.StartTime
+                }
+            }).ToList();
+            List<DisplayInfo> ds = new();
+            foreach(var t in st)
+            {
+                DisplayInfo di = new();
+                di.IsFinish = t.IsFinish.Value;
+                di.Number = t.Start.Number.ToString();
+                di.Chip = t.Start.Chip;
+                di.CircleTime = t.CircleTime.Value;
+                di.F = t.Start.Partisipation.Member.FamilyName;
+                di.I = t.Start.Partisipation.Member.Name;
+                di.O = t.Start.Partisipation.Member.SecondName;
+                di.StartTime = t.Start.StartTime.Value;
+                di.Place = t.Place.ToString();
+                di.TimeFromStart = di.TimeFromStart;
+                ds.Add(di);
+            }
+                //var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
                 var teams = dbContext.Teams.ToList();
                 var members = dbContext.Starts.Include(x => x.Partisipation).ThenInclude(y => y.Member).ToList();
-                
-                //TeamTimer.DataContext = timings;
-                TeamTimer.ItemsSource = timings;
-                foreach(var t in timings)
-                {
 
-                }
+                //TeamTimer.DataContext = timings;
+                TeamTimer.ItemsSource = ds;
                 /*foreach (var t in timings)
                 {
                     i++;
@@ -79,7 +134,7 @@ namespace RefereeHelper.Views
                                          $"\n\tTeam:{t.Start?.Team?.Name}"); //+
                                        //$"\n\tisFinish?");
                 }*/
-                    if (teamsRB.IsChecked==true)
+                /*    if (teamsRB.IsChecked==true)
                  {
                     TeamTimer.ItemsSource=teams;
                  } else if (membersRB.IsChecked==true)
@@ -87,12 +142,12 @@ namespace RefereeHelper.Views
                     TeamTimer.ItemsSource=members;
                 } else if (timingRB.IsChecked==true)
                 {
-                    TeamTimer.ItemsSource=timings;
-                }/* else if (teamTimingRB.IsChecked==true)
+                    TeamTimer.ItemsSource=st;
+                } else if (teamTimingRB.IsChecked==true)
                 {
                     TeamTimer.ItemsSource=teamTimer;
                 }*/
-            }
+            
             
 
         }

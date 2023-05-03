@@ -42,6 +42,16 @@ namespace RefereeHelper.OptionsWindows
             }
         }
 
+        public void RefreshData()
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                List<Discharge> discharges = db.Discharges.ToList();
+                dischargeList.DataContext = discharges;
+                dischargeList.ItemsSource = discharges;
+            }
+        }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
@@ -71,6 +81,20 @@ namespace RefereeHelper.OptionsWindows
             this.Close();
         }
 
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                ManualAddDischarge manualAddWindow = new ManualAddDischarge(new Discharge());
+                if (manualAddWindow.ShowDialog() == true)
+                {
+                    Discharge Discharge= manualAddWindow.Discharge;
+                    db.Discharges.Add(Discharge);
+                    db.SaveChanges();
+                }
+            }
+            RefreshData();
+            
+        }
     }
 }

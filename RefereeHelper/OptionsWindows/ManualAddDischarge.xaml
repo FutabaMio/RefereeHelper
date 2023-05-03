@@ -1,0 +1,16 @@
+﻿<Window x:Class="RefereeHelper.OptionsWindows.ManualAddDischarge"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RefereeHelper.OptionsWindows"
+        mc:Ignorable="d"
+        Title="ManualAddDischarge" Height="450" Width="800">
+    <Grid>
+        <Label Content="Название разряда:"/>
+        <TextBox Name="dischargeName" MaxHeight="30" VerticalAlignment="Top" HorizontalAlignment="Left" MaxWidth="250" Margin="0,23,0,0" Width="190"/>
+
+        <Button Name="acceptButton" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="30" Width="80" Content="OK" Click="acceptButton_Click"/>
+        <Button Name="exitButton" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="110,0,0,0" Height="30" Width="80" Content="Отменить" Click="exitButton_Click"/>
+    </Grid>
+</Window>
