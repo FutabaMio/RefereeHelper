@@ -50,6 +50,10 @@ namespace RefereeHelper.OptionsWindows
                 List<Discharge> discharges = db.Discharges.ToList();
                 dischargeList.DataContext = discharges;
                 dischargeList.ItemsSource = discharges;
+
+                List<Club> clubs = db.Clubs.ToList();
+                clubsList.DataContext = clubs;
+                clubsList.ItemsSource=clubs;
             }
         }
 
@@ -95,6 +99,21 @@ namespace RefereeHelper.OptionsWindows
             }
             RefreshData();
             
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                ManualAddClub manualAddWindow = new ManualAddClub(new Club());
+                if (manualAddWindow.ShowDialog() == true)
+                {
+                    Club Club= manualAddWindow.Club;
+                    db.Clubs.Add(Club);
+                    db.SaveChanges();
+                }
+            }
+            RefreshData();
         }
     }
 }

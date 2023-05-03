@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RefereeHelper.EntityFramework;
 using RefereeHelper.Models;
+using RefereeHelper.OptionsWindows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,16 @@ namespace RefereeHelper.Views
 
         private void manualAddStart_Click(object sender, RoutedEventArgs e)
         {
-
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                ManualAddStart manualAddWindow = new ManualAddStart(new Models.Start());
+                if(manualAddWindow.ShowDialog() == true)
+                {
+                    Models.Start Start = manualAddWindow.Start;
+                    db.Starts.Add(Start);
+                    db.SaveChanges();
+                }
+            }
         }
 
         private void editStart_Click(object sender, RoutedEventArgs e)
