@@ -133,8 +133,8 @@ namespace RefereeHelper.Views
                                          $"\n\tTime of circle: {t.CircleTime}" +
                                          $"\n\tTeam:{t.Start?.Team?.Name}"); //+
                                        //$"\n\tisFinish?");
-                }*/
-                /*    if (teamsRB.IsChecked==true)
+                }
+                    if (teamsRB.IsChecked==true)
                  {
                     TeamTimer.ItemsSource=teams;
                  } else if (membersRB.IsChecked==true)
@@ -475,7 +475,17 @@ namespace RefereeHelper.Views
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            AddData();
+            
+            Timing bufTiming= new Timing();
+            if (TeamTimer.CurrentColumn.Header=="StartId")
+            {
+              if(TeamTimer.CurrentCell !=null)
+                {
+                    //int.TryParse()
+                }
+            }
+            //int numb = TeamTimer.SelectedCells.Value;
+            //AddData();
             //Timing timing;
             //db.Timings.Add(timing); //пофиксить запись (почитать об ошибке)
             //почитать, как при записи в бд подсосать данные из таблиц по номеру участнику

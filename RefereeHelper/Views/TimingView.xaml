@@ -71,6 +71,19 @@
         <RadioButton Name="membersRB" Grid.Row="2" VerticalAlignment="Bottom" Margin="150,0,0,0" Content="Участники"/>
         <RadioButton Name="timingRB" Grid.Row="2" VerticalAlignment="Bottom" Margin="250,0,0,0" Content="Тайминг"/>
         <RadioButton Name="teamTimingRB" Grid.Row="2" VerticalAlignment="Bottom" Margin="350,0,0,0" Content="Тайминг команд"/>
-        <DataGrid Grid.Row="3" Name="TeamTimer" MouseRightButtonDown="TeamTimer_MouseRightButtonDown" ItemsSource="{Binding}"/>
+        <DataGrid Grid.Row="3" Name="TeamTimer" MouseRightButtonDown="TeamTimer_MouseRightButtonDown" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Фамилия" Width="100"/>
+                <DataGridTextColumn Header="Имя" Width="100"/>
+                <DataGridTextColumn Header="Отчество" Width="100"/>
+                <DataGridTextColumn Header="Номер" Width="50"/>
+                <DataGridTextColumn Header="Чип" Width="100"/>
+                <DataGridTextColumn Header="Время старта" Width="100"/>
+                <DataGridTextColumn Header="Место" Width="100"/>
+                <DataGridTextColumn Header="Время круга" Width="100"/>
+                <DataGridTextColumn Header="Время со старта" Width="100"/>
+                <DataGridTextColumn Header="Финишировал" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>
