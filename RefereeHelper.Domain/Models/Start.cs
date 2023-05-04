@@ -38,5 +38,11 @@ namespace RefereeHelper.Models
         public DateTime? StartTime { get; set; }
         public /*sk*/virtual IEnumerable<Timing> Timings { get; set; }
 
+        public override string ToString()
+        {
+            string fin= this.Number.ToString();
+            return fin;
+        }
+
     }
 }

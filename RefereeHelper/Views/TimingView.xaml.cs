@@ -119,7 +119,7 @@ namespace RefereeHelper.Views
                 var members = dbContext.Starts.Include(x => x.Partisipation).ThenInclude(y => y.Member).ToList();
 
                 //TeamTimer.DataContext = timings;
-                TeamTimer.ItemsSource = ds;
+                TeamTimer.ItemsSource = st; //отображение стартов (подготовленных участников)
                 /*foreach (var t in timings)
                 {
                     i++;
@@ -151,7 +151,7 @@ namespace RefereeHelper.Views
             
 
         }
-        private static void TimingDateTable()
+        /*private static void TimingDateTable()
         {
             DataColumn[] columns =
             {
@@ -166,7 +166,7 @@ namespace RefereeHelper.Views
                 new DataColumn("currentTime", typeof(string))
             };
 
-        }
+        }*/
 
         //конец
 
@@ -473,17 +473,20 @@ namespace RefereeHelper.Views
             }
         }
 
+        private void TeamTimer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                TeamTimer.CurrentCell.Item.ToString();
+            }
+        }
+
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             
             Timing bufTiming= new Timing();
-            if (TeamTimer.CurrentColumn.Header=="StartId")
-            {
-              if(TeamTimer.CurrentCell !=null)
-                {
-                    //int.TryParse()
-                }
-            }
+            
+
             //int numb = TeamTimer.SelectedCells.Value;
             //AddData();
             //Timing timing;
