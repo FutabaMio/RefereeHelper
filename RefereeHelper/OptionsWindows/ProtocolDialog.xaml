@@ -5,58 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RefereeHelper.OptionsWindows"
         mc:Ignorable="d"
-        Title="Протоколы" Height="165" Width="410">
+        Title="Протоколы" Height="85" Width="410">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="44*"/>
             <RowDefinition Height="44"/>
-            <RowDefinition Height="44"/>
-            <RowDefinition Height="44"/>
+
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width ="200"/>
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0">
-            <Button Name="ExcelSPBut" Content="Стартовый протокол в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelSPBut_Click"/>
-        </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
-            <Button Name="ExcelDPBut" Content="Протокол по дистанции в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelDPBut_Click"/>
-        </Grid>
-        <Grid Grid.Row="2" Grid.Column="0">
-            <Button Name="ExcelFPBut" Content="Финишний протокол в Excel" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="ExcelFPBut_Click"/>
-        </Grid>
-        <Grid Grid.Row="0" Grid.Column="1">
-            <Button Name="WordSpBut" Content="Стартовый протокол в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordSpBut_Click">
-                <Button.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Открыть для редактирования" Click="WordSpBut_Click"/>
-                        <MenuItem Header="Печать" Name="PrintSPBut" Click="PrintSPBut_Click"/>
-                        <MenuItem Header="Печать как" Name="PrintAsSPBut" Click="PrintAsSPBut_Click"/>
-                    </ContextMenu>
-                </Button.ContextMenu>
-            </Button>
+            <Button Name="AbsolBut" Content="Абсолютный протокол" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="AbsolBut_Click"/>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="1">
-            <Button Name="WordDpBut" Content="Протокол по дистанции в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordDpBut_Click">
-                <Button.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Открыть для редактирования" Click="WordDpBut_Click"/>
-                        <MenuItem Header="Печать" Name="PrintDPBut" Click="PrintDPBut_Click"/>
-                        <MenuItem Header="Печать как" Name="PrintAsDPBut" Click="PrintAsDPBut_Click"/>
-                    </ContextMenu>
-                </Button.ContextMenu>
-            </Button>
-        </Grid>
-        <Grid Grid.Row="2" Grid.Column="1">
-            <Button Name="WordFpBut" Content="Финишний протокол в Word" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="WordFpBut_Click">
-                <Button.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Открыть для редактирования" Click="WordFpBut_Click"/>
-                        <MenuItem Header="Печать" Name="PrintFPBut" Click="PrintFPBut_Click"/>
-                        <MenuItem Header="Печать как" Name="PrintAsFPBut" Click="PrintAsFPBut_Click"/>
-                    </ContextMenu>
-                </Button.ContextMenu>
-            </Button>
+            <Button Name="GroupBut" Content="Протокол по катигориям" Grid.Row="0" FontSize="12" Margin="10,10,10,10" Click="GroupBut_Click"/>
         </Grid>
     </Grid>
 </Window>

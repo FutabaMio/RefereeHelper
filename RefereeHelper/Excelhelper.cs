@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using RefereeHelper.EntityFramework;
@@ -22,6 +23,7 @@ namespace RefereeHelper
     {
         private Epplus.ExcelPackage package;
         TimeOnly buf;
+        DateTime DateTimebuf;
 
         public Excelhelper()
         {
@@ -82,23 +84,6 @@ namespace RefereeHelper
                         }
                     }).ToList();
 
-                    var timings = dbContext.Set<Timing>().Select(x => new Timing
-                    {
-                        Id = x.Id,
-                        TimeFromStart = x.TimeFromStart,
-                        IsFinish = x.IsFinish,
-                        Start = new Start
-                        {
-                            Id = x.Start.Id,
-                            Partisipation = new Partisipation
-                            {
-                                Id = x.Start.Partisipation.Id
-                            },
-                            Number = x.Start.Number
-                        }
-                    }).ToList();
-
-
                     foreach (Group group in groups)
                     {
                         foreach (Partisipation partisipation in partisipations)
@@ -139,22 +124,16 @@ namespace RefereeHelper
                                         foreach (Start start in starts)
                                             if (start.Partisipation.Id == partisipationId)
                                             {
+                                                
                                                 sheet.Cells[row, 5].Value = start.Number;
+                                                if (start.StartTime != null)
+                                                {
+                                                    DateTimebuf = (DateTime)start.StartTime;
+                                                    sheet.Cells[row, 7].Value = DateTimebuf.ToShortTimeString();
+                                                }
                                                 break;
                                             }
                                         sheet.Cells[row, 6].Value = partisipation.Member?.BornDate.ToShortDateString();
-                                        foreach (Timing timing in timings)
-                                        {
-                                            if (timing.Start?.Partisipation.Id == partisipationId)
-                                            {
-                                                if (timing.IsFinish == true)
-                                                {
-                                                    buf = (TimeOnly)timing.TimeFromStart;
-                                                    sheet.Cells[row, 7].Value = buf.ToLongTimeString();
-                                                    break;
-                                                }
-                                            }
-                                        }
                                     }
                                 }
                             row++;
@@ -184,7 +163,7 @@ namespace RefereeHelper
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     var sheet = package.Workbook.Worksheets.Add("лист 1");
-                    int row = 1, col = 8, costcol = 0, cur = 1;
+                    int row = 1, col = 8, costcol = 0, cur = 1, rowcost;
                     List<int> partisipationIds = new List<int>();
 
                     var distances = dbContext.Set<Distance>().Select(x => new Distance
@@ -274,6 +253,7 @@ namespace RefereeHelper
                         {
                             sheet.Cells[row, 1].Value = distance.Name;
                             row++;
+                            rowcost = row + 1;
                             sheet.Cells[row, 1].Value = "Место";
                             sheet.Cells[row, 2].Value = "Фамилия";
                             sheet.Cells[row, 3].Value = "Имя";
@@ -305,7 +285,6 @@ namespace RefereeHelper
                                     if (partisipation.Id == partisipationId)
                                     {
                                         row++;
-                                        sheet.Cells[row, 1].Value = cur; cur++;
                                         sheet.Cells[row, 2].Value = partisipation.Member?.FamilyName;
                                         sheet.Cells[row, 2].Style.Font.Bold = true;
                                         sheet.Cells[row, 3].Value = partisipation.Member?.Name;
@@ -323,11 +302,13 @@ namespace RefereeHelper
                                         {
                                             if (timing.Start?.Partisipation.Id == partisipationId)
                                             {
-                                                buf = (TimeOnly)timing.TimeFromStart;
+                                                if (timing.TimeFromStart != null)
+                                                    buf = (TimeOnly)timing.TimeFromStart;
                                                 sheet.Cells[row, col].Value = buf.ToLongTimeString();
                                                 col++;
                                                 if (timing.IsFinish == true)
                                                 {
+                                                    sheet.Cells[row, 1].Value = timing.PlaceAbsolute;
                                                     sheet.Cells[row, col - 1].Style.Font.Bold = true;
                                                     sheet.Cells[row, col + 1].Value = timing.Place;
                                                 }
@@ -339,6 +320,7 @@ namespace RefereeHelper
                                         col = 8;
                                     }
                                 }
+                            sheet.Cells[rowcost, 1, row, costcol].Sort(costcol - 3, false);
                             row = row + 2;
                             cur = 1;
                         }
@@ -346,6 +328,178 @@ namespace RefereeHelper
                         {
                             MessageBox.Show("Невозможно сформировать протокол по дистанции", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                             return false; 
+                        }
+                    }
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
+        public bool GroupDistanceProtocol(Competition competition)
+        {
+            try
+            {
+                using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    var sheet = package.Workbook.Worksheets.Add("лист 1");
+                    int row = 1, col = 8, costcol = 0, cur = 1, rowcost;
+                    List<int> partisipationIds = new List<int>();
+
+                    var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
+                    {
+                        Id = x.Id,
+                        Group = new Group
+                        {
+                            Id = x.Group.Id,
+                            Name = x.Group.Name,
+                        },
+                        Competition = new Competition
+                        {
+                            Id = x.Competition.Id,
+                        },
+                        Member = new Member
+                        {
+                            Id = x.Member.Id,
+                            FamilyName = x.Member.FamilyName,
+                            Name = x.Member.Name,
+                            BornDate = x.Member.BornDate,
+                            City = x.Member.City,
+                            Club = new Club
+                            {
+                                Name = x.Member.Club.Name
+                            },
+                            Discharge = new Discharge
+                            {
+                                Name = x.Member.Discharge.Name
+                            }
+                        }
+                    }).ToList();
+
+                    var groups = dbContext.Set<Group>().Select(x => new Group
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Distance = new Distance
+                        {
+                            Id = x.Distance.Id,
+                            Circles = x.Distance.Circles
+                        }
+                    }).ToList();
+
+                    var starts = dbContext.Set<Start>().Select(x => new Start
+                    {
+                        Id = x.Id,
+                        Number = x.Number,
+                        Partisipation = new Partisipation
+                        {
+                            Id = x.Partisipation.Id
+                        }
+                    }).ToList();
+
+
+                    var timings = dbContext.Set<Timing>().Select(x => new Timing
+                    {
+                        Id = x.Id,
+                        TimeFromStart = x.TimeFromStart,
+                        IsFinish = x.IsFinish,
+                        Place = x.Place,
+                        Start = new Start
+                        {
+                            Id = x.Start.Id,
+                            Partisipation = new Partisipation
+                            {
+                                Id = x.Start.Partisipation.Id
+                            },
+                            Number = x.Start.Number
+                        }
+                    }).ToList();
+
+
+                    foreach (Group group in groups)
+                    {
+                        foreach (Partisipation partisipation in partisipations)
+                            if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)
+                                partisipationIds.Add(partisipation.Id);
+                        if (partisipationIds.Count != 0)
+                        {
+                            sheet.Cells[row, 1].Value = group.Name;
+                            row++;
+                            rowcost = row + 1;
+                            sheet.Cells[row, 1].Value = "Место";
+                            sheet.Cells[row, 2].Value = "Фамилия";
+                            sheet.Cells[row, 3].Value = "Имя";
+                            sheet.Cells[row, 4].Value = "Год Рождения";
+                            sheet.Cells[row, 5].Value = "Город";
+                            sheet.Cells[row, 6].Value = "Клуб";
+                            sheet.Cells[row, 7].Value = "Ст.№";
+                            for (int i = 1; i < group.Distance.Circles; i++)
+                            {
+                                sheet.Cells[row, col].Value = "Круг " + i.ToString(); col++;
+                            }
+                            sheet.Cells[row, col].Value = "Финиш";
+                            costcol = col;
+                            sheet.Cells[row - 1, 1, row - 1, col].Merge = true;
+                            sheet.Cells[row - 1, 1, row - 1, col].Style.HorizontalAlignment = EpplusSyle.ExcelHorizontalAlignment.Center;
+                            sheet.Cells[row, 1, row, col].Style.Font.Bold = true;
+                            sheet.Cells[row, 1, row, col].Style.Border.Bottom.Style = EpplusSyle.ExcelBorderStyle.Medium;
+                            sheet.Cells[row, 1, row, col].Style.Border.Top.Style = EpplusSyle.ExcelBorderStyle.Thick;
+                            sheet.Cells[row, 1, row, col].Style.HorizontalAlignment = EpplusSyle.ExcelHorizontalAlignment.Center;
+                            sheet.Column(1).Style.HorizontalAlignment = EpplusSyle.ExcelHorizontalAlignment.Center;
+                            for (int i = 4; i <= col; i++)
+                                sheet.Column(i).Style.HorizontalAlignment = EpplusSyle.ExcelHorizontalAlignment.Center;
+                            col = 8;
+                            foreach (int partisipationId in partisipationIds)
+                                foreach (Partisipation partisipation in partisipations)
+                                {
+                                    if (partisipation.Id == partisipationId)
+                                    {
+                                        row++;
+                                        sheet.Cells[row, 2].Value = partisipation.Member?.FamilyName;
+                                        sheet.Cells[row, 2].Style.Font.Bold = true;
+                                        sheet.Cells[row, 3].Value = partisipation.Member?.Name;
+                                        sheet.Cells[row, 3].Style.Font.Bold = true;
+                                        sheet.Cells[row, 4].Value = partisipation.Member?.BornDate.ToShortDateString();
+                                        sheet.Cells[row, 5].Value = partisipation.Member?.City;
+                                        sheet.Cells[row, 6].Value = partisipation.Member?.Club?.Name;
+                                        foreach (Start start in starts)
+                                            if (start.Partisipation.Id == partisipationId)
+                                            {
+                                                sheet.Cells[row, 7].Value = start.Number;
+                                                break;
+                                            }
+                                        foreach (Timing timing in timings)
+                                        {
+                                            if (timing.Start?.Partisipation.Id == partisipationId)
+                                            {
+                                                if (timing.TimeFromStart != null)
+                                                    buf = (TimeOnly)timing.TimeFromStart;
+                                                sheet.Cells[row, col].Value = buf.ToLongTimeString();
+                                                col++;
+                                                if (timing.IsFinish == true)
+                                                {
+                                                    sheet.Cells[row, 1].Value = timing.Place;
+                                                    sheet.Cells[row, col - 1].Style.Font.Bold = true;
+                                                }
+                                            }
+                                        }
+                                        sheet.Cells[1, 1, row, costcol].AutoFitColumns(1, 150);
+                                        sheet.Cells[row, 1, row, costcol].Style.Border.Bottom.Style = EpplusSyle.ExcelBorderStyle.Medium;
+                                        col = 8;
+                                    }
+                                }
+                            sheet.Cells[rowcost, 1, row, costcol].Sort(costcol-1, false);
+                            row = row + 2;
+                            cur = 1;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Невозможно сформировать протокол по дистанции", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return false;
                         }
                     }
                     return true;

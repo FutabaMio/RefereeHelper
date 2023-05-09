@@ -85,7 +85,8 @@
             <Button Grid.Column="2" Content="Выгрузить стартовый протокол" Name="ProtocolExcelBut" Click="ProtocolExcelBut_Click">
                 <Button.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Выгрузить" Click="ProtocolExcelBut_Click"/>
+                        <MenuItem Name="CreateDoc" Header="Выгрузить" Click="ProtocolExcelBut_Click"/>
+                        <MenuItem Name="CreateDocAlt" Header="Выгрузить" Click="ProtocolExcelBut_Click" Visibility="Hidden"/>
                         <MenuItem Header="Выгрузить как" Name="ExportAsBut" Click="ExportAsBut_Click"/>
                     </ContextMenu>
                 </Button.ContextMenu>

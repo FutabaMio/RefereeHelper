@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using RefereeHelper;
 using RefereeHelper.EntityFramework;
 using RefereeHelper.EntityFramework.Services;
@@ -26,327 +27,179 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class ProtocolDialog : Window
     {
-        public ProtocolDialog()
+        Competition competition;
+        int mod;
+        public ProtocolDialog(Competition c, int m)
         {
             InitializeComponent();
+            competition = c;
+            mod = m;
         }
 
-        private void ExcelSPBut_Click(object sender, RoutedEventArgs e)
+        private void AbsolBut_Click(object sender, RoutedEventArgs e)
         {
-            Excelhelper ex = new Excelhelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-            INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
-            string namefile = "Start_Protocol_Excel.xlsx";
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            if (mod == 0)
             {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-            if(ex.StarProtocol(competition[0]))
-            {
-                string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
-                file = file.Replace("\\\\","\\");
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+                string namefile = "Distance_Protocol_Excel.xlsx";
 
-                ex.saveAs(file);
-            }
-        }
-
-        private void ExcelDPBut_Click(object sender, RoutedEventArgs e)
-        {
-            Excelhelper ex = new Excelhelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-            INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
-            string namefile = "Distance_Protocol_Excel.xlsx";
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-            if (ex.DistanceProtocol(competition[0]))
-            {
-                string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
-                file = file.Replace("\\\\", "\\");
-
-                ex.saveAs(file);
-            }
-        }
-
-        private void ExcelFPBut_Click(object sender, RoutedEventArgs e)
-        {
-            Excelhelper ex = new Excelhelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-            INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
-            string namefile = "Finish_Protocol_Excel.xlsx";
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-            if (ex.FinshProtocol(competition[0]))
-            {
-                string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
-                file = file.Replace("\\\\", "\\");
-
-                ex.saveAs(file);
-            }
-        }
-
-        private void WordSpBut_Click(object sender, RoutedEventArgs e)
-        {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-
-            if (wd.StarProtocol(competition[0]))
-            {
-                try
+                if (ex.DistanceProtocol(competition))
                 {
-                    var p = new Process();
-                    p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx")
-                    {
-                        UseShellExecute = true
-                    };
-                    p.Start();
+                    string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                    file = file.Replace("\\\\", "\\");
+
+                    ex.saveAs(file);
                 }
-                catch
-                { }
             }
-        }
-
-        private void PrintSPBut_Click(object sender, RoutedEventArgs e)
-        {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            else if (mod == 1)
             {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                string namefile = "Distance_Protocol_Excel.xlsx";
+                CommonOpenFileDialog dialog = new CommonOpenFileDialog();
 
-            if (wd.StarProtocol(competition[0]))
-            {
-                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
-                if (File.Exists(file))
-                    wd.Print(file);
-            }
-        }
-
-        private void PrintAsSPBut_Click(object sender, RoutedEventArgs e)
-        {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-
-            if (wd.StarProtocol(competition[0]))
-            {
-                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
-                if (File.Exists(file))
-                    wd.PrintAs(file);
-            }
-        }
-
-        private void WordDpBut_Click(object sender, RoutedEventArgs e)
-        {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-
-            if (wd.DistanceProtocol(competition[0]))
-            {
-                try
+                dialog.IsFolderPicker = true;
+                if (CommonFileDialogResult.Ok == dialog.ShowDialog())
                 {
-                    var p = new Process();
-                    p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
+                    if (ex.DistanceProtocol(competition))
                     {
-                        UseShellExecute = true
-                    };
-                    p.Start();
+                        string file = dialog.FileName + "\\" + namefile;
+                        file = file.Replace("\\\\", "\\");
+
+                        ex.saveAs(file);
+                    }
                 }
-                catch
-                { }
             }
-        }
-
-        private void PrintDPBut_Click(object sender, RoutedEventArgs e)
-        {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            else if (mod == 2)
             {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
 
-            if (wd.StarProtocol(competition[0]))
-            {
-                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
-                if (File.Exists(file))
-                    wd.Print(file);
-            }
-        }
-
-        private void PrintAsDPBut_Click(object sender, RoutedEventArgs e)
-        {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-
-            if (wd.StarProtocol(competition[0]))
-            {
-                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
-                if (File.Exists(file))
-                    wd.PrintAs(file);
-            }
-        }
-
-        private void WordFpBut_Click(object sender, RoutedEventArgs e)
-        {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
-            {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
-
-            if (wd.FinshProtocol(competition[0]))
-            {
-                try
+                if (wd.DistanceProtocol(competition))
                 {
-                    var p = new Process();
-                    p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx")
+                    try
                     {
-                        UseShellExecute = true
-                    };
-                    p.Start();
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
+                        {
+                            UseShellExecute = true
+                        };
+                        p.Start();
+                    }
+                    catch
+                    { }
                 }
-                catch
-                { }
             }
+            else if (mod == 3)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                if (wd.DistanceProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    if (File.Exists(file))
+                        wd.Print(file);
+                }
+            }
+            else if (mod == 4)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                if (wd.DistanceProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    if (File.Exists(file))
+                        wd.PrintAs(file);
+                }
+            }
+            this.Close();
         }
 
-        private void PrintFPBut_Click(object sender, RoutedEventArgs e)
+        private void GroupBut_Click(object sender, RoutedEventArgs e)
         {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            if (mod == 0)
             {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+                string namefile = "Distance_Protocol_Excel.xlsx";
 
-            if (wd.StarProtocol(competition[0]))
-            {
-                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
-                if (File.Exists(file))
-                    wd.Print(file);
+                if (ex.GroupDistanceProtocol(competition))
+                {
+                    string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                    file = file.Replace("\\\\", "\\");
+
+                    ex.saveAs(file);
+                }
             }
-        }
-
-        private void PrintAsFPBut_Click(object sender, RoutedEventArgs e)
-        {
-            WordHelper wd = new WordHelper();
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            var competition = dbContext.Set<Competition>().Select(x => new Competition
+            else if (mod == 1)
             {
-                Id = x.Id,
-                Organizer = x.Organizer,
-                Place = x.Place,
-                Date = x.Date,
-                Judge = x.Judge,
-                Secretary = x.Secretary,
-                TypeAge = x.TypeAge
-            }).ToList();
+                Excelhelper ex = new Excelhelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                string namefile = "Distance_Protocol_Excel.xlsx";
+                CommonOpenFileDialog dialog = new CommonOpenFileDialog();
 
-            if (wd.StarProtocol(competition[0]))
-            {
-                string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
-                if (File.Exists(file))
-                    wd.PrintAs(file);
+                dialog.IsFolderPicker = true;
+                if (CommonFileDialogResult.Ok == dialog.ShowDialog())
+                {
+                    if (ex.GroupDistanceProtocol(competition))
+                    {
+                        string file = dialog.FileName + "\\" + namefile;
+                        file = file.Replace("\\\\", "\\");
+
+                        ex.saveAs(file);
+                    }
+                }
             }
+            else if (mod == 2)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                if (wd.GroupDistanceProtocol(competition))
+                {
+                    try
+                    {
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
+                        {
+                            UseShellExecute = true
+                        };
+                        p.Start();
+                    }
+                    catch
+                    { }
+                }
+            }
+            else if (mod == 3)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                if (wd.GroupDistanceProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    if (File.Exists(file))
+                        wd.Print(file);
+                }
+            }
+            else if (mod == 4)
+            {
+                WordHelper wd = new WordHelper();
+                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+                if (wd.GroupDistanceProtocol(competition))
+                {
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    if (File.Exists(file))
+                        wd.PrintAs(file);
+                }
+            }
+            this.Close();
         }
     }
 }

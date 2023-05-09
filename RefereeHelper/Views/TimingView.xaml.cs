@@ -834,12 +834,6 @@ namespace RefereeHelper.Views
             }
         }
 
-        private void ProtocolDialogBut_Click(object sender, RoutedEventArgs e)
-        {
-            ProtocolDialog f = new ProtocolDialog();
-            f.ShowDialog();
-        }
-
         private void VisualGroupBut_Click(object sender, RoutedEventArgs e)
         {
             Competition competition = (Competition)CompList.SelectedItem;
@@ -922,19 +916,21 @@ namespace RefereeHelper.Views
             }
             else if (position == 1)
             {
-                Excelhelper ex = new Excelhelper();
-                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-                INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
-                string namefile = "Distance_Protocol_Excel.xlsx";
+                ProtocolDialog dialog = new ProtocolDialog((Competition)CompList.SelectedItem,0);
+                dialog.ShowDialog();
+                //Excelhelper ex = new Excelhelper();
+                //var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                //INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
+                //string namefile = "Distance_Protocol_Excel.xlsx";
 
-                Competition competition = (Competition)CompList.SelectedItem;
-                if (ex.DistanceProtocol(competition))
-                {
-                    string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
-                    file = file.Replace("\\\\", "\\");
+                //Competition competition = (Competition)CompList.SelectedItem;
+                //if (ex.DistanceProtocol(competition))
+                //{
+                //    string file = manager.GetPrivateString("Option", "SaveExcelPath") + "\\" + namefile;
+                //    file = file.Replace("\\\\", "\\");
 
-                    ex.saveAs(file);
-                }
+                //    ex.saveAs(file);
+                //}
             }
             else if (position == 2)
             {
@@ -978,23 +974,25 @@ namespace RefereeHelper.Views
             }
             else if (position == 1)
             {
-                Excelhelper ex = new Excelhelper();
-                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-                string namefile = "Distance_Protocol_Excel.xlsx";
-                Competition competition = (Competition)CompList.SelectedItem;
-                CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+                ProtocolDialog dialog = new ProtocolDialog((Competition)CompList.SelectedItem, 1);
+                dialog.ShowDialog();
+                //Excelhelper ex = new Excelhelper();
+                //var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                //string namefile = "Distance_Protocol_Excel.xlsx";
+                //Competition competition = (Competition)CompList.SelectedItem;
+                //CommonOpenFileDialog dialog = new CommonOpenFileDialog();
 
-                dialog.IsFolderPicker = true;
-                if (CommonFileDialogResult.Ok == dialog.ShowDialog())
-                {
-                    if (ex.DistanceProtocol(competition))
-                    {
-                        string file = dialog.FileName + "\\" + namefile;
-                        file = file.Replace("\\\\", "\\");
+                //dialog.IsFolderPicker = true;
+                //if (CommonFileDialogResult.Ok == dialog.ShowDialog())
+                //{
+                //    if (ex.DistanceProtocol(competition))
+                //    {
+                //        string file = dialog.FileName + "\\" + namefile;
+                //        file = file.Replace("\\\\", "\\");
 
-                        ex.saveAs(file);
-                    }
-                }   
+                //        ex.saveAs(file);
+                //    }
+                //}   
             }
             else if (position == 2)
             {
@@ -1049,25 +1047,27 @@ namespace RefereeHelper.Views
             }
             else if (position == 1)
             {
-                WordHelper wd = new WordHelper();
-                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                ProtocolDialog dialog = new ProtocolDialog((Competition)CompList.SelectedItem, 2);
+                dialog.ShowDialog();
+                //WordHelper wd = new WordHelper();
+                //var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
 
-                Competition competition = (Competition)CompList.SelectedItem;
+                //Competition competition = (Competition)CompList.SelectedItem;
 
-                if (wd.DistanceProtocol(competition))
-                {
-                    try
-                    {
-                        var p = new Process();
-                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
-                        {
-                            UseShellExecute = true
-                        };
-                        p.Start();
-                    }
-                    catch
-                    { }
-                }
+                //if (wd.DistanceProtocol(competition))
+                //{
+                //    try
+                //    {
+                //        var p = new Process();
+                //        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
+                //        {
+                //            UseShellExecute = true
+                //        };
+                //        p.Start();
+                //    }
+                //    catch
+                //    { }
+                //}
             }
             else if (position == 2)
             {
@@ -1116,17 +1116,19 @@ namespace RefereeHelper.Views
             }
             else if (position == 1)
             {
-                WordHelper wd = new WordHelper();
-                var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+                ProtocolDialog dialog = new ProtocolDialog((Competition)CompList.SelectedItem, 3);
+                dialog.ShowDialog();
+                //WordHelper wd = new WordHelper();
+                //var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
 
-                Competition competition = (Competition)CompList.SelectedItem;
+                //Competition competition = (Competition)CompList.SelectedItem;
 
-                if (wd.StarProtocol(competition))
-                {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
-                    if (File.Exists(file))
-                        wd.Print(file);
-                }
+                //if (wd.StarProtocol(competition))
+                //{
+                //    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                //    if (File.Exists(file))
+                //        wd.Print(file);
+                //}
             }
             else if (position == 2)
             {
@@ -1135,7 +1137,7 @@ namespace RefereeHelper.Views
 
                 Competition competition = (Competition)CompList.SelectedItem;
 
-                if (wd.StarProtocol(competition))
+                if (wd.FinshProtocol(competition))
                 {
                     string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
                     if (File.Exists(file))
@@ -1166,12 +1168,14 @@ namespace RefereeHelper.Views
             }
             else if (position == 1)
             {
+                ProtocolDialog dialog = new ProtocolDialog((Competition)CompList.SelectedItem, 3);
+                dialog.ShowDialog();
                 WordHelper wd = new WordHelper();
                 var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
 
                 Competition competition = (Competition)CompList.SelectedItem;
 
-                if (wd.StarProtocol(competition))
+                if (wd.DistanceProtocol(competition))
                 {
                     string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
                     if (File.Exists(file))
@@ -1185,7 +1189,7 @@ namespace RefereeHelper.Views
 
                 Competition competition = (Competition)CompList.SelectedItem;
 
-                if (wd.StarProtocol(competition))
+                if (wd.FinshProtocol(competition))
                 {
                     string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
                     if (File.Exists(file))
