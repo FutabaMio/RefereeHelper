@@ -102,10 +102,10 @@ namespace RefereeHelper.OptionsWindows
                     foreach (Timing timing in timings)
                         if (timing.Start?.Partisipation.Group?.DistanceId == distance.Id)
                         {
-                            buf = (TimeOnly)timing.TimeFromStart;
                             MainDB.Dispatcher.Invoke(() =>
                             {
-                                buf = (TimeOnly)timing.TimeFromStart;
+                                if (timing.TimeFromStart != null)
+                                    buf = (TimeOnly)timing.TimeFromStart;
                                 MainDB.Items.Add(new DataItems
                                 {
                                     Name = timing.Start?.Partisipation.Member.Name,
@@ -165,10 +165,10 @@ namespace RefereeHelper.OptionsWindows
                     foreach (Timing timing in timings)
                         if (timing.Start?.Partisipation.GroupId == group.Id)
                         {
-                            buf = (TimeOnly)timing.TimeFromStart;
+                            if (timing.TimeFromStart != null)
+                                buf = (TimeOnly)timing.TimeFromStart;
                             MainDB.Dispatcher.Invoke(() =>
                             {
-                                buf = (TimeOnly)timing.TimeFromStart;
                                 MainDB.Items.Add(new DataItems
                                 {
                                     Name = timing.Start?.Partisipation.Member.Name,
