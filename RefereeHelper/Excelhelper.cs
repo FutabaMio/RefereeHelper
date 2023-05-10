@@ -13,6 +13,7 @@ using RefereeHelper.EntityFramework;
 using RefereeHelper.EntityFramework.Services;
 using RefereeHelper.Models;
 using RefereeHelper.OptionsWindows;
+using RefereeHelper.Views;
 using Epplus = OfficeOpenXml;
 using EpplusSyle = OfficeOpenXml.Style;
 
@@ -71,13 +72,19 @@ namespace RefereeHelper
                     var groups = dbContext.Set<Group>().Select(x => new Group
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
+                        Distance = new Distance
+                        {
+                            Id = x.Distance.Id,
+                            StartTime = x.Distance.StartTime
+                        }
                     }).ToList();
 
-                    var starts = dbContext.Set<Start>().Select(x => new Start
+                    var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
                     {
                         Id = x.Id,
                         Number = x.Number,
+                        StartTime = x.StartTime,
                         Partisipation = new Partisipation
                         {
                             Id = x.Partisipation.Id
@@ -121,18 +128,23 @@ namespace RefereeHelper
                                         sheet.Cells[row, 3].Value = partisipation.Member?.Club?.Name;
                                         sheet.Cells[row, 3].Style.Font.Bold = true;
                                         sheet.Cells[row, 4].Value = partisipation.Member?.Discharge?.Name;
-                                        foreach (Start start in starts)
+                                        foreach (Models.Start start in starts)
                                             if (start.Partisipation.Id == partisipationId)
                                             {
-                                                
                                                 sheet.Cells[row, 5].Value = start.Number;
                                                 if (start.StartTime != null)
                                                 {
                                                     DateTimebuf = (DateTime)start.StartTime;
                                                     sheet.Cells[row, 7].Value = DateTimebuf.ToShortTimeString();
                                                 }
+                                                else
+                                                {
+                                                    DateTimebuf = (DateTime)group.Distance.StartTime;
+                                                    sheet.Cells[row, 7].Value = DateTimebuf.ToShortTimeString();
+                                                }       
                                                 break;
                                             }
+                                        
                                         sheet.Cells[row, 6].Value = partisipation.Member?.BornDate.ToShortDateString();
                                     }
                                 }
@@ -151,7 +163,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false; 
             }
         }
@@ -170,7 +182,8 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        Circles = x.Circles
+                        Circles = x.Circles,
+                        StartTime = x.StartTime
                     }).ToList();
 
                     var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
@@ -213,10 +226,11 @@ namespace RefereeHelper
                         }
                     }).ToList();
 
-                    var starts = dbContext.Set<Start>().Select(x => new Start
+                    var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
                     {
                         Id = x.Id,
                         Number = x.Number,
+                        StartTime = x.StartTime,
                         Partisipation = new Partisipation
                         {
                             Id = x.Partisipation.Id
@@ -230,7 +244,8 @@ namespace RefereeHelper
                         TimeFromStart = x.TimeFromStart,
                         IsFinish = x.IsFinish,
                         Place = x.Place,
-                        Start = new Start
+                        PlaceAbsolute = x.PlaceAbsolute,
+                        Start = new Models.Start
                         {
                             Id = x.Start.Id,
                             Partisipation = new Partisipation
@@ -292,7 +307,7 @@ namespace RefereeHelper
                                         sheet.Cells[row, 4].Value = partisipation.Member?.BornDate.ToShortDateString();
                                         sheet.Cells[row, 5].Value = partisipation.Member?.City;
                                         sheet.Cells[row, 6].Value = partisipation.Member?.Club?.Name;
-                                        foreach (Start start in starts)
+                                        foreach (Models.Start start in starts)
                                             if (start.Partisipation.Id == partisipationId)
                                             {
                                                 sheet.Cells[row, 7].Value = start.Number;
@@ -335,7 +350,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -391,7 +406,7 @@ namespace RefereeHelper
                         }
                     }).ToList();
 
-                    var starts = dbContext.Set<Start>().Select(x => new Start
+                    var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
                     {
                         Id = x.Id,
                         Number = x.Number,
@@ -408,7 +423,7 @@ namespace RefereeHelper
                         TimeFromStart = x.TimeFromStart,
                         IsFinish = x.IsFinish,
                         Place = x.Place,
-                        Start = new Start
+                        Start = new Models.Start
                         {
                             Id = x.Start.Id,
                             Partisipation = new Partisipation
@@ -466,7 +481,7 @@ namespace RefereeHelper
                                         sheet.Cells[row, 4].Value = partisipation.Member?.BornDate.ToShortDateString();
                                         sheet.Cells[row, 5].Value = partisipation.Member?.City;
                                         sheet.Cells[row, 6].Value = partisipation.Member?.Club?.Name;
-                                        foreach (Start start in starts)
+                                        foreach (Models.Start start in starts)
                                             if (start.Partisipation.Id == partisipationId)
                                             {
                                                 sheet.Cells[row, 7].Value = start.Number;
@@ -507,7 +522,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -570,7 +585,7 @@ namespace RefereeHelper
                         }
                     }).ToList();
 
-                    var starts = dbContext.Set<Start>().Select(x => new Start
+                    var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
                     {
                         Id = x.Id,
                         Number = x.Number,
@@ -586,7 +601,7 @@ namespace RefereeHelper
                         TimeFromStart = x.TimeFromStart,
                         IsFinish = x.IsFinish,
                         Place = x.Place,
-                        Start = new Start
+                        Start = new Models.Start
                         {
                             Id = x.Start.Id,
                             Partisipation = new Partisipation
@@ -639,7 +654,7 @@ namespace RefereeHelper
                                                 row++;
                                                 sheet.Cells[row, 2].Value = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
                                                 sheet.Cells[row, 3].Value = partisipation.Member?.Club?.Name;
-                                                foreach (Start start in starts)
+                                                foreach (Models.Start start in starts)
                                                     if (start.Partisipation.Id == partisipationId)
                                                     {
                                                         sheet.Cells[row, 4].Value = start.Number;
@@ -689,7 +704,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -714,7 +729,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -725,7 +740,7 @@ namespace RefereeHelper
                 if (!File.Exists(file))
                 {
                     package.SaveAs(new FileInfo(file));
-                    MessageBox.Show("протокол был сформировон и сохранён по пути:\\n" + file, "Выполнено", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("протокол был сформировон и сохранён по пути:" + file, "Выполнено", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
@@ -737,7 +752,7 @@ namespace RefereeHelper
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Произошла ошибка:" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }

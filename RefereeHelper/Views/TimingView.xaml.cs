@@ -1035,7 +1035,7 @@ namespace RefereeHelper.Views
                     try
                     {
                         var p = new Process();
-                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx")
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordSP.docx")
                         {
                             UseShellExecute = true
                         };
@@ -1081,7 +1081,7 @@ namespace RefereeHelper.Views
                     try
                     {
                         var p = new Process();
-                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx")
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordFP.docx")
                         {
                             UseShellExecute = true
                         };
@@ -1109,7 +1109,7 @@ namespace RefereeHelper.Views
 
                 if (wd.StarProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordSP.docx";
                     if (File.Exists(file))
                         wd.Print(file);
                 }
@@ -1139,7 +1139,7 @@ namespace RefereeHelper.Views
 
                 if (wd.FinshProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordFP.docx";
                     if (File.Exists(file))
                         wd.Print(file);
                 }
@@ -1161,7 +1161,7 @@ namespace RefereeHelper.Views
 
                 if (wd.StarProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordSP.docx";
                     if (File.Exists(file))
                         wd.PrintAs(file);
                 }
@@ -1177,7 +1177,7 @@ namespace RefereeHelper.Views
 
                 if (wd.DistanceProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordDP.docx";
                     if (File.Exists(file))
                         wd.PrintAs(file);
                 }
@@ -1191,7 +1191,7 @@ namespace RefereeHelper.Views
 
                 if (wd.FinshProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordFP.docx";
                     if (File.Exists(file))
                         wd.PrintAs(file);
                 }

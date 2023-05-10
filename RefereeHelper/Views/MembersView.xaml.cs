@@ -60,8 +60,6 @@ namespace RefereeHelper.Views
                     f.Delete();
                 }
             }
-            
-
         }
         int ID = 0;
         public void RefreshData()

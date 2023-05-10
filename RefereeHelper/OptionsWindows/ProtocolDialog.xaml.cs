@@ -82,7 +82,7 @@ namespace RefereeHelper.OptionsWindows
                     try
                     {
                         var p = new Process();
-                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordDP.docx")
                         {
                             UseShellExecute = true
                         };
@@ -99,7 +99,7 @@ namespace RefereeHelper.OptionsWindows
 
                 if (wd.DistanceProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordDP.docx";
                     if (File.Exists(file))
                         wd.Print(file);
                 }
@@ -111,7 +111,7 @@ namespace RefereeHelper.OptionsWindows
 
                 if (wd.DistanceProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordDP.docx";
                     if (File.Exists(file))
                         wd.PrintAs(file);
                 }
@@ -126,7 +126,7 @@ namespace RefereeHelper.OptionsWindows
                 Excelhelper ex = new Excelhelper();
                 var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
                 INIManager manager = new INIManager(System.IO.Path.Combine(Environment.CurrentDirectory, "Option.ini"));
-                string namefile = "Distance_Protocol_Excel.xlsx";
+                string namefile = "GroupDistance_Protocol_Excel.xlsx";
 
                 if (ex.GroupDistanceProtocol(competition))
                 {
@@ -140,7 +140,7 @@ namespace RefereeHelper.OptionsWindows
             {
                 Excelhelper ex = new Excelhelper();
                 var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-                string namefile = "Distance_Protocol_Excel.xlsx";
+                string namefile = "GroupDistance_Protocol_Excel.xlsx";
                 CommonOpenFileDialog dialog = new CommonOpenFileDialog();
 
                 dialog.IsFolderPicker = true;
@@ -165,7 +165,7 @@ namespace RefereeHelper.OptionsWindows
                     try
                     {
                         var p = new Process();
-                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx")
+                        p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordGDP.docx")
                         {
                             UseShellExecute = true
                         };
@@ -182,7 +182,7 @@ namespace RefereeHelper.OptionsWindows
 
                 if (wd.GroupDistanceProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordGDP.docx";
                     if (File.Exists(file))
                         wd.Print(file);
                 }
@@ -194,7 +194,7 @@ namespace RefereeHelper.OptionsWindows
 
                 if (wd.GroupDistanceProtocol(competition))
                 {
-                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx";
+                    string file = System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordGDP.docx";
                     if (File.Exists(file))
                         wd.PrintAs(file);
                 }

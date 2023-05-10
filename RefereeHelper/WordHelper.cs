@@ -82,13 +82,19 @@ namespace RefereeHelper
                     var groups = dbContext.Set<Group>().Select(x => new Group
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
+                        Distance = new Distance
+                        {
+                            Id = x.Distance.Id,
+                            StartTime = x.Distance.StartTime,
+                        }
                     }).ToList();
 
                     var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
                     {
                         Id = x.Id,
                         Number = x.Number,
+                        StartTime = x.StartTime,
                         Partisipation = new Partisipation
                         {
                             Id = x.Partisipation.Id
@@ -171,6 +177,12 @@ namespace RefereeHelper
                                                     table.Cell(row, 7).Range.Text = DateTimebuf.ToShortTimeString();
                                                     table.Cell(1, 7).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                                                 }
+                                                else
+                                                {
+                                                    DateTimebuf = (DateTime)group.Distance.StartTime;
+                                                    table.Cell(row, 7).Range.Text = DateTimebuf.ToShortTimeString();
+                                                    table.Cell(1, 7).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                }
                                                 break;
                                             }
                                         table.Cell(row, 6).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
@@ -196,7 +208,7 @@ namespace RefereeHelper
                         }
 
                     }
-                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestSP.docx");
+                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordSP.docx");
                     doc.Close(ref falseObj, ref missingObj, ref missingObj);
                     word.Quit();
                     return true;
@@ -289,6 +301,7 @@ namespace RefereeHelper
                         TimeFromStart = x.TimeFromStart,
                         IsFinish = x.IsFinish,
                         Place = x.Place,
+                        PlaceAbsolute = x.PlaceAbsolute,
                         Start = new Models.Start
                         {
                             Id = x.Start.Id,
@@ -429,7 +442,7 @@ namespace RefereeHelper
                             return false;
                         }
                     }
-                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx");
+                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordDP.docx");
                     doc.Close(ref falseObj, ref missingObj, ref missingObj);
                     word.Quit();
                     return true;
@@ -650,7 +663,7 @@ namespace RefereeHelper
                             return false;
                         }
                     }
-                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestDP.docx");
+                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordGDP.docx");
                     doc.Close(ref falseObj, ref missingObj, ref missingObj);
                     word.Quit();
                     return true;
@@ -898,7 +911,7 @@ namespace RefereeHelper
                         table.Cell(1, 2).Range.Text = competition.Judge;
                         table.Cell(2, 2).Range.Text = competition.Secretary;
                     }
-                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordTestFP.docx");
+                    doc.SaveAs(System.IO.Path.Combine(Environment.CurrentDirectory, "temp") + "\\WordFP.docx");
                     doc.Close(ref falseObj, ref missingObj, ref missingObj);
                     word.Quit();
                     return true;
