@@ -483,8 +483,15 @@ namespace RefereeHelper.Views
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                Timing bufTiming = new Timing();
+                bufTiming.TimeNow=TimeOnly.FromDateTime(DateTime.Now);
+                db.Timings.Add(bufTiming);
+                db.SaveChanges();
+            }
+               
             
-            Timing bufTiming= new Timing();
             
 
             //int numb = TeamTimer.SelectedCells.Value;
