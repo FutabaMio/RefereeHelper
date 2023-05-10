@@ -9,7 +9,6 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="35*"/>
             <RowDefinition Height="367*"/>
             <RowDefinition Height="48*"/>
         </Grid.RowDefinitions>
@@ -22,7 +21,6 @@
             <Button Grid.Column="0" Name="manualAddParticipation" Content="Добавить вручную" FontSize="20" Click="manualAddStart_Click"/>
             <!--Не уверен, что кнопки вообще нужны - добавить по ПКМ, изменить по двойному клику(?)-->
         </Grid>
-        <Label Grid.Row="0" Content="Участие (вспомогательная таблица)" FontSize="20"/>
-        <DataGrid Grid.Row="1" Name="partisipationTable" ItemsSource="{Binding}"/>
+        <DataGrid Grid.Row="0" Name="partisipationTable" ItemsSource="{Binding}"/>
     </Grid>
 </UserControl>

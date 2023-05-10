@@ -9,7 +9,7 @@
 
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="35*"/>
+            
             <RowDefinition Height="367*"/>
             <RowDefinition Height="48*"/>
         </Grid.RowDefinitions>
@@ -24,7 +24,6 @@
             <Button Grid.Column="1" Name="editStart" Content="Редактировать" FontSize="20" Click="editStart_Click"/>
             <Button Grid.Column="2" Name="deleteStart" Content="Удалить" FontSize="20" Click="deleteStart_Click"/>
         </Grid>
-        <Label Grid.Row="0" Content="Старт" FontSize="20"/>
-        <DataGrid Grid.Row="1" Name="startTable" ItemsSource="{Binding}"/>
+        <DataGrid Grid.Row="0" Name="startTable" ItemsSource="{Binding}"/>
     </Grid>
 </UserControl>
