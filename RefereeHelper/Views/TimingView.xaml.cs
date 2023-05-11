@@ -28,6 +28,10 @@ namespace RefereeHelper.Views
     /// <summary>
     /// Логика взаимодействия для TimingView.xaml
     /// </summary>
+    
+
+
+
     public partial class TimingView : UserControl
     {
         /// <summary>
@@ -1200,16 +1204,20 @@ namespace RefereeHelper.Views
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (position == 2)
+            /*if (position == 2)
             {
                 TimingDataItem item = new TimingDataItem();
                 item.TimeNow = DateTime.Now.ToLongTimeString();
                 TeamTimer.Items.Add(item);
+            }*/
+
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                Timing bufTiming = new Timing();
+                bufTiming.TimeNow=TimeOnly.FromDateTime(DateTime.Now);
+                db.Timings.Add(bufTiming);
+                db.SaveChanges();
             }
-            //Timing timing;
-            //db.Timings.Add(timing); //пофиксить запись (почитать об ошибке)
-            //почитать, как при записи в бд подсосать данные из таблиц по номеру участнику
-            //db.SaveChanges();
         }
 
        
