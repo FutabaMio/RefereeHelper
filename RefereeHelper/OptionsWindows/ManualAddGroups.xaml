@@ -28,7 +28,8 @@
         <Label Grid.Column="1" Grid.Row="1" Content="Пол" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16"/>
         <RadioButton Grid.Column="1" Grid.Row="1" Content="М" VerticalAlignment="Center" Margin="15,0,0,0"/>
         <RadioButton Grid.Column="1" Grid.Row="1" Content="Ж" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,165,0"/>
-        <ComboBox Grid.Column="1" Grid.Row="2" Name="distancesList" Margin="0,35,0,179"/>
+        <Label Grid.Row="2" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Выбор дистанции:" FontSize="18"/>
+        <ComboBox Grid.Column="1" Grid.Row="2" Name="distancesList" Margin="15,35,0,179"/>
         <Button Name="AcceptButton" Grid.Column="1" Grid.Row="2" Content="OK" Height="46" Grid.RowSpan="2" VerticalAlignment="Bottom" Click="AcceptButton_Click" />
         <Button Name="ExitButton" Grid.Column="2" Grid.Row="4" Content="Отмена" Click="ExitButton_Click"/>
     </Grid>

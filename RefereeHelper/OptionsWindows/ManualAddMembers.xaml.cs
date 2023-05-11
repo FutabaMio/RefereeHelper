@@ -42,6 +42,20 @@ namespace RefereeHelper.OptionsWindows
             }
         }
 
+        public void RefreshData()
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                List<Discharge> discharges = db.Discharges.ToList();
+                dischargeList.DataContext = discharges;
+                dischargeList.ItemsSource = discharges;
+
+                List<Club> clubs = db.Clubs.ToList();
+                clubsList.DataContext = clubs;
+                clubsList.ItemsSource=clubs;
+            }
+        }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
@@ -69,6 +83,37 @@ namespace RefereeHelper.OptionsWindows
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                ManualAddDischarge manualAddWindow = new ManualAddDischarge(new Discharge());
+                if (manualAddWindow.ShowDialog() == true)
+                {
+                    Discharge Discharge= manualAddWindow.Discharge;
+                    db.Discharges.Add(Discharge);
+                    db.SaveChanges();
+                }
+            }
+            RefreshData();
+            
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                ManualAddClub manualAddWindow = new ManualAddClub(new Club());
+                if (manualAddWindow.ShowDialog() == true)
+                {
+                    Club Club= manualAddWindow.Club;
+                    db.Clubs.Add(Club);
+                    db.SaveChanges();
+                }
+            }
+            RefreshData();
         }
     }
 }

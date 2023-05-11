@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RefereeHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,31 +12,29 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using RefereeHelper.Models;
 
 namespace RefereeHelper.OptionsWindows
 {
     /// <summary>
-    /// Interaction logic for AddCompetitionCommands.xaml
+    /// Логика взаимодействия для ManualAddDischarge.xaml
     /// </summary>
-    public partial class AddCompetitionCommands : Window
+    public partial class ManualAddDischarge : Window
     {
-        public Team Team { get; private set; }
-        public AddCompetitionCommands(Team team)
+        public Discharge Discharge { get; private set; }
+        public ManualAddDischarge(Discharge discharge)
         {
             InitializeComponent();
-            Team = team;
-            DataContext = team;
+            Discharge = discharge;
+            DataContext = Discharge;
         }
 
-        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        private void acceptButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            Team.Name=teamNameTextBox.Text;
+            Discharge.Name=dischargeName.Text;
             DialogResult=true;
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private void exitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

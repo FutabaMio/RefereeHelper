@@ -26,5 +26,10 @@ namespace RefereeHelper.Models
         /// </summary>
         public virtual Group? Group { get; set; }
         public /*sk*/virtual IEnumerable<Start> Starts { get; set; }
+
+        public override string ToString()
+        {
+            return Id.ToString();
+        }
     }
 }

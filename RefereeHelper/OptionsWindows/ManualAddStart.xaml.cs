@@ -53,6 +53,7 @@ namespace RefereeHelper.OptionsWindows
             Start.Number=numb;
             Start.Chip=chipBox.Text;
             Start.StartTime = (DateTime)startTimePicker.Value;
+            DialogResult=true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

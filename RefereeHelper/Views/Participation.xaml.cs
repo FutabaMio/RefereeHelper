@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RefereeHelper.EntityFramework;
+using RefereeHelper.OptionsWindows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,14 +36,38 @@ namespace RefereeHelper.Views
                 db.Database.EnsureCreated();
                 db.Partisipations.Load();
                 DataContext = db.Starts.Local.ToObservableCollection();
-                participationTable.DataContext=db.Starts.Local.ToBindingList();
+                partisipationTable.DataContext=db.Starts.Local.ToBindingList();
+                partisipationTable.ItemsSource=db.Partisipations.Local.ToBindingList();
                 db.SaveChanges();
             }
         }
 
         private void manualAddStart_Click(object sender, RoutedEventArgs e)
         {
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                ManualAddParticipation manualAddWindow = new ManualAddParticipation(new Models.Partisipation());
+                if(manualAddWindow.ShowDialog() == true)
+                {
+                    Models.Partisipation Partisipation = manualAddWindow.Partisipation;
+                    db.Partisipations.Add(Partisipation);
+                    db.SaveChanges();
+                }
+            }
+            RefreshData();
+        }
 
+
+
+        public void RefreshData()
+        {
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                List<Models.Partisipation> partisipations = db.Partisipations.ToList();
+                partisipationTable.DataContext=partisipations;
+                partisipationTable.ItemsSource=partisipations;
+            }
         }
     }
 }

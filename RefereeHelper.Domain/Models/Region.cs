@@ -20,5 +20,10 @@ namespace RefereeHelper.Models
         public int СodeNumber { get; set; }
         public /*sk*/virtual IEnumerable<Club> Clubs { get; set; }
 
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

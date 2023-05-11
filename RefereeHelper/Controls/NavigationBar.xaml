@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <RadioButton Grid.Column="0" Content="Участники" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Members}"/>
+            <RadioButton Grid.Column="0" Content="Спортсмены" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Members}"/>
             <RadioButton Grid.Column="1" Content="Клубы" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Clubs}"/>
             <RadioButton Grid.Column="2" Content="Группы" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Groups}"/>
             <RadioButton Grid.Column="3" Content="Мероприятия" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Competitions}"/>
@@ -51,8 +51,8 @@
                 <ColumnDefinition Width="103*"/>
             </Grid.ColumnDefinitions>
 
-            <RadioButton Grid.Column="0" Content="Старт" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Start}" VerticalAlignment="Center"/>
-            <RadioButton Grid.Column="1" Content="Участие" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Participation}" VerticalAlignment="Center"/>
+            <RadioButton Grid.Column="0" Content="Участник" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Start}" VerticalAlignment="Center"/>
+            <RadioButton Grid.Column="1" Content="Участие (гонка)" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Participation}" VerticalAlignment="Center"/>
             <RadioButton Name="helpWindow" Grid.Column="3" Content="Помощь" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="helpWindow_Checked"/>
         </Grid>
     </Grid>

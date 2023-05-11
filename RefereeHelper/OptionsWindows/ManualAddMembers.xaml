@@ -38,7 +38,8 @@
         <Label Grid.Column="1" Grid.Row="3" Content="Разряд" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16" Margin="0,0,0,87" Grid.RowSpan="2"/>
         <ComboBox Name="dischargeList" Grid.Column="1" Grid.Row="3" Margin="0,35,0,15"/>
         <Button Name="AcceptButton" Grid.Column="1" Grid.Row="5" Content="OK" Click="AcceptButton_Click"/>
-        <Button Grid.Column="2" Grid.Row="3" Content="Добавить клуб" Height="30" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Button Grid.Column="2" Grid.Row="3" Content="Добавить клуб" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Center" Click="Button_Click_1"/>
+        <Button Grid.Column="2" Grid.Row="3" Content="Добавить разряд" Height="30" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Center" Click="Button_Click"/>
         <Button Name="ExitButton" Grid.Column="2" Grid.Row="5" Content="Отмена" Click="ExitButton_Click"/>
     </Grid>
 </Window>

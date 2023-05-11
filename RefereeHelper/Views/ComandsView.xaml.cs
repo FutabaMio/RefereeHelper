@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using RefereeHelper.OptionsWindows;
 using RefereeHelper.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using RefereeHelper.Models;
+using OfficeOpenXml.ConditionalFormatting;
 
 namespace RefereeHelper.Views
 {
@@ -34,10 +36,12 @@ namespace RefereeHelper.Views
         {
             using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
             {
+                List<Team> teams = new List<Team>();
                 db.Database.EnsureCreated();
                 db.Groups.Load();
-                DataContext = db.Groups.Local.ToObservableCollection();
-                //clubDataGrid.DataContext = db.Groups.Local.ToBindingList();
+                DataContext = db.Teams.Local.ToObservableCollection();
+                teams.AddRange(db.Teams);
+                teamsDataGrid.ItemsSource=teams;    //db.Teams.Local.ToBindingList();
             }
         }
 
@@ -53,8 +57,17 @@ namespace RefereeHelper.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            AddCompetitionCommands addCompetitionCommands = new AddCompetitionCommands();
-            addCompetitionCommands.ShowDialog();
+            AddCompetitionCommands manualAddWindow = new AddCompetitionCommands(new Team());
+            using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                if (manualAddWindow.ShowDialog()==true)
+                {
+                    Team Team = manualAddWindow.Team;
+                    db.Teams.Add(Team);
+                    db.SaveChanges();
+                }
+            }
+            RefreshData();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -67,6 +80,18 @@ namespace RefereeHelper.Views
         {
             AddMemberInCommandFromTable addMemberInCommandFromTable = new AddMemberInCommandFromTable();
             addMemberInCommandFromTable.ShowDialog();
+        }
+
+        
+        public void RefreshData()
+        {
+            using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+            {
+                db.Database.EnsureCreated();
+                List<Team> teams = db.Teams.ToList();
+                teamsDataGrid.DataContext = teams;
+                teamsDataGrid.ItemsSource= teams;
+            }
         }
     }
 }
