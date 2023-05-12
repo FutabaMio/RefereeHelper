@@ -534,8 +534,10 @@ namespace RefereeHelper
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     var sheet = package.Workbook.Worksheets.Add("лист 1");
-                    int row = 1, col = 7, constcol = 0, rowcost = 0;
-                    List<int> partisipationIds = new List<int>();
+                    int row = 1, col = 6, constcol = 0, rowcost = 0,cur = 1;
+                    List<int> partisipationOKIds = new List<int>();
+                    List<int> partisipationDNFIds = new List<int>();
+                    List<int> partisipationDNSIds = new List<int>();
                     TimeOnly buf;
                     TimeSpan timeSpan = TimeSpan.Zero;
 
@@ -589,6 +591,7 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         Number = x.Number,
+                        Status = x.Status,
                         Partisipation = new Partisipation
                         {
                             Id = x.Partisipation.Id
@@ -618,9 +621,21 @@ namespace RefereeHelper
                             if (distance.Id == group.Distance.Id)
                             {
                                 foreach (Partisipation partisipation in partisipations)
-                                    if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)
-                                        partisipationIds.Add(partisipation.Id);
-                                if (partisipationIds.Count != 0)
+                                    if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)                                    
+                                        foreach (Models.Start start in starts)
+                                        {
+                                            if (start.Partisipation.Id == partisipation.Id)
+                                            {
+                                                if(start.Status == 0)
+                                                    partisipationOKIds.Add(partisipation.Id);
+                                                else if(start.Status == 1)
+                                                    partisipationDNFIds.Add(partisipation.Id);
+                                                else if(start.Status == 2)
+                                                    partisipationDNSIds.Add(partisipation.Id);
+                                            }
+                                        }
+                                    
+                                if (partisipationOKIds.Count != 0 || partisipationDNFIds.Count != 0 || partisipationDNSIds.Count != 0)
                                 {
                                     sheet.Cells[row, 1].Value = group.Name + ", " + distance.Name;
                                     sheet.Cells[row, 1, row, 2].AutoFitColumns(1, 450);
@@ -633,7 +648,6 @@ namespace RefereeHelper
                                     sheet.Cells[row, 3].Value = "Коллектив";
                                     sheet.Cells[row, 4].Value = "Номер";
                                     sheet.Cells[row, 5].Value = "ГР";
-                                    sheet.Cells[row, 6].Value = "Отсечка";
                                     for (int i = 1; i < distance.Circles; i++)
                                     {
                                         sheet.Cells[row, col].Value = i.ToString() + "круг"; col++;
@@ -645,12 +659,12 @@ namespace RefereeHelper
                                     sheet.Cells[row - 1, 1, row - 1, constcol].Merge = true;
                                     sheet.Cells[row, 1, row, constcol].Style.Font.Bold = true;
                                     sheet.Cells[row, 1, row, constcol].Style.Border.Bottom.Style = EpplusSyle.ExcelBorderStyle.Medium;
-                                    foreach (int partisipationId in partisipationIds)
+                                    foreach (int partisipationId in partisipationOKIds)
                                         foreach (Partisipation partisipation in partisipations)
                                         {
                                             if (partisipation.Id == partisipationId)
                                             {
-                                                col = 7;
+                                                col = 6;
                                                 row++;
                                                 sheet.Cells[row, 2].Value = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
                                                 sheet.Cells[row, 3].Value = partisipation.Member?.Club?.Name;
@@ -677,9 +691,9 @@ namespace RefereeHelper
                                         }
                                     sheet.Cells[rowcost, 1, row, constcol].Sort(constcol - 3, false);
 
-                                    for (int i = 0; i < partisipationIds.Count; i++)
+                                    for (int i = 0; i < partisipationOKIds.Count; i++)
                                     {
-                                        sheet.Cells[rowcost + i, 1].Value = i + 1;
+                                        sheet.Cells[rowcost + i, 1].Value = cur; cur++;
                                         if (sheet.Cells[rowcost + i, constcol - 2].Value != null)
                                             if (TimeOnly.TryParse(sheet.Cells[rowcost + i, constcol - 2].Value.ToString(), out buf))
                                             {
@@ -687,8 +701,55 @@ namespace RefereeHelper
                                                 buf = TimeOnly.FromTimeSpan(timeSpan);
                                                 sheet.Cells[rowcost + i, constcol - 1].Value = buf.ToLongTimeString();
                                             }
-
                                     }
+                                    foreach (int partisipationId in partisipationDNFIds)
+                                        foreach (Partisipation partisipation in partisipations)
+                                        {
+                                            if (partisipation.Id == partisipationId)
+                                            {
+                                                col = 6;
+                                                row++;
+                                                sheet.Cells[row, 1].Value = cur; cur++;
+                                                sheet.Cells[row, 2].Value = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
+                                                sheet.Cells[row, 3].Value = partisipation.Member?.Club?.Name;
+                                                foreach (Models.Start start in starts)
+                                                    if (start.Partisipation.Id == partisipationId)
+                                                    {
+                                                        sheet.Cells[row, 4].Value = start.Number;
+                                                        break;
+                                                    }
+                                                sheet.Cells[row, 5].Value = partisipation.Member?.BornDate.ToShortDateString();
+                                                foreach (Timing timing in timings)
+                                                {
+                                                    if (timing.Start?.Partisipation.Id == partisipationId)
+                                                    {
+                                                        buf = (TimeOnly)timing.TimeFromStart;
+                                                        sheet.Cells[row, col].Value = buf.ToLongTimeString(); col++;
+                                                    }
+                                                }
+                                                sheet.Cells[row, constcol].Value = "DNF";
+                                            }
+                                        }
+                                    foreach (int partisipationId in partisipationDNSIds)
+                                        foreach (Partisipation partisipation in partisipations)
+                                        {
+                                            if (partisipation.Id == partisipationId)
+                                            {
+                                                col = 6;
+                                                row++;
+                                                sheet.Cells[row, 1].Value = cur; cur++;
+                                                sheet.Cells[row, 2].Value = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
+                                                sheet.Cells[row, 3].Value = partisipation.Member?.Club?.Name;
+                                                foreach (Models.Start start in starts)
+                                                    if (start.Partisipation.Id == partisipationId)
+                                                    {
+                                                        sheet.Cells[row, 4].Value = start.Number;
+                                                        break;
+                                                    }
+                                                sheet.Cells[row, 5].Value = partisipation.Member?.BornDate.ToShortDateString();
+                                                sheet.Cells[row, constcol].Value = "DNS";
+                                            }
+                                        }
                                     row = row + 2;
                                 }
                                 else
