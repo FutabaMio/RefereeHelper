@@ -14,7 +14,6 @@ namespace RefereeHelper.Models
         /// Участие
         /// </summary>
         public virtual Partisipation Partisipation { get; set; }
-        
         /// <summary>
         /// Ключ Команды
         /// </summary>
@@ -28,6 +27,13 @@ namespace RefereeHelper.Models
         /// Стартовый номер
         /// </summary>
         public int Number { get; set; }
+        /// <summary>
+        /// Статус спортсмена
+        /// 0 - всё нормально
+        /// 1 - Do Not Finish
+        /// 2 - Do Not Start
+        /// </summary>
+        public int Status { get; set; }
         /// <summary>
         /// Чип
         /// </summary>
