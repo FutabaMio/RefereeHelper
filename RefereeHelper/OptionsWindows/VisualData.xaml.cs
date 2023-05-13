@@ -35,44 +35,55 @@ namespace RefereeHelper.OptionsWindows
             public string TimeFromStart { get; set; }
         }
 
-        public VisualData(bool Type, Competition competition)
+        Competition competition;
+        int cilcle = 1;
+
+        public VisualData(bool Type, Competition c)
         {
             InitializeComponent();
-
-            if (Type)
-            {
-                TimerCallback tm = new TimerCallback(FillGroup);
-
-                Timer timer = new Timer(tm, competition, 0, 1000);
-            }
-            else
-            {
-                TimerCallback tm = new TimerCallback(FillDistance);
-
-                Timer timer = new Timer(tm, competition, 0, 1000);
-            }
-        }
-
-        void FillDistance(object obj)
-        {
+            competition = c;
             var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            Competition competition = (Competition)obj;
-            TimeOnly buf;
-
-            MainDB.Dispatcher.Invoke(() => { MainDB.Items.Clear(); });
-
             var distances = dbContext.Set<Distance>().Select(x => new Distance
             {
                 Id = x.Id,
-                Name = x.Name
+                Name = x.Name,
+                Circles = x.Circles,
+                Length= x.Length,
+                Height= x.Height,
+                StartTime = x.StartTime
             }).ToList();
+            if (distances.Count != 0)
+            {
+                foreach (var distance in distances)
+                {
+                    DistanceCMB.Items.Add(distance);
+                }
+                DistanceCMB.SelectedIndex = 0;
+                //TimerCallback tm = new TimerCallback(FillDistance);
+
+                //Timer timer = new Timer(tm, competition, 0, 100);
+                System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+
+                timer.Tick += new EventHandler(FillDistance);
+                timer.Interval = new TimeSpan(0, 0, 1);
+                timer.Start();
+            }
+        }
+
+        private void FillDistance(object sender, EventArgs e)
+        {
+            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
+
+            TimeOnly buf;
+
+            MainDB.Items.Clear();
 
             var timings = dbContext.Set<Timing>().Select(x => new Timing
             {
                 Id = x.Id,
                 TimeFromStart = x.TimeFromStart,
                 IsFinish = x.IsFinish,
+                Circle = x.Circle,
                 Start = new Start
                 {
                     Id = x.Start.Id,
@@ -94,90 +105,39 @@ namespace RefereeHelper.OptionsWindows
                 }
             }).ToList();
 
-            foreach (Distance distance in distances)
-                if (timings.Last().Start?.Partisipation.Group?.DistanceId == distance.Id &&
-                    timings.Last().Start?.Partisipation.CompetitionId == competition.Id)
-                {
-                    Libal.Dispatcher.Invoke(() => { Libal.Text = distance.Name; });
-                    foreach (Timing timing in timings)
-                        if (timing.Start?.Partisipation.Group?.DistanceId == distance.Id)
+            DataItems dataItem;
+
+            Distance distance = (Distance)DistanceCMB.SelectedItem;
+            if (distance != null)
+            {
+                foreach (Timing timing in timings)
+                    if (timing.Start?.Partisipation.Group?.DistanceId == distance.Id)
+                        if (timing.Circle > cilcle && timing.Circle != null)
                         {
-                            MainDB.Dispatcher.Invoke(() =>
-                            {
-                                if (timing.TimeFromStart != null)
-                                    buf = (TimeOnly)timing.TimeFromStart;
-                                MainDB.Items.Add(new DataItems
-                                {
-                                    Name = timing.Start?.Partisipation.Member.Name,
-                                    FamalyName = timing.Start?.Partisipation.Member?.FamilyName,
-                                    Number = timing.Start?.Number.ToString(),
-                                    TimeFromStart = buf.ToLongTimeString()
-                                });
-                            });
+                            cilcle = (int)timing.Circle;
+                            break;
                         }
-                }
-        }
-
-        void FillGroup(object obj)
-        {
-            var dbContext = new RefereeHelperDbContextFactory().CreateDbContext();
-
-            Competition competition = (Competition)obj;
-            TimeOnly buf;
-
-            MainDB.Dispatcher.Invoke(() => { MainDB.Items.Clear(); });
-
-            var groups = dbContext.Set<Group>().Select(x => new Group
-            {
-                Id = x.Id,
-                Name = x.Name
-            }).ToList();
-
-            var timings = dbContext.Set<Timing>().Select(x => new Timing
-            {
-                Id = x.Id,
-                TimeFromStart = x.TimeFromStart,
-                IsFinish = x.IsFinish,
-                Start = new Start
+                foreach (Timing timing in timings)
                 {
-                    Id = x.Start.Id,
-                    Partisipation = new Partisipation
+                    if (timing.Start?.Partisipation.Group?.DistanceId == distance.Id)
                     {
-                        Id = x.Start.Partisipation.Id,
-                        GroupId = x.Start.Partisipation.GroupId,
-                        CompetitionId = x.Start.Partisipation.CompetitionId,
-                        Member = new Member
+                        if (timing.Circle == cilcle)
                         {
-                            Name = x.Start.Partisipation.Member.Name,
-                            FamilyName = x.Start.Partisipation.Member.FamilyName
-                        }
-                    },
-                    Number = x.Start.Number
-                }
-            }).ToList();
-
-            foreach (Group group in groups)
-            {
-                if (timings.Last().Start?.Partisipation.GroupId == group.Id && 
-                    timings.Last().Start?.Partisipation.CompetitionId == competition.Id)
-                {
-                    Libal.Dispatcher.Invoke(() => { Libal.Text = group.Name; });
-                    foreach (Timing timing in timings)
-                        if (timing.Start?.Partisipation.GroupId == group.Id)
-                        {
+                            dataItem = new DataItems();
                             if (timing.TimeFromStart != null)
-                                buf = (TimeOnly)timing.TimeFromStart;
-                            MainDB.Dispatcher.Invoke(() =>
                             {
-                                MainDB.Items.Add(new DataItems
-                                {
-                                    Name = timing.Start?.Partisipation.Member.Name,
-                                    FamalyName = timing.Start?.Partisipation.Member?.FamilyName,
-                                    Number = timing.Start?.Number.ToString(),
-                                    TimeFromStart = buf.ToLongTimeString()
-                                });
-                            });
+                                buf = (TimeOnly)timing.TimeFromStart;
+                                dataItem.TimeFromStart = buf.ToShortTimeString();
+                            }
+                            if (timing.Start?.Partisipation?.Member?.Name != null)
+                                dataItem.Name = timing.Start?.Partisipation?.Member?.Name;
+                            if (timing.Start?.Partisipation?.Member?.FamilyName != null)
+                                dataItem.FamalyName = timing.Start?.Partisipation?.Member?.FamilyName;
+                            if (timing.Start?.Number != null)
+                                dataItem.Number = timing.Start?.Number.ToString();
+                            MainDB.Items.Add(dataItem);
                         }
+                    }
                 }
             }
         }

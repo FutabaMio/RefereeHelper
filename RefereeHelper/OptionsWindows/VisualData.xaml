@@ -12,7 +12,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
-            <TextBlock x:Name="Libal" FontSize="30"/>
+            <ComboBox x:Name="DistanceCMB" FontSize="30"/>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <DataGrid x:Name="MainDB" Grid.Row="1" FontSize="20" ItemsSource="{Binding}">
