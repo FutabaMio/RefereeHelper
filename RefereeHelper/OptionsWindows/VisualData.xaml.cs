@@ -59,9 +59,6 @@ namespace RefereeHelper.OptionsWindows
                     DistanceCMB.Items.Add(distance);
                 }
                 DistanceCMB.SelectedIndex = 0;
-                //TimerCallback tm = new TimerCallback(FillDistance);
-
-                //Timer timer = new Timer(tm, competition, 0, 100);
                 System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
 
                 timer.Tick += new EventHandler(FillDistance);
