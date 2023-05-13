@@ -11,11 +11,28 @@
             <RowDefinition Height="44"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
             <ComboBox x:Name="DistanceCMB" FontSize="30"/>
         </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <ComboBox x:Name="Distance1CMB" FontSize="30"/>
+        </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <DataGrid x:Name="MainDB" Grid.Row="1" FontSize="20" ItemsSource="{Binding}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Имя" Binding="{Binding Path=Name}" Width="120" />
+                    <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=FamalyName}" Width="170" />
+                    <DataGridTextColumn Header="Ст№" Binding="{Binding Path=Number}" Width="90" />
+                    <DataGridTextColumn Header="Время" Binding="{Binding Path=TimeFromStart}" Width="120" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <DataGrid x:Name="Main1DB" Grid.Row="1" FontSize="20" ItemsSource="{Binding}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Имя" Binding="{Binding Path=Name}" Width="120" />
                     <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=FamalyName}" Width="170" />
