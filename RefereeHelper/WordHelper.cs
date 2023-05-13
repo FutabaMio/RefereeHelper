@@ -34,8 +34,6 @@ namespace RefereeHelper
 
         public WordHelper()
         {
-
-
         }
 
         public bool StarProtocol(Competition competition)
@@ -694,7 +692,10 @@ namespace RefereeHelper
                     TimeSpan timeSpan = TimeSpan.Zero;
                     TimeOnly finishtime = TimeOnly.MinValue;
                     string s = "";
-                    List<int> partisipationIds = new List<int>();
+                    List<int> partisipationOKIds = new List<int>();
+                    List<int> partisipationDNFIds = new List<int>();
+                    List<int> partisipationDNSIds = new List<int>();
+                    int cur = 1;
                     float maxwidth = 0, width = 0, differencewidth = 0;
                     bool fl = true;
 
@@ -748,6 +749,7 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         Number = x.Number,
+                        Status = x.Status,
                         Partisipation = new Partisipation
                         {
                             Id = x.Partisipation.Id
@@ -773,13 +775,21 @@ namespace RefereeHelper
 
                     foreach (Distance distance in distances)
                         foreach (Group group in groups)
-
                             if (distance.Id == group.Distance.Id)
                             {
                                 foreach (Partisipation partisipation in partisipations)
                                     if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)
-                                        partisipationIds.Add(partisipation.Id);
-                                if (partisipationIds.Count != 0)
+                                        foreach (Models.Start start in starts)
+                                            if (start.Partisipation.Id == partisipation.Id)
+                                            {
+                                                if (start.Status == 0)
+                                                    partisipationOKIds.Add(partisipation.Id);
+                                                else if(start.Status == 1)
+                                                    partisipationDNFIds.Add(partisipation.Id);
+                                                else if(start.Status == 2)
+                                                    partisipationDNSIds.Add(partisipation.Id);  
+                                            }
+                                if (partisipationOKIds.Count != 0 || partisipationDNFIds.Count != 0 || partisipationDNSIds.Count != 0)
                                 {
                                     wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
                                     if (fl)
@@ -809,19 +819,19 @@ namespace RefereeHelper
 
                                     wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
                                     wordRange.Text = "\n";
+                                    wordRange.Font.Size = 1;
                                     wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
 
-                                    constcol = 8 + Convert.ToInt32(distance.Circles);
-                                    col = 7;
+                                    constcol = 7 + Convert.ToInt32(distance.Circles);
+                                    col = 6;
 
-                                    table = doc.Tables.Add(wordRange, partisipationIds.Count + 1, constcol, ref missingObj, ref missingObj);
+                                    table = doc.Tables.Add(wordRange, partisipationOKIds.Count + 1, constcol, ref missingObj, ref missingObj);
 
                                     table.Cell(1, 1).Range.Text = "№п/п";
                                     table.Cell(1, 2).Range.Text = "Фамилия, имя";
                                     table.Cell(1, 3).Range.Text = "Коллектив";
                                     table.Cell(1, 4).Range.Text = "Номер";
                                     table.Cell(1, 5).Range.Text = "ГР";
-                                    table.Cell(1, 6).Range.Text = "Отсечка";
                                     for (int i = 1; i < distance.Circles; i++)
                                     {
                                         table.Cell(1, col).Range.Text = i.ToString() + "круг"; col++;
@@ -830,13 +840,14 @@ namespace RefereeHelper
                                     table.Cell(1, col).Range.Text = "Отставание"; col++;
                                     table.Cell(1, col).Range.Text = "Место";
                                     row = 1;
-                                    foreach (int partisipationId in partisipationIds)
+                                    foreach (int partisipationId in partisipationOKIds)
                                         foreach (Partisipation partisipation in partisipations)
                                         {
                                             if (partisipation.Id == partisipationId)
                                             {
-                                                col = 7;
+                                                col = 6;
                                                 row++;
+                                                
                                                 table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
                                                 table.Cell(row, 3).Range.Text = partisipation.Member?.Club?.Name;
                                                 foreach (Models.Start start in starts)
@@ -850,12 +861,15 @@ namespace RefereeHelper
                                                 {
                                                     if (timing.Start?.Partisipation.Id == partisipationId)
                                                     {
-                                                        buf = (TimeOnly)timing.TimeFromStart;
-                                                        table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
+                                                        if (timing.TimeFromStart != null)
+                                                        {
+                                                            buf = (TimeOnly)timing.TimeFromStart;
+                                                            table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
+                                                        }
                                                         if (timing.IsFinish == true)
                                                         {
-                                                            finishtime = (TimeOnly)timing.TimeFromStart;
                                                             table.Cell(row, col + 1).Range.Text = timing.Place.ToString();
+
                                                         }
                                                     }
                                                 }
@@ -863,14 +877,16 @@ namespace RefereeHelper
                                         }
 
                                     table.Sort(true, col - 1);
-                                    for (int i = 0; i < partisipationIds.Count; i++)
+                                    for (int i = 0; i < partisipationOKIds.Count; i++)
                                     {
-                                        table.Cell(2 + i, 1).Range.Text = (i + 1).ToString();
+                                        table.Cell(2 + i, 1).Range.Text = cur.ToString(); cur++;
                                         if (table.Cell(2 + i, constcol - 2).Range.Text != null)
                                         {
                                             s = table.Cell(2 + i, constcol - 2).Range.Text;
                                             s = s.Trim('\a');
                                             s = s.Trim('\r');
+                                            if (i == 0)
+                                                TimeOnly.TryParse(s, out finishtime);
                                             if (TimeOnly.TryParse(s, out buf))
                                             {
                                                 timeSpan = buf - finishtime;
@@ -880,7 +896,59 @@ namespace RefereeHelper
                                         }
 
                                     }
-
+                                    foreach (int partisipationId in partisipationDNFIds)
+                                        foreach (Partisipation partisipation in partisipations)
+                                        {
+                                            if (partisipation.Id == partisipationId)
+                                            {
+                                                table.Rows.Add(ref missing);
+                                                col = 6;
+                                                row++;
+                                                table.Cell(row, 1).Range.Text = cur.ToString(); cur++;
+                                                table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
+                                                table.Cell(row, 3).Range.Text = partisipation.Member?.Club?.Name;
+                                                foreach (Models.Start start in starts)
+                                                    if (start.Partisipation.Id == partisipationId)
+                                                    {
+                                                        table.Cell(row, 4).Range.Text = start.Number.ToString();
+                                                        break;
+                                                    }
+                                                table.Cell(row, 5).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
+                                                foreach (Timing timing in timings)
+                                                {
+                                                    if (timing.Start?.Partisipation.Id == partisipationId)
+                                                    {
+                                                        if (timing.TimeFromStart != null)
+                                                        {
+                                                            buf = (TimeOnly)timing.TimeFromStart;
+                                                            table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
+                                                        }
+                                                    }
+                                                }
+                                                table.Cell(row, constcol).Range.Text = "DNF";
+                                            }
+                                        }
+                                    foreach (int partisipationId in partisipationDNSIds)
+                                        foreach (Partisipation partisipation in partisipations)
+                                        {
+                                            if (partisipation.Id == partisipationId)
+                                            {
+                                                table.Rows.Add(ref missing);
+                                                col = 6;
+                                                row++;
+                                                table.Cell(row, 1).Range.Text = cur.ToString(); cur++;
+                                                table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
+                                                table.Cell(row, 3).Range.Text = partisipation.Member?.Club?.Name;
+                                                foreach (Models.Start start in starts)
+                                                    if (start.Partisipation.Id == partisipationId)
+                                                    {
+                                                        table.Cell(row, 4).Range.Text = start.Number.ToString();
+                                                        break;
+                                                    }
+                                                table.Cell(row, 5).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
+                                                table.Cell(row, constcol).Range.Text = "DNS";
+                                            }
+                                        }
                                     table.Rows[1].Range.Font.Bold = 1;
                                     table.Rows[1].Borders[WdBorderType.wdBorderBottom].LineStyle = Word.WdLineStyle.wdLineStyleSingle;
                                     table.Range.Font.Size = 6;
