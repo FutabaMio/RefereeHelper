@@ -76,7 +76,6 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
            <!-- <Button Grid.Column="0" Content="Загрузить из файла"/> -->
@@ -100,8 +99,7 @@
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-            <Button Grid.Column="4" Content="Визуализация групп" Name="VisualGroupBut" Click="VisualGroupBut_Click"/>
-            <Button Grid.Column="5" Content="Визуализация дистанций" Name="VisualDistanceBut" Click="VisualDistanceBut_Click"/>
+            <Button Grid.Column="4" Content="Визуализация результатов" Name="VisualBut" Click="VisualBut_Click"/>
         </Grid>
         
         
