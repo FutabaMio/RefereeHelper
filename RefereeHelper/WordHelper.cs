@@ -142,7 +142,7 @@ namespace RefereeHelper
                             table.Cell(1, 1).Range.Text = "№";
                             table.Cell(1, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
                             table.Cell(1, 2).Range.Text = "Фамилия, Имя";
-                            table.Cell(1, 3).Range.Text = "Колектив";
+                            table.Cell(1, 3).Range.Text = "Коллектив";
                             table.Cell(1, 4).Range.Text = "Квал";
                             table.Cell(1, 5).Range.Text = "Номер";
                             table.Cell(1, 5).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
@@ -233,6 +233,8 @@ namespace RefereeHelper
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     List<int> partisipationIds = new List<int>();
+                    List<int> partisipationDNFIds = new List<int>();
+                    List<int> partisipationDNSIds = new List<int>();
                     bool fl = true;
 
                     var distances = dbContext.Set<Distance>().Select(x => new Distance
@@ -286,6 +288,7 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         Number = x.Number,
+                        Status = x.Status,
                         Partisipation = new Partisipation
                         {
                             Id = x.Partisipation.Id
@@ -317,7 +320,18 @@ namespace RefereeHelper
                             if (distance.Id == group.Distance.Id)
                                 foreach (Partisipation partisipation in partisipations)
                                     if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)
-                                        partisipationIds.Add(partisipation.Id);
+                                        foreach (Models.Start start in starts)
+                                        {
+                                            if (start.Partisipation.Id == partisipation.Id)
+                                            {
+                                                if (start.Status == 0)
+                                                    partisipationIds.Add(partisipation.Id);
+                                                else if (start.Status == 1)
+                                                    partisipationDNFIds.Add(partisipation.Id);
+                                                else if (start.Status == 2)
+                                                    partisipationDNSIds.Add(partisipation.Id);
+                                            }
+                                        }
 
                         if (partisipationIds.Count != 0)
                         {
@@ -414,10 +428,85 @@ namespace RefereeHelper
                                                 }
                                             }
                                         }
-                                        table.Cell(row, col).Range.Text = partisipation.Group?.Name;
+                                        table.Cell(row, constcol - 1).Range.Text = partisipation.Group?.Name;
                                     }
                                 }
-                            table.Sort(true, col - 1);
+                            table.Sort(true, 1);
+                            foreach (int partisipationId in partisipationDNFIds)
+                                foreach (Partisipation partisipation in partisipations)
+                                {
+                                    if (partisipation.Id == partisipationId)
+                                    {
+                                        col = 8;
+                                        row++;
+                                        table.Rows.Add(ref missing);
+                                        table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName;
+                                        table.Cell(row, 2).Range.Font.Bold = 1;
+                                        table.Cell(row, 3).Range.Text = partisipation.Member?.Name;
+                                        table.Cell(row, 3).Range.Font.Bold = 1;
+                                        table.Cell(row, 4).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
+                                        table.Cell(row, 4).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, 5).Range.Text = partisipation.Member?.City;
+                                        table.Cell(row, 5).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, 6).Range.Text = partisipation.Member?.Club?.Name;
+                                        table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        foreach (Models.Start start in starts)
+                                            if (start.Partisipation.Id == partisipationId)
+                                            {
+                                                table.Cell(row, 7).Range.Text = start.Number.ToString();
+                                                table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                break;
+                                            }
+                                        foreach (Timing timing in timings)
+                                        {
+                                            if (timing.Start?.Partisipation.Id == partisipationId)
+                                            {
+                                                if (timing.TimeFromStart != null)
+                                                    buf = (TimeOnly)timing.TimeFromStart;
+                                                table.Cell(row, col).Range.Text = buf.ToLongTimeString();
+                                                table.Cell(row, col).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                col++;
+                                            }
+                                        }
+                                        table.Cell(row, 1).Range.Text = "DNF";
+                                        table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, constcol).Range.Text = "DNF";
+                                        table.Cell(row, constcol).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, constcol - 1).Range.Text = partisipation.Group?.Name;
+                                    }
+                                }
+                            foreach (int partisipationId in partisipationDNSIds)
+                                foreach (Partisipation partisipation in partisipations)
+                                {
+                                    if (partisipation.Id == partisipationId)
+                                    {
+                                        col = 8;
+                                        row++;
+                                        table.Rows.Add(ref missing);
+                                        table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName;
+                                        table.Cell(row, 2).Range.Font.Bold = 1;
+                                        table.Cell(row, 3).Range.Text = partisipation.Member?.Name;
+                                        table.Cell(row, 3).Range.Font.Bold = 1;
+                                        table.Cell(row, 4).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
+                                        table.Cell(row, 4).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, 5).Range.Text = partisipation.Member?.City;
+                                        table.Cell(row, 5).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, 6).Range.Text = partisipation.Member?.Club?.Name;
+                                        table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        foreach (Models.Start start in starts)
+                                            if (start.Partisipation.Id == partisipationId)
+                                            {
+                                                table.Cell(row, 7).Range.Text = start.Number.ToString();
+                                                table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                break;
+                                            }
+                                        table.Cell(row, 1).Range.Text = "DNS";
+                                        table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, constcol).Range.Text = "DNS";
+                                        table.Cell(row, constcol).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, constcol - 1).Range.Text = partisipation.Group?.Name;
+                                    }
+                                }
                             table.Range.Font.Size = 6;
 
                             table.Rows[1].Range.Font.Bold = 1;
@@ -467,6 +556,8 @@ namespace RefereeHelper
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     List<int> partisipationIds = new List<int>();
+                    List<int> partisipationDNFIds = new List<int>();
+                    List<int> partisipationDNSIds = new List<int>();
                     bool fl = true;
 
                     var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
@@ -514,6 +605,7 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         Number = x.Number,
+                        Status = x.Status,
                         Partisipation = new Partisipation
                         {
                             Id = x.Partisipation.Id
@@ -543,7 +635,18 @@ namespace RefereeHelper
 
                         foreach (Partisipation partisipation in partisipations)
                             if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)
-                                partisipationIds.Add(partisipation.Id);
+                                foreach (Models.Start start in starts)
+                                {
+                                    if (start.Partisipation.Id == partisipation.Id)
+                                    {
+                                        if (start.Status == 0)
+                                            partisipationIds.Add(partisipation.Id);
+                                        else if (start.Status == 1)
+                                            partisipationDNFIds.Add(partisipation.Id);
+                                        else if (start.Status == 2)
+                                            partisipationDNSIds.Add(partisipation.Id);
+                                    }
+                                }
 
                         if (partisipationIds.Count != 0)
                         {
@@ -638,7 +741,76 @@ namespace RefereeHelper
                                         }
                                     }
                                 }
-                            table.Sort(true, col - 1);
+                            table.Sort(true, 1);
+                            foreach (int partisipationId in partisipationDNFIds)
+                                foreach (Partisipation partisipation in partisipations)
+                                {
+                                    if (partisipation.Id == partisipationId)
+                                    {
+                                        col = 8;
+                                        row++;
+                                        table.Rows.Add(ref missing);
+                                        table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName;
+                                        table.Cell(row, 2).Range.Font.Bold = 1;
+                                        table.Cell(row, 3).Range.Text = partisipation.Member?.Name;
+                                        table.Cell(row, 3).Range.Font.Bold = 1;
+                                        table.Cell(row, 4).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
+                                        table.Cell(row, 4).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, 5).Range.Text = partisipation.Member?.City;
+                                        table.Cell(row, 5).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, 6).Range.Text = partisipation.Member?.Club?.Name;
+                                        table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        foreach (Models.Start start in starts)
+                                            if (start.Partisipation.Id == partisipationId)
+                                            {
+                                                table.Cell(row, 7).Range.Text = start.Number.ToString();
+                                                table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                break;
+                                            }
+                                        foreach (Timing timing in timings)
+                                        {
+                                            if (timing.Start?.Partisipation.Id == partisipationId)
+                                            {
+                                                if (timing.TimeFromStart != null)
+                                                    buf = (TimeOnly)timing.TimeFromStart;
+                                                table.Cell(row, col).Range.Text = buf.ToLongTimeString();
+                                                table.Cell(row, col).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                col++;
+                                            }
+                                        }
+                                        table.Cell(row, 1).Range.Text = "DNF";
+                                        table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                    }
+                                }
+                            foreach (int partisipationId in partisipationDNSIds)
+                                foreach (Partisipation partisipation in partisipations)
+                                {
+                                    if (partisipation.Id == partisipationId)
+                                    {
+                                        col = 8;
+                                        row++;
+                                        table.Rows.Add(ref missing);
+                                        table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName;
+                                        table.Cell(row, 2).Range.Font.Bold = 1;
+                                        table.Cell(row, 3).Range.Text = partisipation.Member?.Name;
+                                        table.Cell(row, 3).Range.Font.Bold = 1;
+                                        table.Cell(row, 4).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
+                                        table.Cell(row, 4).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, 5).Range.Text = partisipation.Member?.City;
+                                        table.Cell(row, 5).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        table.Cell(row, 6).Range.Text = partisipation.Member?.Club?.Name;
+                                        table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                        foreach (Models.Start start in starts)
+                                            if (start.Partisipation.Id == partisipationId)
+                                            {
+                                                table.Cell(row, 7).Range.Text = start.Number.ToString();
+                                                table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                break;
+                                            }
+                                        table.Cell(row, 1).Range.Text = "DNS";
+                                        table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                    }
+                                }
                             table.Range.Font.Size = 6;
 
                             table.Rows[1].Range.Font.Bold = 1;
