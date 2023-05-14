@@ -695,7 +695,7 @@ namespace RefereeHelper
                     List<int> partisipationOKIds = new List<int>();
                     List<int> partisipationDNFIds = new List<int>();
                     List<int> partisipationDNSIds = new List<int>();
-                    int cur = 1;
+                    cur = 1;
                     float maxwidth = 0, width = 0, differencewidth = 0;
                     bool fl = true;
 
