@@ -26,7 +26,7 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Стартовый номер
         /// </summary>
-        public int Number { get; set; }
+        public int? Number { get; set; }
         /// <summary>
         /// Статус спортсмена
         /// 0 - всё нормально
