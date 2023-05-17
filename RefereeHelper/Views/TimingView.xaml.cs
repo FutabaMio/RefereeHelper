@@ -22,6 +22,7 @@ using RefereeHelper.OptionsWindows;
 using System.Security.Policy;
 using System.Windows.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Diagnostics.Metrics;
 
 namespace RefereeHelper.Views
 {
@@ -158,28 +159,33 @@ namespace RefereeHelper.Views
                 var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
                 {
                     Id = x.Id,
-                    Competition = new Competition
-                    {
-                        Id = x.Competition.Id,
-                    },
-                    Member = new Member
-                    {
-                        Id = x.Member.Id,
-                        FamilyName = x.Member.FamilyName,
-                        Name = x.Member.Name,
-                        SecondName= x.Member.SecondName,
-                        BornDate = x.Member.BornDate,
-                        City= x.Member.City,
-                        Phone= x.Member.Phone,
-                        Club = new Club
-                        {
-                            Name = x.Member.Club.Name
-                        },
-                        Discharge = new Discharge
-                        {
-                            Name = x.Member.Discharge.Name
-                        }
-                    }
+                    CompetitionId = x.CompetitionId,
+                    MemberId = x.MemberId
+                }).ToList();
+
+                var members = dbContext.Set<Member>().Select(x => new Member
+                {
+                    Id = x.Id,
+                    FamilyName = x.FamilyName,
+                    Name = x.Name,
+                    SecondName = x.SecondName,
+                    BornDate = x.BornDate,
+                    City = x.City,
+                    Phone = x.Phone,
+                    ClubId = x.ClubId,
+                    DischargeId = x.DischargeId
+                }).ToList();
+
+                var clubs = dbContext.Set<Club>().Select(x => new Club
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+
+                var discharges = dbContext.Set<Discharge>().Select(x => new Discharge
+                {
+                    Id = x.Id,
+                    Name = x.Name
                 }).ToList();
 
                 Competition competition = (Competition)CompList.SelectedItem;
@@ -215,16 +221,31 @@ namespace RefereeHelper.Views
                 TeamTimer.Columns.Add(column);
                 foreach (Partisipation partisipation in partisipations)
                 {
-                    if (partisipation.Competition.Id == competition.Id)
+                    if (partisipation.CompetitionId == competition.Id)
                     {
-                        buf.FamilyName = partisipation.Member?.FamilyName;
-                        buf.MemberName = partisipation.Member?.Name;
-                        buf.SecondName = partisipation.Member?.SecondName;
-                        buf.BornDate = partisipation.Member?.BornDate.ToShortDateString();
-                        buf.City = partisipation.Member?.Phone;
-                        buf.ClubName = partisipation.Member?.Club?.Name;
-                        buf.DischargeName= partisipation.Member?.Discharge?.Name;
-                        TeamTimer.Items.Add(buf);
+                        if (partisipation.MemberId != null)
+                        {
+                            foreach (Member member in members)
+                                if (member.Id == partisipation.MemberId)
+                                {
+                                    buf.FamilyName = member.FamilyName;
+                                    buf.MemberName = member.Name;
+                                    if (member.SecondName != null)
+                                        buf.SecondName = member.SecondName;
+                                    buf.BornDate = member.BornDate.ToShortDateString();
+                                    if (member.Phone != null)
+                                        buf.City = member.Phone;
+                                    if (member.ClubId != null)
+                                        foreach (Club club in clubs)
+                                            if (club.Id == member.ClubId)
+                                                buf.ClubName = club.Name;
+                                    if (member.DischargeId != null)
+                                        foreach (Discharge discharge in discharges)
+                                            if (discharge.Id == member.DischargeId)
+                                                buf.DischargeName = discharge.Name;
+                                }
+                            TeamTimer.Items.Add(buf);
+                        }
                     }
                 }
             }
@@ -247,27 +268,24 @@ namespace RefereeHelper.Views
                     Gender = x.Gender,
                     StartAge = x.StartAge,
                     EndAge = x.EndAge,
-                    Distance = new Distance
-                    {
-                        Id = x.Distance.Id,
-                        Name = x.Distance.Name,
-                        Length = x.Distance.Length,
-                        Height = x.Distance.Height,
-                        Circles = x.Distance.Circles,
-                        StartTime = x.Distance.StartTime
-                    }
+                    DistanceId = x.DistanceId
                 }).ToList();
+
+                var distances = dbContext.Set<Models.Distance>().Select(x => new Models.Distance
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Length = x.Length,
+                    Height = x.Height,
+                    Circles = x.Circles,
+                    StartTime = x.StartTime
+                }).ToList();
+
                 var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
                 {
                     Id = x.Id,
-                    Competition = new Competition
-                    {
-                        Id = x.Competition.Id,
-                    },
-                    Group = new Models.Group
-                    {
-                        Id = x.Group.Id
-                    }
+                    GroupId = x.GroupId,
+                    CompetitionId = x.CompetitionId
                 }).ToList();
 
                 Competition competition = (Competition)CompList.SelectedItem;
@@ -307,12 +325,9 @@ namespace RefereeHelper.Views
                 TeamTimer.Columns.Add(column);
 
                 foreach (Models.Group group in groups)
-                {
-                    foreach(Partisipation partisipation in partisipations)
-                    {
-                        if (group.Id == partisipation.Group?.Id)
-                        {
-                            if (partisipation.Competition.Id == competition.Id)
+                    foreach (Partisipation partisipation in partisipations)
+                        if (partisipation.GroupId != null)
+                            if (group.Id == partisipation.GroupId && partisipation.CompetitionId == competition.Id)
                             {
                                 buf.GroupName = group.Name;
                                 if (group.Gender)
@@ -320,17 +335,19 @@ namespace RefereeHelper.Views
                                 else
                                     buf.Gender = "Ж";
                                 buf.Age = group.StartAge.ToString() + "-" + group.EndAge.ToString();
-                                buf.DistanceName = group.Distance.Name;
-                                buf.Length = group.Distance.Length.ToString() + " м.";
-                                buf.Height = group.Distance.Height.ToString() + " м.";
-                                buf.Circles = group.Distance.Circles.ToString();
-                                buf.StartTime = group.Distance.StartTime.ToShortTimeString();
+                                foreach (Distance distance in distances)
+                                    if (group.DistanceId == distance.Id)
+                                    {
+                                        buf.DistanceName = distance.Name;
+                                        buf.Length = distance.Length.ToString() + " м.";
+                                        buf.Height = distance.Height.ToString() + " м.";
+                                        buf.Circles = distance.Circles.ToString();
+                                        buf.StartTime = distance.StartTime.ToShortTimeString();
+                                        break;
+                                    }
                                 TeamTimer.Items.Add(buf);
                                 break;
                             }
-                        }
-                    }
-                }
             }
         }
 
@@ -354,32 +371,37 @@ namespace RefereeHelper.Views
                     Place = x.Place,
                     PlaceAbsolute = x.PlaceAbsolute,
                     IsFinish = x.IsFinish,
-                    Start = new Models.Start
-                    {
-                        Id = x.Start.Id,
-                        Number = x.Start.Number,
-                        Chip = x.Start.Chip,
-                        StartTime = x.Start.StartTime,
-                        Team = new Team
-                        {
-                            Id = x.Start.Team.Id,
-                            Name = x.Start.Team.Name
-                        },
-                        Partisipation = new Partisipation
-                        {
-                            Id = x.Start.Partisipation.Id,
-                            Competition = new Competition
-                            {
-                                Id = x.Start.Partisipation.Competition.Id
-                            },
-                            Member = new Member
-                            {
-                                Id = x.Start.Partisipation.Member.Id,
-                                Name = x.Start.Partisipation.Member.Name,
-                                FamilyName = x.Start.Partisipation.Member.FamilyName
-                            }
-                        }
-                    }
+                    StartId = x.StartId
+                }).ToList();
+
+                var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
+                {
+                    Id = x.Id,
+                    Number = x.Number,
+                    Chip = x.Chip,
+                    StartTime = x.StartTime,
+                    TeamId = x.TeamId,
+                    PartisipationId = x.PartisipationId
+                }).ToList();
+
+                var teams = dbContext.Set<Team>().Select(x => new Team
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+
+                var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
+                {
+                    Id = x.Id,
+                    CompetitionId = x.Competition.Id,
+                    MemberId = x.Member.Id
+                }).ToList();
+
+                var members = dbContext.Set<Member>().Select(x => new Member
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    FamilyName = x.FamilyName
                 }).ToList();
 
                 Competition competition = (Competition)CompList.SelectedItem;
@@ -447,43 +469,78 @@ namespace RefereeHelper.Views
 
                 foreach (Timing timing in timings)
                 {
-                    if (competition.Id == timing.Start.Partisipation.Competition.Id)
+                    if (timing.StartId != null)
+                    {
+                        foreach (Models.Start start in starts)
+                            if (timing.StartId == start.Id)
+                                foreach (Partisipation partisipation in partisipations)
+                                    if (start.PartisipationId == partisipation.Id)
+                                        if (competition.Id == partisipation.CompetitionId)
+                                        {
+                                            buf.Id = timing.Id.ToString();
+                                            if (timing.Circle != null)
+                                                buf.Circle = timing.Circle.ToString();
+                                            if (timing.Place != null)
+                                                buf.Place = timing.Place.ToString();
+                                            if (timing.PlaceAbsolute != null)
+                                                buf.PlaceAbsolute = timing.PlaceAbsolute.ToString();
+                                            if (start.Number != null)
+                                                buf.Startnumber = start.Number.ToString();
+                                            if (start.Chip != null)
+                                                buf.Chip = start.Chip;
+                                            if (start.StartTime != null)
+                                            {
+                                                timebuf = (DateTime)start.StartTime;
+                                                buf.StartTime = timebuf.ToShortTimeString();
+                                            }
+                                            if (timing.TimeNow != null)
+                                            {
+                                                timenowbuf = (TimeOnly)timing.TimeNow;
+                                                buf.TimeNow = timenowbuf.ToLongTimeString();
+                                            }
+                                            if (timing.TimeFromStart != null)
+                                            {
+                                                timenowbuf = (TimeOnly)timing.TimeFromStart;
+                                                buf.TimeFromStart = timenowbuf.ToLongTimeString();
+                                            }
+
+                                            if (timing.CircleTime != null)
+                                            {
+                                                timenowbuf = (TimeOnly)timing.CircleTime;
+                                                buf.CircleTime = timenowbuf.ToLongTimeString();
+                                            }
+                                            if (timing.IsFinish != null)
+                                            {
+                                                if (timing.IsFinish == true)
+                                                    buf.IsFinish = "да";
+                                                else
+                                                    buf.IsFinish = "нет";
+                                            }
+                                            if (start.TeamId != null)
+                                                foreach (Team team in teams)
+                                                    if (team.Id == start.TeamId)
+                                                    {
+                                                        buf.Team = team.Name;
+                                                        break;
+                                                    }
+                                            if (partisipation.MemberId != null)
+                                                foreach (Member member in members)
+                                                    if (member.Id == start.TeamId)
+                                                    {
+                                                        buf.FamilyName = member.FamilyName;
+                                                        buf.MemberName = member.Name;
+                                                        break;
+                                                    }
+                                            TeamTimer.Items.Add(buf);
+                                        }
+                    }
+                    else
                     {
                         buf.Id = timing.Id.ToString();
-                        buf.FamilyName = timing.Start?.Partisipation.Member?.FamilyName;
-                        buf.MemberName = timing.Start?.Partisipation.Member?.Name;
-                        buf.Team = timing.Start?.Team?.Name;
-                        buf.Startnumber = timing.Start?.Number.ToString();
-                        buf.Chip = timing.Start?.Chip;
-                        if(timing.Start?.StartTime != null)
-                        {
-                            timebuf = (DateTime)timing.Start?.StartTime;
-                            buf.StartTime = timebuf.ToShortTimeString();
-                        }
                         if (timing.TimeNow != null)
                         {
                             timenowbuf = (TimeOnly)timing.TimeNow;
                             buf.TimeNow = timenowbuf.ToLongTimeString();
-                        }
-                        if (timing.TimeFromStart != null)
-                        {
-                            timenowbuf = (TimeOnly)timing.TimeFromStart;
-                            buf.TimeFromStart = timenowbuf.ToLongTimeString();
-                        }
-                        buf.Circle = timing.Circle.ToString();
-                        if (timing.CircleTime != null)
-                        {
-                            timenowbuf = (TimeOnly)timing.CircleTime;
-                            buf.CircleTime = timenowbuf.ToLongTimeString();
-                        }
-                        buf.Place = timing.Place.ToString();
-                        buf.PlaceAbsolute = timing.PlaceAbsolute.ToString();
-                        if (timing.IsFinish != null)
-                        {
-                            if (timing.IsFinish == true)
-                                buf.IsFinish = "да";
-                            else
-                                buf.IsFinish = "нет";
                         }
                         TeamTimer.Items.Add(buf);
                     }
