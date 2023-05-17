@@ -44,29 +44,31 @@ namespace RefereeHelper
                     var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
                     {
                         Id = x.Id,
-                        Group = new Group
-                        {
-                            Id = x.Group.Id,
-                        },
-                        Competition = new Competition
-                        {
-                            Id = x.Competition.Id,
-                        },
-                        Member = new Member
-                        {
-                            Id = x.Member.Id,
-                            FamilyName = x.Member.FamilyName,
-                            Name = x.Member.Name,
-                            BornDate = x.Member.BornDate,
-                            Club = new Club
-                            {
-                                Name = x.Member.Club.Name
-                            },
-                            Discharge = new Discharge
-                            {
-                                Name = x.Member.Discharge.Name
-                            }
-                        }
+                        GroupId = x.GroupId,
+                        CompetitionId = x.CompetitionId,
+                        MemberId = x.MemberId
+                    }).ToList();
+
+                    var members = dbContext.Set<Member>().Select(x => new Member
+                    {
+                        Id = x.Id,
+                        FamilyName = x.FamilyName,
+                        Name = x.Name,
+                        BornDate = x.BornDate,
+                        ClubId = x.ClubId,
+                        DischargeId = x.DischargeId
+                    }).ToList();
+
+                    var clubs = dbContext.Set<Club>().Select(x => new Club
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList();
+
+                    var discharges = dbContext.Set<Discharge>().Select(x => new Discharge
+                    {
+                        Id = x.Id,
+                        Name = x.Name
                     }).ToList();
 
                     var groups = dbContext.Set<Group>().Select(x => new Group
@@ -80,22 +82,26 @@ namespace RefereeHelper
                         }
                     }).ToList();
 
+                    var distances = dbContext.Set<Distance>().Select(x => new Distance
+                    {
+                        Id = x.Id,
+                        StartTime = x.StartTime
+                    }).ToList();
+
                     var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
                     {
                         Id = x.Id,
                         Number = x.Number,
                         StartTime = x.StartTime,
-                        Partisipation = new Partisipation
-                        {
-                            Id = x.Partisipation.Id
-                        }
+                        PartisipationId = x.PartisipationId
                     }).ToList();
 
                     foreach (Group group in groups)
                     {
                         foreach (Partisipation partisipation in partisipations)
-                            if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)
-                                partisipationIds.Add(partisipation.Id);
+                            if (partisipation.GroupId != null && partisipation.MemberId != null)
+                                if (group.Id == partisipation.GroupId && partisipation.CompetitionId == competition.Id)
+                                    partisipationIds.Add(partisipation.Id);
 
                         if (partisipationIds.Count != 0)
                         {
@@ -123,13 +129,27 @@ namespace RefereeHelper
                                     {
                                         row++;
                                         sheet.Cells[row, 1].Value = cur; cur++;
-                                        sheet.Cells[row, 2].Value = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
-                                        sheet.Cells[row, 2].Style.Font.Bold = true;
-                                        sheet.Cells[row, 3].Value = partisipation.Member?.Club?.Name;
-                                        sheet.Cells[row, 3].Style.Font.Bold = true;
-                                        sheet.Cells[row, 4].Value = partisipation.Member?.Discharge?.Name;
+                                        foreach (Member member in members)
+                                            if (member.Id == partisipation.MemberId)
+                                            {
+                                                sheet.Cells[row, 2].Value = member.FamilyName + ", " + member.Name;
+                                                sheet.Cells[row, 2].Style.Font.Bold = true;
+                                                sheet.Cells[row, 6].Value = member.BornDate.ToShortDateString();
+                                                if (member.ClubId != null)
+                                                    foreach (Club club in clubs)
+                                                        if (club.Id == member.ClubId)
+                                                        {
+                                                            sheet.Cells[row, 3].Value = club.Name;
+                                                            sheet.Cells[row, 3].Style.Font.Bold = true;
+                                                        }
+                                                if (member.DischargeId != null)
+                                                    foreach (Discharge discharge in discharges)
+                                                        if (discharge.Id == member.DischargeId)
+                                                            sheet.Cells[row, 4].Value = discharge.Name;
+                                                break;
+                                            }
                                         foreach (Models.Start start in starts)
-                                            if (start.Partisipation.Id == partisipationId)
+                                            if (start.PartisipationId == partisipationId)
                                             {
                                                 sheet.Cells[row, 5].Value = start.Number;
                                                 if (start.StartTime != null)
@@ -137,15 +157,8 @@ namespace RefereeHelper
                                                     DateTimebuf = (DateTime)start.StartTime;
                                                     sheet.Cells[row, 7].Value = DateTimebuf.ToShortTimeString();
                                                 }
-                                                else
-                                                {
-                                                    DateTimebuf = (DateTime)group.Distance.StartTime;
-                                                    sheet.Cells[row, 7].Value = DateTimebuf.ToShortTimeString();
-                                                }       
                                                 break;
                                             }
-                                        
-                                        sheet.Cells[row, 6].Value = partisipation.Member?.BornDate.ToShortDateString();
                                     }
                                 }
                             row++;
