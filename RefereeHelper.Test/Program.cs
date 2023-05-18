@@ -201,7 +201,8 @@ void CheckDB()
                         $"\t{s.StartTime}" +
                         $"\t\t{s.Partisipation?.Member?.Discharge?.Name}" +
                         $"\t{s.Partisipation?.Member?.Club?.Name}" +
-                        $"\t{s.Partisipation?.Member?.Club?.Region?.Name}");
+                        $"\t{s.Partisipation?.Member?.Club?.Region?.Name}" +
+                        $"\t{s.Partisipation.Group.StartAge}");
     }
 
 }
@@ -301,7 +302,7 @@ void Second()
 {
     Console.Write("Введите номер:");
     string msg = Console.ReadLine();
-    UDPReceive u = new();
+    UDPReceive u = UDPReceive.GetUdpClient();
     
     string receive;
     //Send(msg);
@@ -392,7 +393,7 @@ void Third()
         Length = 3000,
         Height = 0,
         Circles = 2,
-        StartTime = new TimeOnly(12, 00, 00)
+        //StartTime = new TimeOnly(12, 00, 00)
     };
     Group group = new()
     {

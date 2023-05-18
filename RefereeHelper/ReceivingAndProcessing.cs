@@ -17,7 +17,7 @@ namespace RefereeHelper
     /// </summary>
     public class UDPReceive
     {
-        private static UDPReceive instance;
+        private static UDPReceive? instance;
         public TimeOnly time;
         public int secondOfDifference = 5;
         public TimeSpan timeOfDifference;
@@ -66,14 +66,13 @@ namespace RefereeHelper
         /// <summary>
         /// Закрывает UDPClient
         /// </summary>
-        public void Close()
+        public void Close() 
         {
             client.Close();
         }
     }
     public class Processing 
     {
-        GenericDataService<Timing> DataService = new(new RefereeHelperDbContextFactory());
         public DbContext dbContext;
 
         public Processing()
@@ -130,25 +129,6 @@ namespace RefereeHelper
         public bool GetIsFinish(int idOfTiming)
         {
             var ts = dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(x => x.Partisipation).ThenInclude(x => x.Group).ThenInclude(x => x.Distance).ToList();
-            //    .Select(x => new Timing
-            //{
-            //    Id = x.Id,
-            //    Circle = x.Circle,
-            //    Start = new Start
-            //    {
-            //        Partisipation = new Partisipation
-            //        {
-            //            Group = new Group
-            //            {
-            //                Distance = new Distance
-            //                {
-            //                    Name = x.Start.Partisipation.Group.Distance.Name,
-            //                    Circles = x.Start.Partisipation.Group.Distance.Circles
-            //                }
-            //            }
-            //        }
-            //    }
-            //}).ToList();
             var t = ts.First(x => x.Id == idOfTiming);
 
             //var t = DataService.Get(idOfTiming).Result;
