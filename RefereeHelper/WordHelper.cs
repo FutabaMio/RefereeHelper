@@ -928,40 +928,31 @@ namespace RefereeHelper
                     var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
                     {
                         Id = x.Id,
-                        Group = new Group
-                        {
-                            Id = x.Group.Id,
-                            Name = x.Group.Name
-                        },
-                        Competition = new Competition
-                        {
-                            Id = x.Competition.Id,
-                        },
-                        Member = new Member
-                        {
-                            Id = x.Member.Id,
-                            FamilyName = x.Member.FamilyName,
-                            Name = x.Member.Name,
-                            BornDate = x.Member.BornDate,
-                            Club = new Club
-                            {
-                                Name = x.Member.Club.Name
-                            },
-                            Discharge = new Discharge
-                            {
-                                Name = x.Member.Discharge.Name
-                            }
-                        }
+                        GroupId = x.GroupId,
+                        CompetitionId = x.CompetitionId,
+                        MemberId = x.MemberId,
+                    }).ToList();
+
+                    var members = dbContext.Set<Member>().Select(x => new Member
+                    {
+                        Id = x.Id,
+                        FamilyName = x.FamilyName,
+                        Name = x.Name,
+                        BornDate = x.BornDate,
+                        ClubId = x.ClubId
+                    }).ToList();
+
+                    var clubs = dbContext.Set<Club>().Select(x => new Club
+                    {
+                        Id = x.Id,
+                        Name = x.Name
                     }).ToList();
 
                     var groups = dbContext.Set<Group>().Select(x => new Group
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        Distance = new Distance
-                        {
-                            Id = x.Distance.Id
-                        }
+                        DistanceId = x.DistanceId
                     }).ToList();
 
                     var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
@@ -969,10 +960,7 @@ namespace RefereeHelper
                         Id = x.Id,
                         Number = x.Number,
                         Status = x.Status,
-                        Partisipation = new Partisipation
-                        {
-                            Id = x.Partisipation.Id
-                        }
+                        PartisipationId = x.PartisipationId
                     }).ToList();
 
                     var timings = dbContext.Set<Timing>().Select(x => new Timing
@@ -981,33 +969,26 @@ namespace RefereeHelper
                         TimeFromStart = x.TimeFromStart,
                         IsFinish = x.IsFinish,
                         Place = x.Place,
-                        Start = new Models.Start
-                        {
-                            Id = x.Start.Id,
-                            Partisipation = new Partisipation
-                            {
-                                Id = x.Start.Partisipation.Id
-                            },
-                            Number = x.Start.Number
-                        }
+                        StartId = x.StartId
                     }).ToList();
 
                     foreach (Distance distance in distances)
                         foreach (Group group in groups)
-                            if (distance.Id == group.Distance.Id)
+                            if (distance.Id == group.DistanceId)
                             {
                                 foreach (Partisipation partisipation in partisipations)
-                                    if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)
-                                        foreach (Models.Start start in starts)
-                                            if (start.Partisipation.Id == partisipation.Id)
-                                            {
-                                                if (start.Status == 0)
-                                                    partisipationOKIds.Add(partisipation.Id);
-                                                else if(start.Status == 1)
-                                                    partisipationDNFIds.Add(partisipation.Id);
-                                                else if(start.Status == 2)
-                                                    partisipationDNSIds.Add(partisipation.Id);  
-                                            }
+                                    if (partisipation.GroupId != null)
+                                        if (group.Id == partisipation.GroupId && partisipation.CompetitionId == competition.Id)
+                                            foreach (Models.Start start in starts)
+                                                if (start.PartisipationId == partisipation.Id)
+                                                {
+                                                    if (start.Status == 0)
+                                                        partisipationOKIds.Add(partisipation.Id);
+                                                    else if (start.Status == 1)
+                                                        partisipationDNFIds.Add(partisipation.Id);
+                                                    else if (start.Status == 2)
+                                                        partisipationDNSIds.Add(partisipation.Id);
+                                                }
                                 if (partisipationOKIds.Count != 0 || partisipationDNFIds.Count != 0 || partisipationDNSIds.Count != 0)
                                 {
                                     wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
@@ -1066,32 +1047,40 @@ namespace RefereeHelper
                                             {
                                                 col = 6;
                                                 row++;
-                                                
-                                                table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
-                                                table.Cell(row, 3).Range.Text = partisipation.Member?.Club?.Name;
+
+                                                if (partisipation.MemberId != null)
+                                                    foreach (Member member in members)
+                                                        if (member.Id == partisipation.MemberId)
+                                                        {
+                                                            table.Cell(row, 2).Range.Text = member.FamilyName + ", " + member.Name;
+                                                            table.Cell(row, 5).Range.Text = member.BornDate.ToShortDateString();
+                                                            if (member.ClubId != null)
+                                                                foreach (Club club in clubs)
+                                                                    if (member.ClubId == club.Id)
+                                                                        table.Cell(row, 3).Range.Text = club.Name;
+                                                        }
                                                 foreach (Models.Start start in starts)
-                                                    if (start.Partisipation.Id == partisipationId)
+                                                    if (start.PartisipationId == partisipationId)
                                                     {
                                                         table.Cell(row, 4).Range.Text = start.Number.ToString();
+                                                        foreach (Timing timing in timings)
+                                                        {
+                                                            if (timing.StartId != null)
+                                                                if (start.Id == timing.StartId)
+                                                                {
+                                                                    if (timing.TimeFromStart != null)
+                                                                    {
+                                                                        buf = (TimeOnly)timing.TimeFromStart;
+                                                                        table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
+                                                                    }
+                                                                    if (timing.IsFinish == true)
+                                                                    {
+                                                                        table.Cell(row, col + 1).Range.Text = timing.Place.ToString();
+                                                                    }
+                                                                }
+                                                        }
                                                         break;
                                                     }
-                                                table.Cell(row, 5).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
-                                                foreach (Timing timing in timings)
-                                                {
-                                                    if (timing.Start?.Partisipation.Id == partisipationId)
-                                                    {
-                                                        if (timing.TimeFromStart != null)
-                                                        {
-                                                            buf = (TimeOnly)timing.TimeFromStart;
-                                                            table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
-                                                        }
-                                                        if (timing.IsFinish == true)
-                                                        {
-                                                            table.Cell(row, col + 1).Range.Text = timing.Place.ToString();
-
-                                                        }
-                                                    }
-                                                }
                                             }
                                         }
 
@@ -1124,26 +1113,35 @@ namespace RefereeHelper
                                                 col = 6;
                                                 row++;
                                                 table.Cell(row, 1).Range.Text = cur.ToString(); cur++;
-                                                table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
-                                                table.Cell(row, 3).Range.Text = partisipation.Member?.Club?.Name;
+                                                if (partisipation.MemberId != null)
+                                                    foreach (Member member in members)
+                                                        if (member.Id == partisipation.MemberId)
+                                                        {
+                                                            table.Cell(row, 2).Range.Text = member.FamilyName + ", " + member.Name;
+                                                            table.Cell(row, 5).Range.Text = member.BornDate.ToShortDateString();
+                                                            if (member.ClubId != null)
+                                                                foreach (Club club in clubs)
+                                                                    if (member.ClubId == club.Id)
+                                                                        table.Cell(row, 3).Range.Text = club.Name;
+                                                        }
                                                 foreach (Models.Start start in starts)
-                                                    if (start.Partisipation.Id == partisipationId)
+                                                    if (start.PartisipationId == partisipationId)
                                                     {
                                                         table.Cell(row, 4).Range.Text = start.Number.ToString();
+                                                        foreach (Timing timing in timings)
+                                                        {
+                                                            if (timing.StartId != null)
+                                                                if (start.Id == timing.StartId)
+                                                                {
+                                                                    if (timing.TimeFromStart != null)
+                                                                    {
+                                                                        buf = (TimeOnly)timing.TimeFromStart;
+                                                                        table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
+                                                                    }
+                                                                }
+                                                        }
                                                         break;
                                                     }
-                                                table.Cell(row, 5).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
-                                                foreach (Timing timing in timings)
-                                                {
-                                                    if (timing.Start?.Partisipation.Id == partisipationId)
-                                                    {
-                                                        if (timing.TimeFromStart != null)
-                                                        {
-                                                            buf = (TimeOnly)timing.TimeFromStart;
-                                                            table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
-                                                        }
-                                                    }
-                                                }
                                                 table.Cell(row, constcol).Range.Text = "DNF";
                                             }
                                         }
@@ -1156,27 +1154,33 @@ namespace RefereeHelper
                                                 col = 6;
                                                 row++;
                                                 table.Cell(row, 1).Range.Text = cur.ToString(); cur++;
-                                                table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
-                                                table.Cell(row, 3).Range.Text = partisipation.Member?.Club?.Name;
+                                                if (partisipation.MemberId != null)
+                                                    foreach (Member member in members)
+                                                        if (member.Id == partisipation.MemberId)
+                                                        {
+                                                            table.Cell(row, 2).Range.Text = member.FamilyName + ", " + member.Name;
+                                                            table.Cell(row, 5).Range.Text = member.BornDate.ToShortDateString();
+                                                            if (member.ClubId != null)
+                                                                foreach (Club club in clubs)
+                                                                    if (member.ClubId == club.Id)
+                                                                        table.Cell(row, 3).Range.Text = club.Name;
+                                                        }
                                                 foreach (Models.Start start in starts)
-                                                    if (start.Partisipation.Id == partisipationId)
+                                                    if (start.PartisipationId == partisipationId)
                                                     {
                                                         table.Cell(row, 4).Range.Text = start.Number.ToString();
                                                         break;
                                                     }
-                                                table.Cell(row, 5).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
                                                 table.Cell(row, constcol).Range.Text = "DNS";
                                             }
                                         }
                                     table.Rows[1].Range.Font.Bold = 1;
                                     table.Rows[1].Borders[WdBorderType.wdBorderBottom].LineStyle = Word.WdLineStyle.wdLineStyleSingle;
                                     table.Range.Font.Size = 6;
-                                    //table.Cell(1, 1).Range.Font.Size = 14;
                                     maxwidth = table.Columns.Width;
                                     table.Columns.AutoFit();
                                     width = table.Columns.Width;
                                     differencewidth = maxwidth - width;
-                                    //table.Columns[3].Width += differencewidth;
                                 }
                                 wordRange = doc.GoTo(ref what, ref which, ref missing, ref missing);
                                 wordRange.Text = "\n";
