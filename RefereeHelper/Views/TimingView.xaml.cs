@@ -941,7 +941,7 @@ namespace RefereeHelper.Views
         {
             position = 2;
             TimingFill();
-            TeamTimer.IsReadOnly = true;
+            //TeamTimer.IsReadOnly = true;
             ProtocolExcelBut.Content = "Выгрузить финишный протокол";
             ProtocolWordBut.Content = "Распечатать финишный протокол";
         }
@@ -1213,6 +1213,7 @@ namespace RefereeHelper.Views
                 db.Timings.Add(bufTiming);
                 db.SaveChanges();
             }
+            TimingFill();
         }
 
        
