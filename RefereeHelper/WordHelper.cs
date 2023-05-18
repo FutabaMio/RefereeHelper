@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace RefereeHelper
@@ -52,29 +53,31 @@ namespace RefereeHelper
                     var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
                     {
                         Id = x.Id,
-                        Group = new Group
-                        {
-                            Id = x.Group.Id,
-                        },
-                        Competition = new Competition
-                        {
-                            Id = x.Competition.Id,
-                        },
-                        Member = new Member
-                        {
-                            Id = x.Member.Id,
-                            FamilyName = x.Member.FamilyName,
-                            Name = x.Member.Name,
-                            BornDate = x.Member.BornDate,
-                            Club = new Club
-                            {
-                                Name = x.Member.Club.Name
-                            },
-                            Discharge = new Discharge
-                            {
-                                Name = x.Member.Discharge.Name
-                            }
-                        }
+                        GroupId = x.GroupId,
+                        CompetitionId = x.CompetitionId,
+                        MemberId = x.MemberId
+                    }).ToList();
+
+                    var members = dbContext.Set<Member>().Select(x => new Member
+                    {
+                        Id = x.Id,
+                        FamilyName = x.FamilyName,
+                        Name = x.Name,
+                        BornDate = x.BornDate,
+                        ClubId = x.ClubId,
+                        DischargeId = x.DischargeId
+                    }).ToList();
+
+                    var clubs = dbContext.Set<Club>().Select(x => new Club
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList();
+
+                    var discharges = dbContext.Set<Discharge>().Select(x => new Discharge
+                    {
+                        Id = x.Id,
+                        Name = x.Name
                     }).ToList();
 
                     var groups = dbContext.Set<Group>().Select(x => new Group
@@ -84,8 +87,14 @@ namespace RefereeHelper
                         Distance = new Distance
                         {
                             Id = x.Distance.Id,
-                            StartTime = x.Distance.StartTime,
+                            StartTime = x.Distance.StartTime
                         }
+                    }).ToList();
+
+                    var distances = dbContext.Set<Distance>().Select(x => new Distance
+                    {
+                        Id = x.Id,
+                        StartTime = x.StartTime
                     }).ToList();
 
                     var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
@@ -93,33 +102,15 @@ namespace RefereeHelper
                         Id = x.Id,
                         Number = x.Number,
                         StartTime = x.StartTime,
-                        Partisipation = new Partisipation
-                        {
-                            Id = x.Partisipation.Id
-                        }
-                    }).ToList();
-
-                    var timings = dbContext.Set<Timing>().Select(x => new Timing
-                    {
-                        Id = x.Id,
-                        TimeFromStart = x.TimeFromStart,
-                        IsFinish = x.IsFinish,
-                        Start = new Models.Start
-                        {
-                            Id = x.Start.Id,
-                            Partisipation = new Partisipation
-                            {
-                                Id = x.Start.Partisipation.Id
-                            },
-                            Number = x.Start.Number
-                        }
+                        PartisipationId = x.PartisipationId
                     }).ToList();
 
                     foreach (Group group in groups)
                     {
                         foreach (Partisipation partisipation in partisipations)
-                            if (group.Id == partisipation.Group?.Id && partisipation.Competition?.Id == competition.Id)
-                                partisipationIds.Add(partisipation.Id);
+                            if (partisipation.GroupId != null && partisipation.MemberId != null)
+                                if (group.Id == partisipation.GroupId && partisipation.CompetitionId == competition.Id)
+                                    partisipationIds.Add(partisipation.Id);
 
                         if (partisipationIds.Count != 0)
                         {
@@ -161,11 +152,24 @@ namespace RefereeHelper
                                         row++;
                                         table.Cell(row, 1).Range.Text = (row - 1).ToString();
                                         table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
-                                        table.Cell(row, 2).Range.Text = partisipation.Member?.FamilyName + ", " + partisipation.Member?.Name;
-                                        table.Cell(row, 3).Range.Text = partisipation.Member?.Club?.Name;
-                                        table.Cell(row, 4).Range.Text = partisipation.Member?.Discharge?.Name;
+                                        foreach (Member member in members)
+                                            if (member.Id == partisipation.MemberId)
+                                            {
+                                                table.Cell(row, 2).Range.Text = member.FamilyName + ", " + member.Name;
+                                                table.Cell(row, 6).Range.Text = member.BornDate.ToShortDateString();
+                                                table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                if (member.ClubId != null)
+                                                    foreach (Club club in clubs)
+                                                        if (club.Id == member.ClubId)
+                                                            table.Cell(row, 3).Range.Text = club.Name;
+                                                if (member.DischargeId != null)
+                                                    foreach (Discharge discharge in discharges)
+                                                        if (discharge.Id == member.DischargeId)
+                                                            table.Cell(row, 4).Range.Text = discharge.Name;
+                                                break;
+                                            }
                                         foreach (Models.Start start in starts)
-                                            if (start.Partisipation.Id == partisipationId)
+                                            if (start.PartisipationId == partisipationId)
                                             {
                                                 table.Cell(row, 5).Range.Text = start.Number.ToString();
                                                 table.Cell(row, 5).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
@@ -173,18 +177,10 @@ namespace RefereeHelper
                                                 {
                                                     DateTimebuf = (DateTime)start.StartTime;
                                                     table.Cell(row, 7).Range.Text = DateTimebuf.ToShortTimeString();
-                                                    table.Cell(1, 7).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                                                }
-                                                else
-                                                {
-                                                    DateTimebuf = (DateTime)group.Distance.StartTime;
-                                                    table.Cell(row, 7).Range.Text = DateTimebuf.ToShortTimeString();
-                                                    table.Cell(1, 7).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                    table.Cell(row, 7).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                                                 }
                                                 break;
                                             }
-                                        table.Cell(row, 6).Range.Text = partisipation.Member?.BornDate.ToShortDateString();
-                                        table.Cell(row, 6).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                                     }
                                 }
                             table.Range.Font.Size = 8;
