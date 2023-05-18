@@ -23,6 +23,7 @@ namespace RefereeHelper.OptionsWindows
     public partial class ManualAddGroup : Window
     {
         public Group Group { get;private set; }
+        bool WorkMode = true;
         public ManualAddGroup(Group group)
         {
             InitializeComponent();
@@ -47,11 +48,32 @@ namespace RefereeHelper.OptionsWindows
             Group.Name = nameTextBox.Text;
             int.TryParse(minAgeBox.Text, out int minAge);
             int.TryParse(maxAgeBox.Text, out int maxAge);
-            Group.StartAge = minAge;
-            Group.EndAge = maxAge;
+            if (maxAge<minAge)
+            {
+                MessageBox.Show("Возможно, вы хотите поменять даты местами?", MessageBoxButton.YesNo.ToString());
+                if (DialogResult==true)
+                {
+                    int buf = minAge;
+                    minAge = maxAge;
+                    maxAge=minAge;
+                }
+            }
+            if (WorkMode==false)
+            {
+            Group.StartAge =DateTime.Now.Year-maxAge;
+            Group.EndAge = DateTime.Now.Year-minAge;
+            }
+            
             var d = (Distance)distancesList.SelectedItem;
             Group.DistanceId = d.Id;
             DialogResult=true;
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            minAgeText.Content="Возраст от:";
+            maxAgeText.Content="Возраст до:";
+            WorkMode=false;
         }
     }
 }
