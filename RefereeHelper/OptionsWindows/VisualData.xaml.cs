@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +20,7 @@ using RefereeHelper;
 using RefereeHelper.EntityFramework;
 using RefereeHelper.EntityFramework.Services;
 using RefereeHelper.Models;
+using RefereeHelper.Views;
 
 namespace RefereeHelper.OptionsWindows
 {
@@ -89,25 +91,35 @@ namespace RefereeHelper.OptionsWindows
                 TimeFromStart = x.TimeFromStart,
                 IsFinish = x.IsFinish,
                 Circle = x.Circle,
-                Start = new Start
-                {
-                    Id = x.Start.Id,
-                    Partisipation = new Partisipation
-                    {
-                        Id = x.Start.Partisipation.Id,
-                        CompetitionId = x.Start.Partisipation.CompetitionId,
-                        Group = new Group
-                        {
-                            DistanceId = x.Start.Partisipation.Group.DistanceId
-                        },
-                        Member = new Member
-                        {
-                            Name = x.Start.Partisipation.Member.Name,
-                            FamilyName = x.Start.Partisipation.Member.FamilyName
-                        }
-                    },
-                    Number = x.Start.Number
-                }
+                StartId = x.StartId
+            }).ToList();
+
+            var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
+            {
+                Id = x.Id,
+                PartisipationId = x.PartisipationId,
+                Number = x.Number
+            }).ToList();
+
+            var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
+            {
+                Id = x.Id,
+                CompetitionId = x.CompetitionId,
+                GroupId = x.GroupId,
+                MemberId = x.MemberId
+            }).ToList();
+
+            var groups = dbContext.Set<Models.Group>().Select(x => new Models.Group
+            {
+                Id = x.Id,
+                DistanceId = x.DistanceId
+            }).ToList();
+
+            var members = dbContext.Set<Member>().Select(x => new Member
+            {
+                Id = x.Id,
+                Name = x.Name,
+                FamilyName = x.FamilyName
             }).ToList();
 
             DataItems dataItem;
@@ -116,33 +128,54 @@ namespace RefereeHelper.OptionsWindows
             if (distance != null)
             {
                 foreach (Timing timing in timings)
-                    if (timing.Start?.Partisipation.Group?.DistanceId == distance.Id)
-                        if (timing.Circle > cilcle && timing.Circle != null)
-                        {
-                            cilcle = (int)timing.Circle;
-                            break;
-                        }
+                    if (timing.Circle != null)
+                        if (timing.StartId != null)
+                            foreach (Models.Start start in starts)
+                                if (timing.StartId == start.Id)
+                                    foreach (Partisipation partisipation in partisipations)
+                                        if (start.PartisipationId == partisipation.Id)
+                                            if (partisipation.GroupId != null)
+                                                foreach (Models.Group group in groups)
+                                                    if (group.Id == partisipation.GroupId)
+                                                        if (group.DistanceId == distance.Id)
+                                                            if (timing.Circle > cilcle)
+                                                            {
+                                                                cilcle = (int)timing.Circle;
+                                                                goto exit;
+                                                            }
+                exit:
                 foreach (Timing timing in timings)
                 {
-                    if (timing.Start?.Partisipation.Group?.DistanceId == distance.Id)
-                    {
-                        if (timing.Circle == cilcle)
-                        {
-                            dataItem = new DataItems();
-                            if (timing.TimeFromStart != null)
-                            {
-                                buf = (TimeOnly)timing.TimeFromStart;
-                                dataItem.TimeFromStart = buf.ToShortTimeString();
-                            }
-                            if (timing.Start?.Partisipation?.Member?.Name != null)
-                                dataItem.Name = timing.Start?.Partisipation?.Member?.Name;
-                            if (timing.Start?.Partisipation?.Member?.FamilyName != null)
-                                dataItem.FamalyName = timing.Start?.Partisipation?.Member?.FamilyName;
-                            if (timing.Start?.Number != null)
-                                dataItem.Number = timing.Start?.Number.ToString();
-                            MainDB.Items.Add(dataItem);
-                        }
-                    }
+                    if (timing.StartId != null)
+                        foreach (Models.Start start in starts)
+                            if (timing.StartId == start.Id)
+                                foreach (Partisipation partisipation in partisipations)
+                                    if (start.PartisipationId == partisipation.Id)
+                                        if (partisipation.GroupId != null)
+                                            foreach (Models.Group group in groups)
+                                                if (group.Id == partisipation.GroupId)
+                                                    if (group.DistanceId == distance.Id)
+                                                    {
+                                                        if (timing.Circle == cilcle)
+                                                        {
+                                                            dataItem = new DataItems();
+                                                            if (timing.TimeFromStart != null)
+                                                            {
+                                                                buf = (TimeOnly)timing.TimeFromStart;
+                                                                dataItem.TimeFromStart = buf.ToShortTimeString();
+                                                            }
+                                                            if (partisipation.MemberId != null)
+                                                                foreach (Member member in members)
+                                                                    if (member.Id == partisipation.MemberId)
+                                                                    {
+                                                                        dataItem.Name = member.Name;
+                                                                        dataItem.FamalyName = member.FamilyName;
+                                                                    }
+                                                            if (start.Number != null)
+                                                                dataItem.Number = start.Number.ToString();
+                                                            MainDB.Items.Add(dataItem);
+                                                        }
+                                                    }
                 }
             }
         }
@@ -160,25 +193,35 @@ namespace RefereeHelper.OptionsWindows
                 TimeFromStart = x.TimeFromStart,
                 IsFinish = x.IsFinish,
                 Circle = x.Circle,
-                Start = new Start
-                {
-                    Id = x.Start.Id,
-                    Partisipation = new Partisipation
-                    {
-                        Id = x.Start.Partisipation.Id,
-                        CompetitionId = x.Start.Partisipation.CompetitionId,
-                        Group = new Group
-                        {
-                            DistanceId = x.Start.Partisipation.Group.DistanceId
-                        },
-                        Member = new Member
-                        {
-                            Name = x.Start.Partisipation.Member.Name,
-                            FamilyName = x.Start.Partisipation.Member.FamilyName
-                        }
-                    },
-                    Number = x.Start.Number
-                }
+                StartId = x.StartId
+            }).ToList();
+
+            var starts = dbContext.Set<Models.Start>().Select(x => new Models.Start
+            {
+                Id = x.Id,
+                PartisipationId = x.PartisipationId,
+                Number = x.Number
+            }).ToList();
+
+            var partisipations = dbContext.Set<Partisipation>().Select(x => new Partisipation
+            {
+                Id = x.Id,
+                CompetitionId = x.CompetitionId,
+                GroupId = x.GroupId,
+                MemberId = x.MemberId
+            }).ToList();
+
+            var groups = dbContext.Set<Models.Group>().Select(x => new Models.Group
+            {
+                Id = x.Id,
+                DistanceId = x.DistanceId
+            }).ToList();
+
+            var members = dbContext.Set<Member>().Select(x => new Member
+            {
+                Id = x.Id,
+                Name = x.Name,
+                FamilyName = x.FamilyName
             }).ToList();
 
             DataItems dataItem;
@@ -187,33 +230,54 @@ namespace RefereeHelper.OptionsWindows
             if (distance != null)
             {
                 foreach (Timing timing in timings)
-                    if (timing.Start?.Partisipation.Group?.DistanceId == distance.Id)
-                        if (timing.Circle > cilcle1 && timing.Circle != null)
-                        {
-                            cilcle1 = (int)timing.Circle;
-                            break;
-                        }
+                    if (timing.Circle != null)
+                        if (timing.StartId != null)
+                            foreach (Models.Start start in starts)
+                                if (timing.StartId == start.Id)
+                                    foreach (Partisipation partisipation in partisipations)
+                                        if (start.PartisipationId == partisipation.Id)
+                                            if (partisipation.GroupId != null)
+                                                foreach (Models.Group group in groups)
+                                                    if (group.Id == partisipation.GroupId)
+                                                        if (group.DistanceId == distance.Id)
+                                                            if (timing.Circle > cilcle)
+                                                            {
+                                                                cilcle = (int)timing.Circle;
+                                                                goto exit;
+                                                            }
+                exit:
                 foreach (Timing timing in timings)
                 {
-                    if (timing.Start?.Partisipation.Group?.DistanceId == distance.Id)
-                    {
-                        if (timing.Circle == cilcle1)
-                        {
-                            dataItem = new DataItems();
-                            if (timing.TimeFromStart != null)
-                            {
-                                buf = (TimeOnly)timing.TimeFromStart;
-                                dataItem.TimeFromStart = buf.ToShortTimeString();
-                            }
-                            if (timing.Start?.Partisipation?.Member?.Name != null)
-                                dataItem.Name = timing.Start?.Partisipation?.Member?.Name;
-                            if (timing.Start?.Partisipation?.Member?.FamilyName != null)
-                                dataItem.FamalyName = timing.Start?.Partisipation?.Member?.FamilyName;
-                            if (timing.Start?.Number != null)
-                                dataItem.Number = timing.Start?.Number.ToString();
-                            Main1DB.Items.Add(dataItem);
-                        }
-                    }
+                    if (timing.StartId != null)
+                        foreach (Models.Start start in starts)
+                            if (timing.StartId == start.Id)
+                                foreach (Partisipation partisipation in partisipations)
+                                    if (start.PartisipationId == partisipation.Id)
+                                        if (partisipation.GroupId != null)
+                                            foreach (Models.Group group in groups)
+                                                if (group.Id == partisipation.GroupId)
+                                                    if (group.DistanceId == distance.Id)
+                                                    {
+                                                        if (timing.Circle == cilcle)
+                                                        {
+                                                            dataItem = new DataItems();
+                                                            if (timing.TimeFromStart != null)
+                                                            {
+                                                                buf = (TimeOnly)timing.TimeFromStart;
+                                                                dataItem.TimeFromStart = buf.ToShortTimeString();
+                                                            }
+                                                            if (partisipation.MemberId != null)
+                                                                foreach (Member member in members)
+                                                                    if (member.Id == partisipation.MemberId)
+                                                                    {
+                                                                        dataItem.Name = member.Name;
+                                                                        dataItem.FamalyName = member.FamilyName;
+                                                                    }
+                                                            if (start.Number != null)
+                                                                dataItem.Number = start.Number.ToString();
+                                                            Main1DB.Items.Add(dataItem);
+                                                        }
+                                                    }
                 }
             }
         }
