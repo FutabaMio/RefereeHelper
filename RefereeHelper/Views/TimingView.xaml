@@ -40,11 +40,11 @@
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="127*"/>
+                <ColumnDefinition Width="95*"/>
+                <ColumnDefinition Width="578*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Name="secundomer" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBox Name="secundomer" FontSize="20" BorderThickness="0" Text="00:00:00.00" VerticalAlignment="Top" HorizontalAlignment="Left" Height="26" Width="108" />
             <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
