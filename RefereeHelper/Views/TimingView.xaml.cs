@@ -1201,7 +1201,7 @@ namespace RefereeHelper.Views
         private void TeamTimer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var row = sender as DataGridRow;
-            var tim = row.DataContext as TimingsFromDataGrid;
+            var tim = row.DataContext as Timing;
             MessageBox.Show($"selected ID: {tim.Id}");
         }
 
