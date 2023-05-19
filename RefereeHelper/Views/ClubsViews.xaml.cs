@@ -29,11 +29,9 @@ namespace RefereeHelper.Views
         public ClubsViews()
         {
             InitializeComponent();
-
-            Loaded+=ClubsViews_Loaded;
         }
 
-        private void ClubsViews_Loaded(object sender, RoutedEventArgs e)
+        public void RefreshData()
         {
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
@@ -57,6 +55,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
+            RefreshData();
                
         }
 
@@ -71,8 +70,9 @@ namespace RefereeHelper.Views
                     db.Add(Club);
                     db.SaveChanges();
                 }
+                
             }
-               
+               RefreshData();
         }
 
         private void clubDataGrid_CurrentCellChanged(object sender, EventArgs e)

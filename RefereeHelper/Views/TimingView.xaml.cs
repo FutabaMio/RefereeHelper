@@ -38,7 +38,7 @@ namespace RefereeHelper.Views
         /// <summary>
         /// Структура для заполнения таблицы участниками
         /// </summary>
-        struct MemberDataItem
+        class MemberDataItem
         {
             public string FamilyName { get; set; }
             public string MemberName { get; set; }
@@ -52,7 +52,7 @@ namespace RefereeHelper.Views
         /// <summary>
         /// Структура для заполнения таблицы группами
         /// </summary>
-        struct DistanceDataItem
+        class DistanceDataItem
         {
             public string GroupName { get; set; }
             public string Gender { get; set; }
@@ -66,7 +66,7 @@ namespace RefereeHelper.Views
         /// <summary>
         /// Структура для заполнения таблицы тиймингами
         /// </summary>
-        struct TimingDataItem
+        class TimingDataItem
         {
             public string Id { get; set; }
             public string FamilyName { get; set; }
@@ -570,8 +570,8 @@ namespace RefereeHelper.Views
             {
                 var timings = dbContext.Timings.Include(x => x.Start).ThenInclude(y => y.Partisipation).ThenInclude(z => z.Member).ToList();
                 var teams = dbContext.Teams.ToList();
-                TeamTimer.DataContext = timings;
-                TeamTimer.ItemsSource = timings;
+                //TeamTimer.DataContext = timings;
+                //TeamTimer.ItemsSource = timings;
                 /*foreach (var t in timings)
                 {
                     i++;
@@ -1200,7 +1200,7 @@ namespace RefereeHelper.Views
         private void TeamTimer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var row = sender as DataGridRow;
-            var tim = row.DataContext as Timing;
+            var tim = row.DataContext as TimingDataItem;
             MessageBox.Show($"selected ID: {tim.Id}");
         }
 

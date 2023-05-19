@@ -29,11 +29,10 @@ namespace RefereeHelper.Views
         public CompetitionView()
         {
             InitializeComponent();
-            Loaded+=CompetitionView_Loaded;
 
         }
 
-        private void CompetitionView_Loaded(object sender, RoutedEventArgs e)
+        public void RefreshData()
         {
             using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
             {
@@ -57,6 +56,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
+            RefreshData();
                
         }
 
@@ -72,6 +72,7 @@ namespace RefereeHelper.Views
                     db.SaveChanges();
                 }
             }
+            RefreshData();
         }
     }
 }
