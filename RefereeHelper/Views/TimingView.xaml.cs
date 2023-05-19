@@ -525,7 +525,7 @@ namespace RefereeHelper.Views
                                                     }
                                             if (partisipation.MemberId != null)
                                                 foreach (Member member in members)
-                                                    if (member.Id == start.TeamId)
+                                                    if (member.Id == partisipation.MemberId)
                                                     {
                                                         buf.FamilyName = member.FamilyName;
                                                         buf.MemberName = member.Name;
