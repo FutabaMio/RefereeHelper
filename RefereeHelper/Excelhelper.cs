@@ -189,7 +189,7 @@ namespace RefereeHelper
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     var sheet = package.Workbook.Worksheets.Add("лист 1");
-                    int row = 1, col = 8, costcol = 0, cur = 1, rowcost;
+                    int row = 1, col = 8, costcol = 0, cur = 1, rowcost, circle = 0;
                     List<int> partisipationIds = new List<int>();
                     List<int> partisipationDNFIds = new List<int>();
                     List<int> partisipationDNSIds = new List<int>();
@@ -337,18 +337,24 @@ namespace RefereeHelper
                                                             {
                                                                 buf = (TimeOnly)timing.TimeFromStart;
                                                                 sheet.Cells[row, col].Value = buf.ToLongTimeString();
+                                                                circle++;
                                                             }
                                                             col++;
                                                             if (timing.IsFinish == true)
                                                             {
-                                                                sheet.Cells[row, 1].Value = timing.PlaceAbsolute;
                                                                 sheet.Cells[row, col - 1].Style.Font.Bold = true;
-                                                                sheet.Cells[row, col + 1].Value = timing.Place;
                                                             }
+                                                            sheet.Cells[row, 1].Value = timing.PlaceAbsolute;
+                                                            sheet.Cells[row, costcol].Value = timing.Place;
                                                         }
                                                 }
                                                 break;
                                             }
+                                        if (circle < distance.Circles)
+                                        {
+                                            sheet.Cells[row, costcol - 2].Value = "+ " + (distance.Circles - circle) + " круг.";
+                                            sheet.Cells[row, costcol - 2].Style.Font.Bold = true;
+                                        }
                                         if (partisipation.GroupId != null)
                                             foreach (Group group in groups)
                                                 if (group.Id == partisipation.GroupId)
@@ -356,6 +362,7 @@ namespace RefereeHelper
                                         sheet.Cells[1, 1, row, costcol].AutoFitColumns(1, 150);
                                         sheet.Cells[row, 1, row, costcol].Style.Border.Bottom.Style = EpplusSyle.ExcelBorderStyle.Medium;
                                         col = 8;
+                                        circle = 0;
                                     }
                                 }
                             sheet.Cells[rowcost, 1, row, costcol].Sort(0, false);
@@ -474,7 +481,7 @@ namespace RefereeHelper
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     var sheet = package.Workbook.Worksheets.Add("лист 1");
-                    int row = 1, col = 8, costcol = 0, cur = 1, rowcost;
+                    int row = 1, col = 8, costcol = 0, cur = 1, rowcost, circles = 0;
                     List<int> partisipationIds = new List<int>();
                     List<int> partisipationDNFIds = new List<int>();
                     List<int> partisipationDNSIds = new List<int>();
@@ -507,7 +514,11 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        DistanceId = x.DistanceId
+                        DistanceId = x.DistanceId,
+                        Distance = new Distance
+                        {
+                            Circles = x.Distance.Circles
+                        }
                     }).ToList();
 
                     var distances = dbContext.Set<Distance>().Select(x => new Distance
@@ -617,19 +628,24 @@ namespace RefereeHelper
                                                             {
                                                                 buf = (TimeOnly)timing.TimeFromStart;
                                                                 sheet.Cells[row, col].Value = buf.ToLongTimeString();
+                                                                circles++;
                                                             }
                                                             col++;
                                                             if (timing.IsFinish == true)
-                                                            {
-                                                                sheet.Cells[row, 1].Value = timing.Place;
                                                                 sheet.Cells[row, col - 1].Style.Font.Bold = true;
-                                                            }
+                                                            sheet.Cells[row, 1].Value = timing.Place;
                                                         }
                                                 }
                                                 break;
-                                            } 
+                                            }
+                                        if (circles < group.Distance.Circles)
+                                        {
+                                            sheet.Cells[row, costcol].Value = "+ " + (group.Distance.Circles - circles) + " круг.";
+                                            sheet.Cells[row, costcol].Style.Font.Bold = true;
+                                        }
                                         sheet.Cells[1, 1, row, costcol].AutoFitColumns(1, 150);
                                         sheet.Cells[row, 1, row, costcol].Style.Border.Bottom.Style = EpplusSyle.ExcelBorderStyle.Medium;
+                                        circles = 0;
                                         col = 8;
                                     }
                                 }
@@ -739,7 +755,7 @@ namespace RefereeHelper
                 using (var dbContext = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
                     var sheet = package.Workbook.Worksheets.Add("лист 1");
-                    int row = 1, col = 6, constcol = 0, rowcost = 0,cur = 1;
+                    int row = 1, col = 6, constcol = 0, rowcost = 0,cur = 1, circles = 0, placecur = 0;
                     List<int> partisipationOKIds = new List<int>();
                     List<int> partisipationDNFIds = new List<int>();
                     List<int> partisipationDNSIds = new List<int>();
@@ -849,6 +865,7 @@ namespace RefereeHelper
                                             if (partisipation.Id == partisipationId)
                                             {
                                                 col = 6;
+                                                circles = 0;
                                                 row++;
                                                 if (partisipation.MemberId != null)
                                                     foreach (Member member in members)
@@ -874,22 +891,25 @@ namespace RefereeHelper
                                                                     {
                                                                         buf = (TimeOnly)timing.TimeFromStart;
                                                                         sheet.Cells[row, col].Value = buf.ToLongTimeString(); col++;
+                                                                        circles++;
                                                                     }
-                                                                    if (timing.IsFinish == true)
-                                                                    {
-                                                                        sheet.Cells[row, col + 1].Value = timing.Place;
-                                                                    }
+                                                                    sheet.Cells[row, constcol].Value = timing.Place;
                                                                 }
                                                         }
+                                                        
                                                         break;
                                                     }
+                                                if (circles < distance.Circles)
+                                                {
+                                                    sheet.Cells[row, constcol - 2].Value = "+ " + (distance.Circles - circles) + " круг.";
+                                                    placecur++;
+                                                }
                                             }
                                         }
-                                    sheet.Cells[rowcost, 1, row, constcol].Sort(constcol - 3, false);
+                                    sheet.Cells[rowcost, 1, row, constcol].Sort(constcol - 1, false);
 
-                                    for (int i = 0; i < partisipationOKIds.Count; i++)
+                                    for (int i = 0; i < partisipationOKIds.Count - placecur; i++)
                                     {
-                                        sheet.Cells[rowcost + i, 1].Value = cur; cur++;
                                         if (sheet.Cells[rowcost + i, constcol - 2].Value != null)
                                             if (TimeOnly.TryParse(sheet.Cells[rowcost + i, constcol - 2].Value.ToString(), out buf))
                                             {
@@ -897,6 +917,10 @@ namespace RefereeHelper
                                                 buf = TimeOnly.FromTimeSpan(timeSpan);
                                                 sheet.Cells[rowcost + i, constcol - 1].Value = buf.ToLongTimeString();
                                             }
+                                    }
+                                    for (int i = 0; i < partisipationOKIds.Count; i++)
+                                    {
+                                        sheet.Cells[rowcost + i, 1].Value = cur; cur++;
                                     }
 
                                     foreach (int partisipationId in partisipationDNFIds)
