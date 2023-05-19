@@ -48,16 +48,6 @@ namespace RefereeHelper.OptionsWindows
             Group.Name = nameTextBox.Text;
             int.TryParse(minAgeBox.Text, out int minAge);
             int.TryParse(maxAgeBox.Text, out int maxAge);
-            if (maxAge<minAge)
-            {
-                MessageBox.Show("Возможно, вы хотите поменять даты местами?", MessageBoxButton.YesNo.ToString());
-                if (DialogResult==true)
-                {
-                    int buf = minAge;
-                    minAge = maxAge;
-                    maxAge=minAge;
-                }
-            }
             if (WorkMode==false)
             {
             Group.StartAge =DateTime.Now.Year-maxAge;
