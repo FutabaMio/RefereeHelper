@@ -27,6 +27,8 @@ namespace RefereeHelper
         static object which = Word.WdGoToDirection.wdGoToLast;
         static int row;
         static int constrow;
+        static int circles;
+        static int placecur;
         static int cur;
         static int col;
         static int constcol;
@@ -372,6 +374,7 @@ namespace RefereeHelper
                                     {
                                         col = 8;
                                         row++;
+                                        circles = 0;
                                         if (partisipation.MemberId != null)
                                             foreach (Member member in members)
                                                 if (member.Id == partisipation.MemberId)
@@ -407,20 +410,24 @@ namespace RefereeHelper
                                                                 buf = (TimeOnly)timing.TimeFromStart;
                                                                 table.Cell(row, col).Range.Text = buf.ToLongTimeString();
                                                                 table.Cell(row, col).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                                circles++;
                                                             }
                                                             col++;
                                                             if (timing.IsFinish == true)
-                                                            {
-                                                                table.Cell(row, 1).Range.Text = timing.PlaceAbsolute.ToString();
-                                                                table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                                                                table.Cell(row, col - 1).Range.Font.Bold = 1;
-                                                                table.Cell(row, col + 1).Range.Text = timing.Place.ToString();
-                                                                table.Cell(row, col + 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                                                            }
+                                                                table.Cell(row, col - 1).Range.Font.Bold = 1; 
+                                                            table.Cell(row, 1).Range.Text = timing.PlaceAbsolute.ToString();
+                                                            table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                            table.Cell(row, constcol).Range.Text = timing.Place.ToString();
+                                                            table.Cell(row, constcol).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                                                         }
                                                 }
                                                 break;
                                             }
+                                        if (circles < distance.Circles)
+                                        {
+                                            table.Cell(row, constcol - 2).Range.Text = "+ " + (distance.Circles - circles) + " круг.";
+                                            table.Cell(row, constcol - 2).Range.Font.Bold = 1;
+                                        }
                                         if (partisipation.GroupId != null)
                                             foreach (Group group in groups)
                                                 if (group.Id == partisipation.GroupId)
@@ -720,6 +727,7 @@ namespace RefereeHelper
                                     if (partisipation.Id == partisipationId)
                                     {
                                         col = 8;
+                                        circles = 0;
                                         row++;
                                         if (partisipation.MemberId != null)
                                             foreach (Member member in members)
@@ -756,18 +764,22 @@ namespace RefereeHelper
                                                                 buf = (TimeOnly)timing.TimeFromStart;
                                                                 table.Cell(row, col).Range.Text = buf.ToLongTimeString();
                                                                 table.Cell(row, col).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                                circles++;
                                                             }
                                                             col++;
                                                             if (timing.IsFinish == true)
-                                                            {
-                                                                table.Cell(row, 1).Range.Text = timing.Place.ToString();
-                                                                table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                                                                 table.Cell(row, col - 1).Range.Font.Bold = 1;
-                                                            }
+                                                            table.Cell(row, 1).Range.Text = timing.Place.ToString();
+                                                            table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                                                         }
                                                 }
                                                 break;
                                             }
+                                        if (circles < group.Distance.Circles)
+                                        {
+                                            table.Cell(row, constcol).Range.Text = "+ " + (group.Distance.Circles - circles) + " круг.";
+                                            table.Cell(row, constcol).Range.Font.Bold = 1;
+                                        }
                                     }
                                 }
                             table.Sort(true, 1);
@@ -911,6 +923,7 @@ namespace RefereeHelper
                     TimeSpan timeSpan = TimeSpan.Zero;
                     TimeOnly finishtime = TimeOnly.MinValue;
                     string s = "";
+                    placecur = 0;
                     List<int> partisipationOKIds = new List<int>();
                     List<int> partisipationDNFIds = new List<int>();
                     List<int> partisipationDNSIds = new List<int>();
@@ -1047,7 +1060,7 @@ namespace RefereeHelper
                                             {
                                                 col = 6;
                                                 row++;
-
+                                                circles = 0;
                                                 if (partisipation.MemberId != null)
                                                     foreach (Member member in members)
                                                         if (member.Id == partisipation.MemberId)
@@ -1072,22 +1085,24 @@ namespace RefereeHelper
                                                                     {
                                                                         buf = (TimeOnly)timing.TimeFromStart;
                                                                         table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
+                                                                        circles++;
                                                                     }
-                                                                    if (timing.IsFinish == true)
-                                                                    {
-                                                                        table.Cell(row, col + 1).Range.Text = timing.Place.ToString();
-                                                                    }
+                                                                    table.Cell(row, constcol).Range.Text = timing.Place.ToString(); 
                                                                 }
                                                         }
                                                         break;
                                                     }
+                                                if (circles < distance.Circles)
+                                                {
+                                                    table.Cell(row, constcol - 2).Range.Text = "+ " + (distance.Circles - circles) + " круг.";
+                                                    placecur++;
+                                                }
                                             }
                                         }
 
-                                    table.Sort(true, col - 1);
-                                    for (int i = 0; i < partisipationOKIds.Count; i++)
+                                    table.Sort(true, constcol);
+                                    for (int i = 0; i < partisipationOKIds.Count - placecur; i++)
                                     {
-                                        table.Cell(2 + i, 1).Range.Text = cur.ToString(); cur++;
                                         if (table.Cell(2 + i, constcol - 2).Range.Text != null)
                                         {
                                             s = table.Cell(2 + i, constcol - 2).Range.Text;
@@ -1103,6 +1118,10 @@ namespace RefereeHelper
                                             }
                                         }
 
+                                    }
+                                    for (int i = 0; i < partisipationOKIds.Count; i++)
+                                    {
+                                        table.Cell(2 + i, 1).Range.Text = cur.ToString(); cur++;
                                     }
                                     foreach (int partisipationId in partisipationDNFIds)
                                         foreach (Partisipation partisipation in partisipations)

@@ -906,7 +906,7 @@ namespace RefereeHelper
                                                 }
                                             }
                                         }
-                                    sheet.Cells[rowcost, 1, row, constcol].Sort(0, false);
+                                    sheet.Cells[rowcost, 1, row, constcol].Sort(constcol - 1, false);
 
                                     for (int i = 0; i < partisipationOKIds.Count - placecur; i++)
                                     {
@@ -919,7 +919,9 @@ namespace RefereeHelper
                                             }
                                     }
                                     for (int i = 0; i < partisipationOKIds.Count; i++)
+                                    {
                                         sheet.Cells[rowcost + i, 1].Value = cur; cur++;
+                                    }
 
                                     foreach (int partisipationId in partisipationDNFIds)
                                         foreach (Partisipation partisipation in partisipations)
