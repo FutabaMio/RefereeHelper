@@ -21,13 +21,13 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Content="Стартовый номер"/>
-        <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="False" Margin="0,25,400,0"/>
+        <TextBox Name="startNumberTbx" Grid.Row="0" Grid.Column="0" IsReadOnly="False" Margin="0,25,400,0"/>
 
         <Label Grid.Column="0" Content="Фамилия" Margin="0,58,0,0" Grid.RowSpan="2"/>
-        <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" Margin="0,25,250,0"/>
+        <TextBox Name="FamilyNameTbx" Grid.Row="1" Grid.Column="0" IsReadOnly="True" Margin="0,25,250,0"/>
 
         <Label Grid.Row="1" Grid.Column="0" Content="Имя" Margin="0,56,0,0" Grid.RowSpan="2"/>
-        <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" Margin="0,25,250,0"/>
+        <TextBox Name="NameTbx" Grid.Row="2" Grid.Column="0" IsReadOnly="True" Margin="0,25,250,0"/>
 
         <Button Grid.Row="4" Grid.Column="1" Content="OK" Click="Button_Click_1"/>
         <Button Grid.Row="4" Grid.Column="2" Content="Отмена" Margin="0,0,0,0" Click="Button_Click"/>

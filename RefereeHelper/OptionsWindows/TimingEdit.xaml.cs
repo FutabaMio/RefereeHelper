@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RefereeHelper.Domain.Models;
+using RefereeHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,8 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class TimingEdit : Window
     {
+        public Timing Timing { get; set; }
+
         public TimingEdit()
         {
             InitializeComponent();
@@ -32,6 +36,14 @@ namespace RefereeHelper.OptionsWindows
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void ShowTiming(TimingDataItem timing)
+        {
+            Timing = timing;
+            FamilyNameTbx.Text=$"{timing.FamilyName}";
+            NameTbx.Text=$"{timing.MemberName}";
+            this.Show();
         }
     }
 }

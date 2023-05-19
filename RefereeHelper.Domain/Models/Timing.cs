@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RefereeHelper.Domain.Models;
 using RefereeHelper.Models.Base;
 
 
@@ -43,11 +44,16 @@ namespace RefereeHelper.Models
         /// Финишировал ли
         /// </summary>
         public bool? IsFinish { get; set; }
+
+        public static implicit operator Timing(TimingDataItem v)
+        {
+            throw new NotImplementedException();
+        }
         //public bool autoMode { get; set; } = false;            //почитать об инициализации переменной после указания её свойств
         /// <summary>
         /// 
         /// </summary>
         //public TimeOnly? currentTime { get; set; }              //надо распарсить только время, поискать как (TimeOnly currentTime = DateOnly.FromDateTime(timer))
-     }
+    }
 }
 
