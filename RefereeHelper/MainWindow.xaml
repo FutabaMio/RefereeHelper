@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RefereeHelper"
         xmlns:controls="clr-namespace:RefereeHelper.Controls"
         mc:Ignorable="d"
-        Title="RefereeHelper" Height="450" Width="800" WindowStyle="SingleBorderWindow">
+        Title="RefereeHelper" Height="450" Width="800" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
