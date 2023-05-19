@@ -48,6 +48,12 @@ namespace RefereeHelper.OptionsWindows
             Group.Name = nameTextBox.Text;
             int.TryParse(minAgeBox.Text, out int minAge);
             int.TryParse(maxAgeBox.Text, out int maxAge);
+            if (minAge>maxAge)
+            {
+                int buf = maxAge;
+                maxAge=minAge;
+                minAge=buf;
+            }
             if (WorkMode==false)
             {
             Group.StartAge =DateTime.Now.Year-maxAge;
