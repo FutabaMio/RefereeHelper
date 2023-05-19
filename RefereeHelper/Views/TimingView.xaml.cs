@@ -23,6 +23,7 @@ using System.Security.Policy;
 using System.Windows.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics.Metrics;
+using RefereeHelper.Domain.Models;
 
 namespace RefereeHelper.Views
 {
@@ -1195,6 +1196,13 @@ namespace RefereeHelper.Views
                         wd.PrintAs(file);
                 }
             }
+        }
+
+        private void TeamTimer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var row = sender as DataGridRow;
+            var tim = row.DataContext as Timing;
+            MessageBox.Show($"selected ID: {tim.Id}");
         }
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
