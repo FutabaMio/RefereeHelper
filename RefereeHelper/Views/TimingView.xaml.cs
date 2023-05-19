@@ -23,7 +23,6 @@ using System.Security.Policy;
 using System.Windows.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics.Metrics;
-using RefereeHelper.Domain.Models;
 
 namespace RefereeHelper.Views
 {
