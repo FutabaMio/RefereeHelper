@@ -68,7 +68,13 @@
             <Button Grid.Column="2" Content="Результаты" Name="TimingFillBut" Click="TimingFillBut_Click"/>
         </Grid>
 
-        <DataGrid Grid.Row="4" Name="TeamTimer" MouseDoubleClick="TeamTimer_MouseDoubleClick" MouseRightButtonDown="TeamTimer_MouseRightButtonDown" IsReadOnly="False"/>
+        <DataGrid Grid.Row="4" Name="TeamTimer" MouseRightButtonDown="TeamTimer_MouseRightButtonDown" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="TeamTimer_MouseDoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
         <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
