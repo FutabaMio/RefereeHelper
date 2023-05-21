@@ -23,6 +23,7 @@ using System.Security.Policy;
 using System.Windows.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics.Metrics;
+using RefereeHelper.Domain.Models;
 
 namespace RefereeHelper.Views
 {
@@ -66,7 +67,7 @@ namespace RefereeHelper.Views
         /// <summary>
         /// Структура для заполнения таблицы тиймингами
         /// </summary>
-        class TimingDataItem
+        /*class TimingDataItem
         {
             public string Id { get; set; }
             public string FamilyName { get; set; }
@@ -82,7 +83,7 @@ namespace RefereeHelper.Views
             public string Place { get; set; }
             public string PlaceAbsolute { get; set; }
             public string IsFinish { get; set; }     
-        }
+        }*/
 
         //показатель указывающий на то чем заполнена сейчас таблица: участники = 0, дистанции = 1, результаты = 2 
         byte position = 0;
@@ -1201,6 +1202,10 @@ namespace RefereeHelper.Views
         {
             var row = sender as DataGridRow;
             var tim = row.DataContext as TimingDataItem;
+            var editTiming = new TimingEdit();
+            editTiming.ShowTiming(tim);
+
+            
             MessageBox.Show($"selected ID: {tim.Id}");
         }
 

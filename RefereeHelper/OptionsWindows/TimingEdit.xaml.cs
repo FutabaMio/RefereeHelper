@@ -21,7 +21,7 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class TimingEdit : Window
     {
-        public Timing Timing { get; set; }
+        public TimingDataItem Timing { get; set; }
 
         public TimingEdit()
         {
@@ -43,6 +43,7 @@ namespace RefereeHelper.OptionsWindows
             Timing = timing;
             FamilyNameTbx.Text=$"{timing.FamilyName}";
             NameTbx.Text=$"{timing.MemberName}";
+            startNumberTbx.Text=$"{timing.Startnumber}";
             this.Show();
         }
     }
