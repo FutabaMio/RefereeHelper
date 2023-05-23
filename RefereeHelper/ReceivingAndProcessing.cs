@@ -95,7 +95,7 @@ namespace RefereeHelper
             int i = 0;
             foreach (var k in ts)
             {
-                k.Place = i + 1; i++;
+                k.Start.Place = i + 1; i++;
                 dbContext.Update(k);
             }
             dbContext.SaveChanges();
@@ -115,7 +115,7 @@ namespace RefereeHelper
             int i = 0;
             foreach (var k in ts)
             {
-                k.PlaceAbsolute = i + 1; i++;
+                k.Start.PlaceAbsolute = i + 1; i++;
                 dbContext.Update(k);
             }
             dbContext.SaveChanges();

@@ -30,10 +30,19 @@ namespace RefereeHelper.Models
         /// <summary>
         /// Статус спортсмена
         /// 0 - всё нормально
-        /// 1 - Do Not Finish
-        /// 2 - Do Not Start
+        /// 1 - Финишировал
+        /// 2 - Do Not Finish
+        /// 3 - Do Not Start
         /// </summary>
         public int Status { get; set; }
+        /// <summary>
+        /// Позиция по группе
+        /// </summary>
+        public int? Place { get; set; }
+        /// <summary>
+        /// Абсолютная позиция
+        /// </summary>
+        public int? PlaceAbsolute { get; set; }
         /// <summary>
         /// Чип
         /// </summary>
