@@ -1202,11 +1202,10 @@ namespace RefereeHelper.Views
         {
             try
             {
-            var row = sender as DataGridRow;
-            var tim = row.DataContext as TimingDataItem;
-            var editTiming = new TimingEdit();
-            editTiming.ShowTiming(tim);
-            MessageBox.Show($"selected ID: {tim.Id}");
+                var row = sender as DataGridRow;
+                var tim = row.DataContext as TimingDataItem;
+                var editTiming = new TimingEdit();
+                editTiming.ShowTiming(tim);
             }
             catch(Exception exc)
             {
