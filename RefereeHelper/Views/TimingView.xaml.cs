@@ -1200,13 +1200,22 @@ namespace RefereeHelper.Views
 
         private void TeamTimer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            try
+            {
             var row = sender as DataGridRow;
             var tim = row.DataContext as TimingDataItem;
             var editTiming = new TimingEdit();
             editTiming.ShowTiming(tim);
+            MessageBox.Show($"selected ID: {tim.Id}");
+            }
+            catch(Exception exc)
+            {
+                MessageBox.Show("Нажмите на кнопку <<РЕЗУЛЬТАТЫ>> и дважды кликните на строке");
+            }
+            
 
             
-            MessageBox.Show($"selected ID: {tim.Id}");
+            
         }
 
         private void TeamTimer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

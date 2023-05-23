@@ -41,8 +41,8 @@ namespace RefereeHelper.OptionsWindows
         public void ShowTiming(TimingDataItem timing)
         {
             Timing = timing;
-            FamilyNameTbx.Text=$"{timing.FamilyName}";
-            NameTbx.Text=$"{timing.MemberName}";
+            //FamilyNameTbx.Text=$"{timing.FamilyName}";
+            //NameTbx.Text=$"{timing.MemberName}";
             startNumberTbx.Text=$"{timing.Startnumber}";
             this.Show();
         }
