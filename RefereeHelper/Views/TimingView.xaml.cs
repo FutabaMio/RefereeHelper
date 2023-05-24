@@ -369,8 +369,8 @@ namespace RefereeHelper.Views
                     TimeFromStart = x.TimeFromStart,
                     Circle = x.Circle,
                     CircleTime = x.CircleTime,
-                    Place = x.Place,
-                    PlaceAbsolute = x.PlaceAbsolute,
+                    Place = x.Start.Place,
+                    PlaceAbsolute = x.Start.PlaceAbsolute,
                     IsFinish = x.IsFinish,
                     StartId = x.StartId
                 }).ToList();

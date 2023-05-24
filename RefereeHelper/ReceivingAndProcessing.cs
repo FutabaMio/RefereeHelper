@@ -86,12 +86,17 @@ namespace RefereeHelper
         public void RefrechPlace(DbContext dbContext, Timing t)
         {
             var d = t;
+            d.Start = dbContext.Set<Start>().First(x => x.Id == d.StartId);
             d.Start.Partisipation = dbContext.Set<Partisipation>().First(x => x.Id == t.Start.PartisipationId);
             d.Start.Partisipation.Group = dbContext.Set<Group>().First(x => x.Id == d.Start.Partisipation.GroupId);
             d.Start.Partisipation.Group.Distance = dbContext.Set<Distance>().First(x => x.Id == d.Start.Partisipation.Group.DistanceId);
-            var ts = dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(c => c.Partisipation).ThenInclude(v => v.Group)
+            var ts = dbContext.Set<Timing>().Include(x => x.Start)
+                .ThenInclude(c => c.Partisipation)
+                .ThenInclude(v => v.Group)
                 .Where(m => m.Start.Partisipation.Group.Distance.Id == d.Start.Partisipation.Group.Distance.Id && m.Circle == d.Circle)
-                .OrderByDescending(n => n.TimeFromStart).ToList();
+                .OrderByDescending(n => n.TimeFromStart)
+                .ToList();
+
             int i = 0;
             foreach (var k in ts)
             {
@@ -130,19 +135,17 @@ namespace RefereeHelper
         {
             var ts = dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(x => x.Partisipation).ThenInclude(x => x.Group).ThenInclude(x => x.Distance).ToList();
             var t = ts.First(x => x.Id == idOfTiming);
-
+            t.Start.Partisipation = dbContext.Set<Partisipation>().First(x => x.Id == t.Start.PartisipationId);
+            t.Start.Partisipation.Group = dbContext.Set<Group>().First(x => x.Id == t.Start.Partisipation.GroupId);
+            t.Start.Partisipation.Group.Distance = dbContext.Set<Distance>().First(x => x.Id == t.Start.Partisipation.Group.DistanceId);
             //var t = DataService.Get(idOfTiming).Result;
-            if (t.Start?.Partisipation.Group?.Distance.Circles-1 < t.Circle)
+            if (t.Start?.Partisipation?.Group?.Distance.Circles-1 < t.Circle)
             {
-                if(t.Start?.Partisipation.Group?.Distance.Circles == t.Circle)
-                {
-                    return true;
-                }
-                return true;
+                return false;
             }
             else
             {
-                return false;
+                return true;
             }
         }
         /// <summary>
@@ -176,7 +179,7 @@ namespace RefereeHelper
         public int GetOfLapsForHim(DbContext dbContext, Timing t)
         {
             var timingEntity = dbContext.Set<Timing>().Include(z => z.Start).First(x => x.Id == t.Id);
-            return dbContext.Set<Timing>().Where(x => x.Start.Number == timingEntity.Start.Number).Count();
+            return dbContext.Set<Timing>().Where(x => x.StartId == timingEntity.StartId).Count();
         }
         /// <summary>
         /// Определяет количество людей на определённом круге
