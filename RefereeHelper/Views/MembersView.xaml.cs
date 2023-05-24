@@ -159,18 +159,7 @@ namespace RefereeHelper.Views
 
         private void FilterButton_Click(object sender, RoutedEventArgs e)
         {
-            string filterStr = FilterBox.Text;
-            if (filterStr!=null)
-            {
-                using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
-                {
-                    var filteredPeoples = db.Members.Where(f => f.Name.StartsWith(filterStr) || f.SecondName.StartsWith(filterStr) || f.FamilyName.StartsWith(filterStr));
-                    MembersList.Items.Clear();
-                    MembersList.ItemsSource=filteredPeoples;
-                }
-                
-                //RefreshData();
-            }
+            
 
         }
 
@@ -196,8 +185,21 @@ namespace RefereeHelper.Views
 
         private void FilterBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-           
-            
+
+            string filterStr = FilterBox.Text;
+            if (filterStr != null)
+            {
+                using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    var filteredPeoples = db.Members.Where(f => f.Name.StartsWith(filterStr) || 
+                                                                f.SecondName.StartsWith(filterStr) || 
+                                                                f.FamilyName.StartsWith(filterStr)).ToList();
+                    
+                    MembersList.ItemsSource = filteredPeoples;
+                }
+
+                //RefreshData();
+            }
         }
     }
 }
