@@ -80,5 +80,21 @@ namespace RefereeHelper.Views
         {
            // db.SaveChanges();   <- не так, не сохраняет
         }
+
+        private void FilterBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string filterStr = FilterBox.Text;
+            if (filterStr != null)
+            {
+                using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    var filteredClubs = db.Clubs.Where(f => f.Name.StartsWith(filterStr)).ToList();
+
+                    clubDataGrid.ItemsSource = filteredClubs;
+                }
+
+                //RefreshData();
+            }
+        }
     }
 }

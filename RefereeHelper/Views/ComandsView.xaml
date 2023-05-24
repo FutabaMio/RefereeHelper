@@ -15,15 +15,17 @@
             <RowDefinition Height="37*">
             </RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Команды" FontSize="24" FontWeight="Bold"/>
-       <!-- <TextBlock Grid.Row="1" Text="Участники команды" FontSize="24" FontWeight="Bold"/> -->
+        <TextBlock Grid.Row="0" Text="Команды" Background="White" FontSize="24" FontWeight="Bold"/>
+        <TextBox Grid.Row="0" Name="FilterBox" Width="200" HorizontalAlignment="Right" Margin="0,0,0,0" TextChanged="TextBox_TextChanged"/>
+        <Label Grid.Row="0" Content="Фильтр по названию:" Margin="0,0,200,0" FontWeight="Bold" HorizontalAlignment="Right"/>
+        <!-- <TextBlock Grid.Row="1" Text="Участники команды" FontSize="24" FontWeight="Bold"/> -->
         <Button Grid.Row="2" Margin="10,2,679,2" Content="Добавить команду" FontSize="10" Click="Button_Click"/>
         <Button Grid.Row="2" Margin="126,2,557,2" Content="Редактировать" FontSize="10"/>
         <Button Grid.Row="2" Margin="249,2,434,2" Content="Удалить" FontSize="10"/>
         <!--  <Button Grid.Row="2" Margin="371,2,312,2" Content="Добавить вручную" FontSize="10" Click="Button_Click_1"/> -->
         <Button Grid.Row="2" Margin="372,2,311,2" Content="Добавить из базы" FontSize="10" Click="Button_Click_2"/>
-       <!-- <Button Grid.Row="2" Margin="673,2,10,2" Content="Удалить" FontSize="10"/> -->
+        <!-- <Button Grid.Row="2" Margin="673,2,10,2" Content="Удалить" FontSize="10"/> -->
         <DataGrid Grid.Row="0" Margin="0,34,0,0"  Name="teamsDataGrid" Grid.RowSpan="2"/>
-      <!--  <DataGrid Grid.Row="1" Margin="0,34,0,0"  Name="membersDataGrid"/> -->
+        <!--  <DataGrid Grid.Row="1" Margin="0,34,0,0"  Name="membersDataGrid"/> -->
     </Grid>
 </UserControl>

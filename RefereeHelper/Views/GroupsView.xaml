@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:RefereeHelper.Views" xmlns:viewmodels="clr-namespace:RefereeHelper.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:GroupsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="373*"/>
@@ -22,7 +22,11 @@
             <Button Grid.Column="1" Content="Редактировать группу"/>
             <Button Grid.Column="2" Content="Удалить"/>
         </Grid>
-        <TextBlock Text="Группы" FontSize="24" FontWeight="Bold" Grid.Row="0"/>
+        
+        <TextBlock Text="Группы" Background="White" FontSize="24" FontWeight="Bold" Grid.Row="0"/>
+
+        <TextBox Grid.Row="0" Width="200" HorizontalAlignment="Right" Name="FilterBox" TextChanged="FilterBox_TextChanged"/>
+        <Label Grid.Row="0" Margin="0,0,200,0" Content="Фильтр по названию:" FontWeight="Bold" HorizontalAlignment="Right" FontSize="18"/>
         <DataGrid Name="groupsTable" Grid.Row="1" IsReadOnly="True" ItemsSource="{Binding}" MouseRightButtonDown="groupsTable_MouseRightButtonDown"/>
     </Grid>
 </UserControl>

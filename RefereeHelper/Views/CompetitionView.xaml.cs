@@ -29,7 +29,7 @@ namespace RefereeHelper.Views
         public CompetitionView()
         {
             InitializeComponent();
-
+            RefreshData();
         }
 
         public void RefreshData()
@@ -73,6 +73,22 @@ namespace RefereeHelper.Views
                 }
             }
             RefreshData();
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string filterStr = FilterBox.Text;
+            if (filterStr != null)
+            {
+                using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    var filteredComps = db.Members.Where(f => f.Name.StartsWith(filterStr)).ToList();
+
+                    competitionsTable.ItemsSource = filteredComps;
+                }
+
+                //RefreshData();
+            }
         }
     }
 }

@@ -73,5 +73,21 @@ namespace RefereeHelper.Views
             }
             RefreshData();
         }
+
+        private void FilterBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string filterStr = FilterBox.Text;
+            if (filterStr != null)
+            {
+                using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    var filteredGroups = db.Groups.Where(f => f.Name.StartsWith(filterStr)).ToList();
+
+                    groupsTable.ItemsSource = filteredGroups;
+                }
+
+                //RefreshData();
+            }
+        }
     }
 }
