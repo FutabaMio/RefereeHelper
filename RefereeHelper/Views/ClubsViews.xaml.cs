@@ -29,6 +29,7 @@ namespace RefereeHelper.Views
         public ClubsViews()
         {
             InitializeComponent();
+            RefreshData();
         }
 
         public void RefreshData()

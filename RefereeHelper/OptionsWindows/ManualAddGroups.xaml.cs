@@ -23,7 +23,7 @@ namespace RefereeHelper.OptionsWindows
     public partial class ManualAddGroup : Window
     {
         public Group Group { get;private set; }
-        bool WorkMode = true;
+        bool WorkMode = false;
         public ManualAddGroup(Group group)
         {
             InitializeComponent();
@@ -54,7 +54,7 @@ namespace RefereeHelper.OptionsWindows
                 maxAge=minAge;
                 minAge=buf;
             }
-            if (WorkMode==false)
+            if (WorkMode==true)
             {
             Group.StartAge =DateTime.Now.Year-maxAge;
             Group.EndAge = DateTime.Now.Year-minAge;
@@ -67,9 +67,20 @@ namespace RefereeHelper.OptionsWindows
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            minAgeText.Content="Возраст от:";
-            maxAgeText.Content="Возраст до:";
-            WorkMode=false;
+            if(WorkMode==true)
+            {
+                minAgeText.Content="Возраст от:";
+                maxAgeText.Content="Возраст до:";
+                WorkMode=false;
+            }
+            else
+            {   
+                
+                minAgeText.Content="Год рождения от:";
+                maxAgeText.Content="Год рождения до:";
+                WorkMode=true;
+            }
+           
         }
     }
 }
