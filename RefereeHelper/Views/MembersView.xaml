@@ -15,8 +15,8 @@
             </RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Background="White" Text="База Участников" FontSize="20" Grid.Row="0"/>
-      <!--  <TextBox Name="FilterBox" Grid.Row="0" Width="150" Margin="400,0,0,0" FontSize="20"/>
-        <Button Name="FilterButton" Content="Фильтр" Grid.Row="0" Width="100" Margin="700,0,0,0" FontSize="20" Click="FilterButton_Click"/> -->
+        <TextBox Name="FilterBox" Grid.Row="0" Width="150" Margin="400,0,0,0" FontSize="20" TextChanged="FilterBox_TextChanged"/>
+        <Button Name="FilterButton" Content="Фильтр" Grid.Row="0" Width="100" Margin="700,0,0,0" FontSize="20" Click="FilterButton_Click"/>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="122*"/>

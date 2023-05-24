@@ -159,16 +159,19 @@ namespace RefereeHelper.Views
 
         private void FilterButton_Click(object sender, RoutedEventArgs e)
         {
-           /* string key = string.Empty;
-            if (FilterBox.TextChanged)
+            string filterStr = FilterBox.Text;
+            if (filterStr!=null)
             {
-                key = FilterBox.Text;
-                SqliteCommand command = new SqliteCommand(@"SELECT * FROM sportsman where", con);
-                SqliteDataReader dataReader = command.ExecuteReader();
-                membersDataGrid.ItemsSource = dataReader;
+                using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    var filteredPeoples = db.Members.Where(f => f.Name.StartsWith(filterStr) || f.SecondName.StartsWith(filterStr) || f.FamilyName.StartsWith(filterStr));
+                    MembersList.Items.Clear();
+                    MembersList.ItemsSource=filteredPeoples;
+                }
+                
+                //RefreshData();
+            }
 
-            }*/
-            
         }
 
         private void MembersList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -189,6 +192,12 @@ namespace RefereeHelper.Views
                 }
             }
             RefreshData();
+        }
+
+        private void FilterBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           
+            
         }
     }
 }
