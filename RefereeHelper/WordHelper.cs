@@ -281,6 +281,8 @@ namespace RefereeHelper
                         Number = x.Number,
                         StartTime = x.StartTime,
                         Status = x.Status,
+                        Place = x.Place,
+                        PlaceAbsolute = x.PlaceAbsolute,
                         PartisipationId = x.PartisipationId
                     }).ToList();
 
@@ -289,9 +291,6 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         TimeFromStart = x.TimeFromStart,
-                        IsFinish = x.IsFinish,
-                        Place = x.Place,
-                        PlaceAbsolute = x.PlaceAbsolute,
                         StartId = x.StartId
                     }).ToList();
 
@@ -306,11 +305,11 @@ namespace RefereeHelper
                                             {
                                                 if (start.PartisipationId == partisipation.Id)
                                                 {
-                                                    if (start.Status == 0)
+                                                    if (start.Status == 0 || start.Status == 1)
                                                         partisipationIds.Add(partisipation.Id);
-                                                    else if (start.Status == 1)
-                                                        partisipationDNFIds.Add(partisipation.Id);
                                                     else if (start.Status == 2)
+                                                        partisipationDNFIds.Add(partisipation.Id);
+                                                    else if (start.Status == 3)
                                                         partisipationDNSIds.Add(partisipation.Id);
                                                 }
                                             }
@@ -400,6 +399,12 @@ namespace RefereeHelper
                                             {
                                                 table.Cell(row, 7).Range.Text = start.Number.ToString();
                                                 table.Cell(row, 7).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                table.Cell(row, 1).Range.Text = start.PlaceAbsolute.ToString();
+                                                table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                table.Cell(row, constcol).Range.Text = start.Place.ToString();
+                                                table.Cell(row, constcol).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                if (start.Status == 1)
+                                                    table.Cell(row, constcol - 2).Range.Font.Bold = 1;
                                                 foreach (Timing timing in timings)
                                                 {
                                                     if (timing.StartId != null)
@@ -413,12 +418,6 @@ namespace RefereeHelper
                                                                 circles++;
                                                             }
                                                             col++;
-                                                            if (timing.IsFinish == true)
-                                                                table.Cell(row, col - 1).Range.Font.Bold = 1; 
-                                                            table.Cell(row, 1).Range.Text = timing.PlaceAbsolute.ToString();
-                                                            table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                                                            table.Cell(row, constcol).Range.Text = timing.Place.ToString();
-                                                            table.Cell(row, constcol).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                                                         }
                                                 }
                                                 break;
@@ -640,6 +639,7 @@ namespace RefereeHelper
                         Id = x.Id,
                         Number = x.Number,
                         Status = x.Status,
+                        Place = x.Place,
                         PartisipationId = x.PartisipationId
                     }).ToList();
 
@@ -647,8 +647,6 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         TimeFromStart = x.TimeFromStart,
-                        IsFinish = x.IsFinish,
-                        Place = x.Place,
                         StartId = x.StartId
                     }).ToList();
 
@@ -662,11 +660,11 @@ namespace RefereeHelper
                                     {
                                         if (start.PartisipationId == partisipation.Id)
                                         {
-                                            if (start.Status == 0)
+                                            if (start.Status == 0 || start.Status == 1)
                                                 partisipationIds.Add(partisipation.Id);
-                                            else if (start.Status == 1)
-                                                partisipationDNFIds.Add(partisipation.Id);
                                             else if (start.Status == 2)
+                                                partisipationDNFIds.Add(partisipation.Id);
+                                            else if (start.Status == 3)
                                                 partisipationDNSIds.Add(partisipation.Id);
                                         }
                                     }
@@ -754,6 +752,10 @@ namespace RefereeHelper
                                             {
                                                 table.Cell(row, 7).Range.Text = start.Number.ToString();
                                                 table.Cell(row, 7).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                table.Cell(row, 1).Range.Text = start.Place.ToString();
+                                                table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                if (start.Status == 1)
+                                                    table.Cell(row, col - 1).Range.Font.Bold = 1;
                                                 foreach (Timing timing in timings)
                                                 {
                                                     if (timing.StartId != null)
@@ -767,10 +769,7 @@ namespace RefereeHelper
                                                                 circles++;
                                                             }
                                                             col++;
-                                                            if (timing.IsFinish == true)
-                                                                table.Cell(row, col - 1).Range.Font.Bold = 1;
-                                                            table.Cell(row, 1).Range.Text = timing.Place.ToString();
-                                                            table.Cell(row, 1).Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                                                            
                                                         }
                                                 }
                                                 break;
@@ -973,6 +972,7 @@ namespace RefereeHelper
                         Id = x.Id,
                         Number = x.Number,
                         Status = x.Status,
+                        Place = x.Place,
                         PartisipationId = x.PartisipationId
                     }).ToList();
 
@@ -980,8 +980,6 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         TimeFromStart = x.TimeFromStart,
-                        IsFinish = x.IsFinish,
-                        Place = x.Place,
                         StartId = x.StartId
                     }).ToList();
 
@@ -995,11 +993,11 @@ namespace RefereeHelper
                                             foreach (Models.Start start in starts)
                                                 if (start.PartisipationId == partisipation.Id)
                                                 {
-                                                    if (start.Status == 0)
+                                                    if (start.Status == 0 || start.Status == 1)
                                                         partisipationOKIds.Add(partisipation.Id);
-                                                    else if (start.Status == 1)
-                                                        partisipationDNFIds.Add(partisipation.Id);
                                                     else if (start.Status == 2)
+                                                        partisipationDNFIds.Add(partisipation.Id);
+                                                    else if (start.Status == 3)
                                                         partisipationDNSIds.Add(partisipation.Id);
                                                 }
                                 if (partisipationOKIds.Count != 0 || partisipationDNFIds.Count != 0 || partisipationDNSIds.Count != 0)
@@ -1076,6 +1074,7 @@ namespace RefereeHelper
                                                     if (start.PartisipationId == partisipationId)
                                                     {
                                                         table.Cell(row, 4).Range.Text = start.Number.ToString();
+                                                        table.Cell(row, constcol).Range.Text = start.Place.ToString();
                                                         foreach (Timing timing in timings)
                                                         {
                                                             if (timing.StartId != null)
@@ -1087,7 +1086,6 @@ namespace RefereeHelper
                                                                         table.Cell(row, col).Range.Text = buf.ToLongTimeString(); col++;
                                                                         circles++;
                                                                     }
-                                                                    table.Cell(row, constcol).Range.Text = timing.Place.ToString(); 
                                                                 }
                                                         }
                                                         break;
