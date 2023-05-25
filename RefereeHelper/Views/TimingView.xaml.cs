@@ -1211,6 +1211,11 @@ namespace RefereeHelper.Views
                 var tim = row.DataContext as TimingDataItem;
                 var editTiming = new TimingEdit();
                 editTiming.ShowTiming(tim);
+                if (editTiming.DialogResult==true)
+                {
+                    TimingFill();
+                }
+                
             }
             catch(Exception exc)
             {

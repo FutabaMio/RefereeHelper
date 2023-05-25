@@ -85,7 +85,8 @@ namespace RefereeHelper.OptionsWindows
             
                 int StartNumber = Int32.Parse(startNumberTbx.Text.ToString());
                 Process(StartNumber, p.dbContext);
-                this.Close();
+                DialogResult=true;
+                //this.Close();
             
         }
 
@@ -95,7 +96,7 @@ namespace RefereeHelper.OptionsWindows
             //FamilyNameTbx.Text=$"{timing.FamilyName}";
             //NameTbx.Text=$"{timing.MemberName}";
             startNumberTbx.Text=$"{timing.Startnumber}";
-            this.Show();
+            this.ShowDialog();
         }
     }
 }
