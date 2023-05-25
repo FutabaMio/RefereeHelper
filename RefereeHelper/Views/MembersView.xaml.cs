@@ -72,9 +72,7 @@ namespace RefereeHelper.Views
                 MembersList.DataContext = db.Members.Local.ToBindingList();
                 ID=db.Members.Count()+1;
                 db.SaveChanges();
-                
-            }
-            
+            } 
         }
 
         private void AddMember_Click(object sender, RoutedEventArgs e)
