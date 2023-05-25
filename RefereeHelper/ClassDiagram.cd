@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RefereeHelper.Models.Base.BaseEntity">
+    <Position X="33" Y="10.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Club">
+    <Position X="28.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Competition">
+    <Position X="35.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Discharge">
+    <Position X="42" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Distance">
+    <Position X="21.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Group">
+    <Position X="30.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Member">
+    <Position X="37.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Partisipation">
+    <Position X="24" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Region">
+    <Position X="33" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Start">
+    <Position X="39.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Team">
+    <Position X="44.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Models.Timing">
+    <Position X="26.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RefereeHelper.Views.TimingView">
+    <Position X="31.5" Y="6.5" Width="2.75" />
+    <Members>
+      <Field Name="_time" Hidden="true" />
+      <Method Name="AddData" Hidden="true" />
+      <Method Name="CheckBox_Checked" Hidden="true" />
+      <Field Name="countOfFinishingPeople" Hidden="true" />
+      <Field Name="CountOfFinishingPeople" Hidden="true" />
+      <Field Name="CountOfLapsForHim" Hidden="true" />
+      <Field Name="countOfStartingPeople" Hidden="true" />
+      <Field Name="currentTime" Hidden="true" />
+      <Field Name="datagram" Hidden="true" />
+      <Field Name="DataService" Hidden="true" />
+      <Method Name="DistanceFill" Hidden="true" />
+      <Method Name="DistanceFillBut_Click" Hidden="true" />
+      <Field Name="dt" Hidden="true" />
+      <Method Name="dtTick" Hidden="true" />
+      <Method Name="ExportAsBut_Click" Hidden="true" />
+      <Method Name="FillCompList" Hidden="true" />
+      <Method Name="GetCountPeopleOnThisLap" Hidden="true" />
+      <Method Name="GetIsFinish" Hidden="true" />
+      <Method Name="GetOfLapsForHim" Hidden="true" />
+      <Method Name="GetTimeOfLap" Hidden="true" />
+      <Field Name="i" Hidden="true" />
+      <Field Name="idsOfFinishingPeople" Hidden="true" />
+      <Method Name="LoadData" Hidden="true" />
+      <Method Name="LoadEvents" Hidden="true" />
+      <Method Name="MemberFillBut_Click" Hidden="true" />
+      <Method Name="MembersFill" Hidden="true" />
+      <Field Name="p" Hidden="true" />
+      <Field Name="position" Hidden="true" />
+      <Method Name="Process" Hidden="true" />
+      <Field Name="received" Hidden="true" />
+      <Method Name="Received" Hidden="true" />
+      <Method Name="RefrechAbsolutePlace" Hidden="true" />
+      <Method Name="RefrechPlace" Hidden="true" />
+      <Field Name="result" Hidden="true" />
+      <Field Name="secondOfDifference" Hidden="true" />
+      <Method Name="StartButton_Click" Hidden="true" />
+      <Field Name="startDataService" Hidden="true" />
+      <Field Name="sw" Hidden="true" />
+      <Method Name="TeamTimer_MouseDoubleClick" Hidden="true" />
+      <Method Name="TeamTimer_MouseRightButtonDown" Hidden="true" />
+      <Field Name="timeOfDifference" Hidden="true" />
+      <Method Name="TimerStop" Hidden="true" />
+      <Method Name="TimingDateTable" Hidden="true" />
+      <Method Name="TimingFill" Hidden="true" />
+      <Method Name="TimingFillBut_Click" Hidden="true" />
+      <Method Name="TimingView" Hidden="true" />
+      <Field Name="u" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="RefereeHelper.Views.TimingView.MemberDataItem">
+        <TypeIdentifier>
+          <NewMemberFileName>Views\TimingView.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="RefereeHelper.Views.TimingView.DistanceDataItem">
+        <TypeIdentifier>
+          <NewMemberFileName>Views\TimingView.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="RefereeHelper.Views.TimingView.TimingDataItem">
+        <TypeIdentifier>
+          <NewMemberFileName>Views\TimingView.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAQBGQBQIJxaQAABgBAYjIAAkAJAAGEbEYAAADaBAA=</HashCode>
+      <FileName>Views\TimingView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RefereeHelper.WordHelper">
+    <Position X="28.25" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAGgAAAGQAiAACAAAAAAAQACQAAAFIAIgACAAAAEAAA=</HashCode>
+      <FileName>WordHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RefereeHelper.Excelhelper">
+    <Position X="33.25" Y="2.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACQAgAADAAAAAAAAAAAAAAAIAIAAAAAAAQAAA=</HashCode>
+      <FileName>Excelhelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RefereeHelper.OptionsWindows.VisualData">
+    <Position X="36" Y="5.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="RefereeHelper.OptionsWindows.VisualData.DataItems">
+        <TypeIdentifier>
+          <NewMemberFileName>OptionsWindows\VisualData.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACIAAAEAAEAgAAAAAAAAAAAA=</HashCode>
+      <FileName>OptionsWindows\VisualData.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RefereeHelper.OptionsWindows.ProtocolDialog">
+    <Position X="39.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAQABIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OptionsWindows\ProtocolDialog.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
