@@ -9,8 +9,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0*"/>
-            <RowDefinition Height="14*"/>
-            <RowDefinition Height="194*"/>
+            <RowDefinition Height="23*"/>
+            <RowDefinition Height="185*"/>
             <RowDefinition Height="17*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="3">
@@ -28,12 +28,10 @@
         </Grid>
         <TextBlock Grid.Row="1" Text="Клубы" Background="White" FontSize="24" FontWeight="Bold"/>
 
-        <Label Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,150,0" Content="Фильтр по названию:" FontWeight="Bold"/>
-        <TextBox Name="FilterBox" Grid.Row="1" FontSize="10" HorizontalAlignment="Right" Width="150" TextChanged="FilterBox_TextChanged"/>
+        <Label Grid.Row="1" HorizontalAlignment="Left" Margin="513,0,0,0" Content="Фильтр по названию:" FontWeight="Bold" Width="137"/>
+        <TextBox Name="FilterBox" Grid.Row="1" FontSize="10" HorizontalAlignment="Left" Width="150" TextChanged="FilterBox_TextChanged" Margin="650,0,0,0"/>
 
-        <DataGrid Grid.Row="2" Name="clubDataGrid" ItemsSource="{Binding}"  MouseRightButtonDown="clubDataGrid_MouseRightButtonDown" CurrentCellChanged="clubDataGrid_CurrentCellChanged">
-
-        </DataGrid>
+        <DataGrid Grid.Row="2" Name="clubDataGrid" ItemsSource="{Binding}"  MouseRightButtonDown="clubDataGrid_MouseRightButtonDown" CurrentCellChanged="clubDataGrid_CurrentCellChanged"/>
 
     </Grid>
 </UserControl>
