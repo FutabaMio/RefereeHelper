@@ -240,6 +240,8 @@ namespace RefereeHelper
                         Number = x.Number,
                         StartTime = x.StartTime,
                         Status = x.Status,
+                        Place = x.Place,
+                        PlaceAbsolute = x.PlaceAbsolute,
                         PartisipationId = x.PartisipationId
                     }).ToList();
 
@@ -248,9 +250,6 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         TimeFromStart = x.TimeFromStart,
-                        IsFinish = x.IsFinish,
-                        Place = x.Place,
-                        PlaceAbsolute = x.PlaceAbsolute,
                         StartId = x.StartId
                     }).ToList();
 
@@ -265,11 +264,11 @@ namespace RefereeHelper
                                             {
                                                 if (start.PartisipationId == partisipation.Id)
                                                 {
-                                                    if (start.Status == 0)
+                                                    if (start.Status == 0 || start.Status == 1)
                                                         partisipationIds.Add(partisipation.Id);
-                                                    else if (start.Status == 1)
-                                                        partisipationDNFIds.Add(partisipation.Id);
                                                     else if (start.Status == 2)
+                                                        partisipationDNFIds.Add(partisipation.Id);
+                                                    else if (start.Status == 3)
                                                         partisipationDNSIds.Add(partisipation.Id);
                                                 }
                                             }
@@ -328,6 +327,10 @@ namespace RefereeHelper
                                             if (start.PartisipationId == partisipationId)
                                             {
                                                 sheet.Cells[row, 7].Value = start.Number;
+                                                sheet.Cells[row, 1].Value = start.PlaceAbsolute;
+                                                sheet.Cells[row, costcol].Value = start.Place;
+                                                if (start.Status == 1)
+                                                    sheet.Cells[row, costcol - 2].Style.Font.Bold = true;
                                                 foreach (Timing timing in timings)
                                                 {
                                                     if (timing.StartId != null)
@@ -340,12 +343,6 @@ namespace RefereeHelper
                                                                 circle++;
                                                             }
                                                             col++;
-                                                            if (timing.IsFinish == true)
-                                                            {
-                                                                sheet.Cells[row, col - 1].Style.Font.Bold = true;
-                                                            }
-                                                            sheet.Cells[row, 1].Value = timing.PlaceAbsolute;
-                                                            sheet.Cells[row, costcol].Value = timing.Place;
                                                         }
                                                 }
                                                 break;
@@ -532,6 +529,7 @@ namespace RefereeHelper
                         Id = x.Id,
                         Number = x.Number,
                         Status = x.Status,
+                        Place = x.Place,
                         PartisipationId = x.PartisipationId
                     }).ToList();
 
@@ -539,8 +537,6 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         TimeFromStart = x.TimeFromStart,
-                        IsFinish = x.IsFinish,
-                        Place = x.Place,
                         StartId = x.StartId
                     }).ToList();
 
@@ -553,11 +549,11 @@ namespace RefereeHelper
                                     {
                                         if (start.PartisipationId == partisipation.Id)
                                         {
-                                            if (start.Status == 0)
+                                            if (start.Status == 0 || start.Status == 1)
                                                 partisipationIds.Add(partisipation.Id);
-                                            else if (start.Status == 1)
-                                                partisipationDNFIds.Add(partisipation.Id);
                                             else if (start.Status == 2)
+                                                partisipationDNFIds.Add(partisipation.Id);
+                                            else if (start.Status == 3)
                                                 partisipationDNSIds.Add(partisipation.Id);
                                         }
                                     }
@@ -619,6 +615,9 @@ namespace RefereeHelper
                                             if (start.PartisipationId == partisipationId)
                                             {
                                                 sheet.Cells[row, 7].Value = start.Number;
+                                                sheet.Cells[row, 1].Value = start.Place;
+                                                if (start.Status == 1)
+                                                    sheet.Cells[row, costcol].Style.Font.Bold = true;
                                                 foreach (Timing timing in timings)
                                                 {
                                                     if (timing.StartId != null)
@@ -631,9 +630,6 @@ namespace RefereeHelper
                                                                 circles++;
                                                             }
                                                             col++;
-                                                            if (timing.IsFinish == true)
-                                                                sheet.Cells[row, col - 1].Style.Font.Bold = true;
-                                                            sheet.Cells[row, 1].Value = timing.Place;
                                                         }
                                                 }
                                                 break;
@@ -696,7 +692,7 @@ namespace RefereeHelper
                                         col = 8;
                                     }
                                 }
-                            foreach (int partisipationId in partisipationDNFIds)
+                            foreach (int partisipationId in partisipationDNSIds)
                                 foreach (Partisipation partisipation in partisipations)
                                 {
                                     if (partisipation.Id == partisipationId)
@@ -804,6 +800,7 @@ namespace RefereeHelper
                         Id = x.Id,
                         Number = x.Number,
                         Status = x.Status,
+                        Place = x.Place,
                         PartisipationId = x.PartisipationId
                     }).ToList();
 
@@ -811,8 +808,6 @@ namespace RefereeHelper
                     {
                         Id = x.Id,
                         TimeFromStart = x.TimeFromStart,
-                        IsFinish = x.IsFinish,
-                        Place = x.Place,
                         StartId = x.StartId
                     }).ToList();
 
@@ -827,11 +822,11 @@ namespace RefereeHelper
                                             foreach (Models.Start start in starts)
                                                 if (start.PartisipationId == partisipation.Id)
                                                 {
-                                                    if (start.Status == 0)
+                                                    if (start.Status == 0 || start.Status == 1)
                                                         partisipationOKIds.Add(partisipation.Id);
-                                                    else if (start.Status == 1)
-                                                        partisipationDNFIds.Add(partisipation.Id);
                                                     else if (start.Status == 2)
+                                                        partisipationDNFIds.Add(partisipation.Id);
+                                                    else if (start.Status == 3)
                                                         partisipationDNSIds.Add(partisipation.Id);
                                                 }
                                     
@@ -882,6 +877,7 @@ namespace RefereeHelper
                                                     if (start.PartisipationId == partisipationId)
                                                     {
                                                         sheet.Cells[row, 4].Value = start.Number;
+                                                        sheet.Cells[row, constcol].Value = start.Place;
                                                         foreach (Timing timing in timings)
                                                         {
                                                             if (timing.StartId != null)
@@ -893,7 +889,6 @@ namespace RefereeHelper
                                                                         sheet.Cells[row, col].Value = buf.ToLongTimeString(); col++;
                                                                         circles++;
                                                                     }
-                                                                    sheet.Cells[row, constcol].Value = timing.Place;
                                                                 }
                                                         }
                                                         
