@@ -222,6 +222,7 @@ namespace RefereeHelper.Views
                 TeamTimer.Columns.Add(column);
                 foreach (Partisipation partisipation in partisipations)
                 {
+                    buf = new MemberDataItem();
                     if (partisipation.CompetitionId == competition.Id)
                     {
                         if (partisipation.MemberId != null)
@@ -326,6 +327,8 @@ namespace RefereeHelper.Views
                 TeamTimer.Columns.Add(column);
 
                 foreach (Models.Group group in groups)
+                {
+                    buf = new DistanceDataItem();
                     foreach (Partisipation partisipation in partisipations)
                         if (partisipation.GroupId != null)
                             if (group.Id == partisipation.GroupId && partisipation.CompetitionId == competition.Id)
@@ -349,6 +352,7 @@ namespace RefereeHelper.Views
                                 TeamTimer.Items.Add(buf);
                                 break;
                             }
+                }
             }
         }
 
@@ -470,6 +474,7 @@ namespace RefereeHelper.Views
 
                 foreach (Timing timing in timings)
                 {
+                    buf = new TimingDataItem();
                     if (timing.StartId != null)
                     {
                         foreach (Models.Start start in starts)
