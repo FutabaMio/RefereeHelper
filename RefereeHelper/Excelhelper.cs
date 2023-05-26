@@ -341,6 +341,8 @@ namespace RefereeHelper
                                                                 buf = (TimeOnly)timing.TimeFromStart;
                                                                 sheet.Cells[row, col].Value = buf.ToLongTimeString();
                                                                 circle++;
+                                                                if (circle == distance.Circles)
+                                                                    break;
                                                             }
                                                             col++;
                                                         }
@@ -628,6 +630,8 @@ namespace RefereeHelper
                                                                 buf = (TimeOnly)timing.TimeFromStart;
                                                                 sheet.Cells[row, col].Value = buf.ToLongTimeString();
                                                                 circles++;
+                                                                if (circles == group.Distance.Circles)
+                                                                    break;
                                                             }
                                                             col++;
                                                         }
@@ -888,6 +892,8 @@ namespace RefereeHelper
                                                                         buf = (TimeOnly)timing.TimeFromStart;
                                                                         sheet.Cells[row, col].Value = buf.ToLongTimeString(); col++;
                                                                         circles++;
+                                                                        if (circles == distance.Circles)
+                                                                            break;
                                                                     }
                                                                 }
                                                         }
