@@ -47,6 +47,19 @@ namespace RefereeHelper.OptionsWindows.EditWindows
                 dbgroup.EndAge=maxDate;
                 var d = (Distance)CMBdistance.SelectedItem;
                 dbgroup.Distance=d;
+                if (TBXgender.Text == "муж" || TBXgender.Text == "м" || TBXgender.Name == "мужской")
+                {
+                    dbgroup.Gender = true;
+                }
+                else if (TBXgender.Text == "жен" || TBXgender.Text == "ж" || TBXgender.Name == "женский")
+                {
+                    dbgroup.Gender = false;
+                }
+                else
+                {
+                    MessageBox.Show("Похоже, вы ввели неправильный пол. Повторите попытку.");
+                }
+
 
                 db.SaveChanges();
                 DialogResult=true;
