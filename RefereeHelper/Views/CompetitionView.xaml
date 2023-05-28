@@ -23,7 +23,10 @@
             <Button Grid.Column="2" Content="Удалить"/> -->
         </Grid>
 
-        <TextBlock Grid.Row="0" Text="Соревнования" FontSize="20"/>
+        <TextBlock Grid.Row="0" Text="Соревнования" Background="White" FontSize="20"/>
+
+        <TextBox Grid.Row="0" Name="FilterBox" HorizontalAlignment="Right" Width="200" TextChanged="TextBox_TextChanged"/>
+        <Label Grid.Row="0" HorizontalAlignment="Right" Content="Фильтр по названию:" Margin="0,0,200,0" FontWeight="Bold"/>
         <DataGrid Grid.Row="0" Background="White" Name="competitionsTable" ItemsSource="{Binding}" MouseRightButtonDown="competitionsTable_MouseRightButtonDown" Margin="0,26,0,0" Grid.RowSpan="2"/>
     </Grid>
 </UserControl>

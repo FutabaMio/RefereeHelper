@@ -6,13 +6,14 @@
              xmlns:local="clr-namespace:RefereeHelper.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20*"/>
-            <RowDefinition Height="188*"/>
+            <RowDefinition Height="0*"/>
+            <RowDefinition Height="23*"/>
+            <RowDefinition Height="185*"/>
             <RowDefinition Height="17*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40*"/>
                 <ColumnDefinition Width="40*"/>
@@ -22,12 +23,15 @@
             <Button x:Name="AddClubButton" Content="Добавить клуб" FontSize="10" Grid.Column="0" Click="AddClubButton_Click"/>
             <Button x:Name="EditClub" Content="Редактировать клуб" FontSize="10" Grid.Column="1"/>
             <Button x:Name="DeleteButton" Content="Удалить" FontSize="10" Grid.Column="2"/>
-           <!-- <Button x:Name="OpenBaseButton" Content="Открыть базу регионов" FontSize="10" Grid.Column="3"/> -->
+
+            <!-- <Button x:Name="OpenBaseButton" Content="Открыть базу регионов" FontSize="10" Grid.Column="3"/> -->
         </Grid>
-        <TextBlock Text="Клубы" FontSize="24" FontWeight="Bold"/>
-        <DataGrid Grid.Row="1" Name="clubDataGrid" ItemsSource="{Binding}"  MouseRightButtonDown="clubDataGrid_MouseRightButtonDown" CurrentCellChanged="clubDataGrid_CurrentCellChanged">
-            
-        </DataGrid>
+        <TextBlock Grid.Row="1" Text="Клубы" Background="White" FontSize="24" FontWeight="Bold"/>
+
+        <Label Grid.Row="1" HorizontalAlignment="Left" Margin="513,0,0,0" Content="Фильтр по названию:" FontWeight="Bold" Width="137"/>
+        <TextBox Name="FilterBox" Grid.Row="1" FontSize="10" HorizontalAlignment="Left" Width="150" TextChanged="FilterBox_TextChanged" Margin="650,0,0,0"/>
+
+        <DataGrid Grid.Row="2" Name="clubDataGrid" ItemsSource="{Binding}"  MouseRightButtonDown="clubDataGrid_MouseRightButtonDown" CurrentCellChanged="clubDataGrid_CurrentCellChanged"/>
 
     </Grid>
 </UserControl>

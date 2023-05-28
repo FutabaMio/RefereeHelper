@@ -154,13 +154,6 @@ namespace RefereeHelper.Views
                 membersDataGrid.Items.Add(table.TableName);
             }*/
         }
-
-        private void FilterButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-
-        }
-
         private void MembersList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             //здесь нужно вызвать форму редактирования по текущему элементу (на котором дабл клик был)

@@ -93,5 +93,21 @@ namespace RefereeHelper.Views
                 teamsDataGrid.ItemsSource= teams;
             }
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string filterStr = FilterBox.Text;
+            if (filterStr != null)
+            {
+                using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    var filteredTeams = db.Teams.Where(f => f.Name.StartsWith(filterStr)).ToList();
+
+                    teamsDataGrid.ItemsSource = filteredTeams;
+                }
+
+                //RefreshData();
+            }
+        }
     }
 }

@@ -48,16 +48,27 @@ namespace RefereeHelper.OptionsWindows
             Group.Name = nameTextBox.Text;
             int.TryParse(minAgeBox.Text, out int minAge);
             int.TryParse(maxAgeBox.Text, out int maxAge);
-            if (minAge>maxAge)
-            {
-                int buf = maxAge;
-                maxAge=minAge;
-                minAge=buf;
-            }
             if (WorkMode==true)
             {
-            Group.StartAge =DateTime.Now.Year-maxAge;
-            Group.EndAge = DateTime.Now.Year-minAge;
+                if (minAge>maxAge)
+                {
+                    int buf = maxAge;
+                    maxAge=minAge;
+                    minAge=buf;
+                }
+                Group.StartAge =DateTime.Now.Year-maxAge;
+                Group.EndAge = DateTime.Now.Year-minAge;
+            }
+            else
+            {
+                if (minAge>maxAge)
+                {
+                    int buf = maxAge;
+                    maxAge=minAge;
+                    minAge=buf;
+                }
+                Group.StartAge=minAge;
+                Group.EndAge=maxAge;
             }
             
             var d = (Distance)distancesList.SelectedItem;
@@ -71,7 +82,7 @@ namespace RefereeHelper.OptionsWindows
             {
                 minAgeText.Content="Возраст от:";
                 maxAgeText.Content="Возраст до:";
-                WorkMode=false;
+                //WorkMode=false;
             }
             else
             {   
