@@ -82,11 +82,18 @@ namespace RefereeHelper.OptionsWindows
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            
+            try
+            {
                 int StartNumber = Int32.Parse(startNumberTbx.Text.ToString());
                 Process(StartNumber, p.dbContext);
                 DialogResult=true;
                 //this.Close();
+
+            }
+            catch
+            {
+                startNumberTbx.Text = string.Empty;
+            }
             
         }
 
