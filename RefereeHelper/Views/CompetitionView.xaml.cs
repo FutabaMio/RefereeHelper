@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RefereeHelper.EntityFramework;
 using RefereeHelper.Models;
 using RefereeHelper.OptionsWindows;
+using RefereeHelper.OptionsWindows.EditWindows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,12 +83,44 @@ namespace RefereeHelper.Views
             {
                 using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
                 {
-                    var filteredComps = db.Members.Where(f => f.Name.StartsWith(filterStr)).ToList();
+                    var filteredComps = db.Competitions.Where(f => f.Name.StartsWith(filterStr)).ToList();
 
                     competitionsTable.ItemsSource = filteredComps;
                 }
 
                 //RefreshData();
+            }
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            var comp = row.DataContext as Competition;
+            EditCompetitionInfo window = new EditCompetitionInfo(comp);
+            window.ShowCompetition(comp);
+            if (window.DialogResult==true)
+            {
+                RefreshData();
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DelCompetition();
+            RefreshData();
+        }
+
+        public void DelCompetition()
+        {
+            Competition SelectedCompetition = (Competition)competitionsTable.SelectedItem;
+            if (SelectedCompetition!=null)
+            {
+                using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    Competition dbcompetition = db.Competitions.Find(SelectedCompetition.Id);
+                    db.Remove(dbcompetition);
+                    db.SaveChanges();
+                }
             }
         }
     }
