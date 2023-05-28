@@ -24,13 +24,14 @@ namespace RefereeHelper.OptionsWindows
     /// </summary>
     public partial class TimingEdit : Window
     {
+        
         public TimingDataItem Timing { get; set; }
 
         public TimingEdit()
         {
             InitializeComponent();
         }
-
+        
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

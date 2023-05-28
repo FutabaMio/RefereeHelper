@@ -38,7 +38,7 @@
                 <BeginStoryboard>
                     <Storyboard>
                         <ColorAnimation To="{StaticResource Upper Buttons Bar}" Duration="0:0:0.3" Storyboard.TargetProperty="Background.Color"/>
-                        <ColorAnimation To="{StaticResource Upper Title Bar}" Duration="0:0:0.3" Storyboard.TargetProperty="Foreground.Color"/>
+                        <ColorAnimation To="Black" Duration="0:0:0.3" Storyboard.TargetProperty="Foreground.Color"/>
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
