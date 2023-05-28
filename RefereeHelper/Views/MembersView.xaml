@@ -28,11 +28,15 @@
             <Button x:Name="AddMember" Content="Добавить вручную" FontSize="10" Grid.Column="0" VerticalAlignment="Center" Click="AddMember_Click" Height="70"/>
             <Button x:Name="AddFromExcel"  Content="Загрузить из Excel" FontSize="10" Grid.Column="1" Click="AddFromExcel_Click"/>
             <Button x:Name="AddToExcel"  Content="Выгрузить в Excel" FontSize="10" Grid.Column="2"/>
-            <Button x:Name="DeleteMember" Content="Удалить" FontSize="10" Grid.Column="3"/>
+            <Button x:Name="DeleteMember" Content="Удалить" FontSize="10" Grid.Column="3" Click="DeleteMember_Click"/>
             <!--  <Button  x:Name="CategoryTable" Content="Открыть базу разрядов для редактирования" FontSize="10" Grid.Column="4"/> -->
         </Grid>
-        <DataGrid Name="MembersList" Grid.Row="1" ItemsSource="{Binding}" MouseDoubleClick="MembersList_MouseDoubleClick" MouseRightButtonDown="MembersList_MouseRightButtonDown">
-
+        <DataGrid Name="MembersList" Grid.Row="1" ItemsSource="{Binding}" IsReadOnly="True" MouseDoubleClick="MembersList_MouseDoubleClick" MouseRightButtonDown="MembersList_MouseRightButtonDown">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="MembersList_MouseDoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
         </DataGrid>
         <!--<ListBox Grid.Row="1" Background="White" Name="membersDataGrid" ItemsSource="{Binding}">
             <ListBox.ItemTemplate>

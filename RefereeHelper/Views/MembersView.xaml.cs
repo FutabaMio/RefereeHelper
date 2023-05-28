@@ -25,6 +25,7 @@ using Epplus = OfficeOpenXml;
 using EpplusSyle = OfficeOpenXml.Style;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
 using System.Diagnostics;
+using RefereeHelper.OptionsWindows.EditWindows;
 
 namespace RefereeHelper.Views
 {
@@ -156,7 +157,22 @@ namespace RefereeHelper.Views
         }
         private void MembersList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            //здесь нужно вызвать форму редактирования по текущему элементу (на котором дабл клик был)
+            try
+            {
+                DataGridRow row = sender as DataGridRow;
+                var memb = row.DataContext as Member;
+                EditMemberInfo window = new EditMemberInfo(memb);
+                window.ShowMember(memb);
+                if (window.DialogResult==true)
+                {
+                    RefreshData();
+                }
+            }
+            catch (Exception exc)
+            {
+                //MessageBox.Show(exc.Message);
+            }
+            
         }
 
         private void MembersList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -188,9 +204,27 @@ namespace RefereeHelper.Views
                     
                     MembersList.ItemsSource = filteredPeoples;
                 }
-
-                //RefreshData();
             }
+        }
+
+        public void DelMember()
+        {
+            Member SelectedMember = (Member)MembersList.SelectedItem;
+            if (SelectedMember!=null)
+            {
+                using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    Member dbmember = db.Members.Find(SelectedMember.Id);
+                    db.Remove(dbmember);
+                    db.SaveChanges();
+                }
+            }
+            
+        }
+        private void DeleteMember_Click(object sender, RoutedEventArgs e)
+        {
+            DelMember();
+            RefreshData();
         }
     }
 }

@@ -17,6 +17,7 @@ using RefereeHelper.OptionsWindows;
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
 using RefereeHelper.EntityFramework;
+using RefereeHelper.OptionsWindows.EditWindows;
 
 namespace RefereeHelper.Views
 {
@@ -94,6 +95,38 @@ namespace RefereeHelper.Views
                 }
 
                 //RefreshData();
+            }
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            var club = row.DataContext as Club;
+            EditClubInfo window = new EditClubInfo(club);
+            window.ShowClub(club);
+            if (window.DialogResult==true)
+            {
+                RefreshData();
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DelClub();
+            RefreshData();
+        }
+
+        public void DelClub()
+        {
+            Club selectedClub = (Club)clubDataGrid.SelectedItem;
+            if (selectedClub!=null)
+            {
+                using(var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    Club dbclub = db.Clubs.Find(selectedClub.Id);
+                    db.Remove(dbclub);
+                    db.SaveChanges();
+                }
             }
         }
     }
