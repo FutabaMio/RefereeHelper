@@ -85,10 +85,12 @@ namespace RefereeHelper.OptionsWindows
             try
             {
                 int StartNumber = Int32.Parse(startNumberTbx.Text.ToString());
-                Process(StartNumber, p.dbContext);
-                DialogResult=true;
-                //this.Close();
-
+                if (StartNumber == Int32.Parse(Timing.Startnumber)) { Close(); }
+                else
+                {
+                    Process(StartNumber, p.dbContext);
+                    DialogResult = true;
+                }
             }
             catch
             {
