@@ -17,6 +17,7 @@ using RefereeHelper.OptionsWindows;
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
 using RefereeHelper.EntityFramework;
+using RefereeHelper.OptionsWindows.EditWindows;
 
 namespace RefereeHelper.Views
 {
@@ -87,6 +88,38 @@ namespace RefereeHelper.Views
                 }
 
                 //RefreshData();
+            }
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            var group = row.DataContext as Group;
+            EditGroupInfo window = new EditGroupInfo(group);
+            window.ShowGroup(group);
+            if (window.DialogResult==true)
+            {
+                RefreshData();
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DelGroup();
+            RefreshData();
+        }
+
+        public void DelGroup()
+        {
+            Group SelectedGroup = (Group)groupsTable.SelectedItem;
+            if (SelectedGroup!=null)
+            {
+                using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    Group dbgroup = db.Groups.Find(SelectedGroup.Id);
+                    db.Remove(dbgroup);
+                    db.SaveChanges();
+                }
             }
         }
     }
