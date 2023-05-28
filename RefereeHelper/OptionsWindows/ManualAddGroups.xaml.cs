@@ -82,11 +82,10 @@ namespace RefereeHelper.OptionsWindows
             {
                 minAgeText.Content="Возраст от:";
                 maxAgeText.Content="Возраст до:";
-                //WorkMode=false;
+                WorkMode= false;
             }
             else
-            {   
-                
+            {
                 minAgeText.Content="Год рождения от:";
                 maxAgeText.Content="Год рождения до:";
                 WorkMode=true;

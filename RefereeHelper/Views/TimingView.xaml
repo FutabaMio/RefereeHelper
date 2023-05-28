@@ -34,9 +34,8 @@
                 <ColumnDefinition Width="63*"/>
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" Name="CompList" IsReadOnly="True"/>
-            <CheckBox Grid.Column="3" Content="On|Off" Name="automode" HorizontalAlignment="Left" FontSize="20" Checked="CheckBox_Checked" Margin="126,0,0,0" Width="79"/>
-            <Button Grid.Row="0" Grid.Column="2" Content="OK" HorizontalAlignment="Left" Width="100" Grid.ColumnSpan="2"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Name="textBox_TimeOfDifference" Text="5" Margin="0,0,5,0"/>
+            <CheckBox Grid.Column="3" Content="Вкл/Выкл" Name="automode" HorizontalAlignment="Left" FontSize="20" Checked="CheckBox_Checked" Margin="126,0,0,0" Width="123" ToolTip="Режим автоматического считывания"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Name="textBox_TimeOfDifference" Text="5" Margin="0,0,5,0" ToolTip="Таймер считывания меток (секунды)"/>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
