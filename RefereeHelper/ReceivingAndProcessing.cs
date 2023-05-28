@@ -47,8 +47,8 @@ namespace RefereeHelper
         /// </summary>
         public async Task<string> Receive()
         {
-            try
-            {
+            //try
+            //{
                 result = await client.ReceiveAsync();
                 datagram = result.Buffer;
                 received = Encoding.UTF8.GetString(datagram);
@@ -56,12 +56,12 @@ namespace RefereeHelper
                 received = received.Substring(received.IndexOf("Tag:") + 4);
                 received = received.Substring(0, received.IndexOf(" "));
                 return received;
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e);
-                return " ";
-            }
+            //}
+            //catch(Exception e)
+            //{
+            //    Console.WriteLine(e);
+            //    return " ";
+            //}
         }
         /// <summary>
         /// Закрывает UDPClient
@@ -139,8 +139,12 @@ namespace RefereeHelper
             t.Start.Partisipation.Group = dbContext.Set<Group>().First(x => x.Id == t.Start.Partisipation.GroupId);
             t.Start.Partisipation.Group.Distance = dbContext.Set<Distance>().First(x => x.Id == t.Start.Partisipation.Group.DistanceId);
             //var t = DataService.Get(idOfTiming).Result;
-            if (t.Start?.Partisipation?.Group?.Distance.Circles-1 < t.Circle)
+            if (t.Start?.Partisipation?.Group?.Distance.Circles > t.Circle)
             {
+                if (t.Start?.Partisipation?.Group?.Distance.Circles == t.Circle)
+                {
+                    return true;
+                }
                 return false;
             }
             else
