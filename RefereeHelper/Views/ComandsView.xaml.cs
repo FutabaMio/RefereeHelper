@@ -18,6 +18,7 @@ using RefereeHelper.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
 using OfficeOpenXml.ConditionalFormatting;
+using RefereeHelper.OptionsWindows.EditWindows;
 
 namespace RefereeHelper.Views
 {
@@ -76,12 +77,6 @@ namespace RefereeHelper.Views
             manualAddMemberInComand.ShowDialog();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            AddMemberInCommandFromTable addMemberInCommandFromTable = new AddMemberInCommandFromTable();
-            addMemberInCommandFromTable.ShowDialog();
-        }
-
         
         public void RefreshData()
         {
@@ -105,8 +100,38 @@ namespace RefereeHelper.Views
 
                     teamsDataGrid.ItemsSource = filteredTeams;
                 }
+            }
+        }
 
-                //RefreshData();
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            var tm = row.DataContext as Team;
+            EditTeamInfo window = new EditTeamInfo(tm);
+            window.ShowTeam(tm);
+            if (window.DialogResult==true)
+            {
+                RefreshData();
+            }
+        }
+
+        private void BTNdelete_Click(object sender, RoutedEventArgs e)
+        {
+            DelTeam();
+            RefreshData();
+        }
+
+        public void DelTeam()
+        {
+            Team SelectedTeam = (Team)teamsDataGrid.SelectedItem;
+            if (SelectedTeam != null)
+            {
+                using(var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    Team dbteam = db.Teams.Find(SelectedTeam.Id);
+                    db.Remove(dbteam);
+                    db.SaveChanges();
+                }
             }
         }
     }

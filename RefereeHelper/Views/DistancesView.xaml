@@ -6,23 +6,31 @@
              xmlns:local="clr-namespace:RefereeHelper.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="7*"/>
-            <RowDefinition Height="77*"/>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="22*"/>
+            <RowDefinition Height="188*"/>
+            <RowDefinition Height="15*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-            </Grid.ColumnDefinitions> 
+            </Grid.ColumnDefinitions>
             <Button x:Name="AddDistanceButton" Content="Добавить дистанцию" FontSize="10" Grid.Column="0" Click="AddDistanceButton_Click"/>
-       <!-- <Button x:Name="EditDistance" Content="Редактировать" FontSize="10" Grid.Column="1" Click="EditDistance_Click"/> -->
-       <!-- <Button x:Name="DeleteButton" Content="Удалить" FontSize="10" Grid.Column="2"/> -->
+            <!-- <Button x:Name="EditDistance" Content="Редактировать" FontSize="10" Grid.Column="1" Click="EditDistance_Click"/> -->
+            <Button x:Name="DeleteButton" Content="Удалить" FontSize="10" Grid.Column="1" Click="DeleteButton_Click"/>
         </Grid>
-        <TextBlock Text="Дистанции" FontSize="24" FontWeight="Bold"/>
-        <DataGrid Grid.Row="1" Name="distanceTable" ItemsSource="{Binding}" MouseRightButtonDown="distanceTable_MouseRightButtonDown"/>
+        <TextBlock Background="White" Grid.Row="0" Text="Дистанции" FontSize="24" FontWeight="Bold"/>
+        <TextBox Grid.Row="0" Name="FilterBox" FontSize="12" HorizontalAlignment="Right" Width="200" TextChanged="FilterBox_TextChanged"/>
+        <Label Grid.Row="0" HorizontalAlignment="Right" Content="Фильтр по названию:" FontWeight="Bold" Margin="0,0,200,0"/>
+        <DataGrid Grid.Row="1" Name="distanceTable" ItemsSource="{Binding}" MouseRightButtonDown="distanceTable_MouseRightButtonDown" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
     </Grid>
 </UserControl>

@@ -1,0 +1,26 @@
+﻿<Window x:Class="RefereeHelper.OptionsWindows.EditWindows.EditTeamInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RefereeHelper.OptionsWindows.EditWindows"
+        mc:Ignorable="d"
+        Title="EditTeamInfo" Height="250" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Название:" FontSize="14"/>
+        <TextBox Name="TBXname" Grid.Row="0" Grid.Column="0" Margin="0,25,0, 25" Grid.ColumnSpan="2"/>
+
+        <Button Name="BTNaccept" Grid.Row="2" Grid.Column="0" Content="Принять" FontSize="14" Click="BTNaccept_Click"/>
+        <Button Name="BTNcancel" Grid.Row="2" Grid.Column="1" Content="Отмена" FontSize="14" Click="BTNcancel_Click"/>
+    </Grid>
+</Window>

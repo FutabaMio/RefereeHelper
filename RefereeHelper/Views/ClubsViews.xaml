@@ -31,7 +31,7 @@
         <Label Grid.Row="1" HorizontalAlignment="Left" Margin="513,0,0,0" Content="Фильтр по названию:" FontWeight="Bold" Width="137"/>
         <TextBox Name="FilterBox" Grid.Row="1" FontSize="10" HorizontalAlignment="Left" Width="150" TextChanged="FilterBox_TextChanged" Margin="650,0,0,0"/>
 
-        <DataGrid Grid.Row="2" Name="clubDataGrid" ItemsSource="{Binding}"  MouseRightButtonDown="clubDataGrid_MouseRightButtonDown" CurrentCellChanged="clubDataGrid_CurrentCellChanged">
+        <DataGrid Grid.Row="2" Name="clubDataGrid" ItemsSource="{Binding}"  MouseRightButtonDown="clubDataGrid_MouseRightButtonDown" CurrentCellChanged="clubDataGrid_CurrentCellChanged" IsReadOnly="True">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>

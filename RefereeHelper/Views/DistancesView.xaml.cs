@@ -17,6 +17,7 @@ using RefereeHelper.OptionsWindows;
 using Microsoft.EntityFrameworkCore;
 using RefereeHelper.Models;
 using RefereeHelper.EntityFramework;
+using RefereeHelper.OptionsWindows.EditWindows;
 
 namespace RefereeHelper.Views
 {
@@ -72,6 +73,51 @@ namespace RefereeHelper.Views
                 }
             }
             RefreshData();
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            var dist = row.DataContext as Distance;
+            EditDistanceInfo window = new EditDistanceInfo(dist);
+            window.ShowDistance(dist);
+            if (window.DialogResult==true)
+            {
+                RefreshData();
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DelDistance();
+            RefreshData();
+        }
+
+        public void DelDistance()
+        {
+            Distance SelectedDistance = (Distance)distanceTable.SelectedItem;
+            if(SelectedDistance != null )
+            {
+                using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    Distance dbdistance = db.Distances.Find(SelectedDistance.Id);
+                    db.Remove(dbdistance);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        private void FilterBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string filterStr = FilterBox.Text;
+            if (filterStr!=null)
+            {
+                using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    var filteredDistances = db.Distances.Where(f => f.Name.StartsWith(filterStr)).ToList();
+                    distanceTable.ItemsSource= filteredDistances;
+                }
+            }
         }
     }
 }

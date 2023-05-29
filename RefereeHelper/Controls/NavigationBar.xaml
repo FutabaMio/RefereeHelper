@@ -45,15 +45,15 @@
                 <Style TargetType="RadioButton" BasedOn="{StaticResource NavButton}"/>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="107*"/>
-                <ColumnDefinition Width="157*"/>
-                <ColumnDefinition Width="433*"/>
+                <ColumnDefinition Width="146*"/>
+                <ColumnDefinition Width="216*"/>
+                <ColumnDefinition Width="335*"/>
                 <ColumnDefinition Width="103*"/>
             </Grid.ColumnDefinitions>
 
-            <RadioButton Grid.Column="0" Content="Участник" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Start}" VerticalAlignment="Center"/>
-            <RadioButton Grid.Column="1" Content="Участие (гонка)" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Participation}" VerticalAlignment="Center"/>
-            <RadioButton Name="helpWindow" Grid.Column="3" Content="Помощь" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="helpWindow_Checked"/>
+            <RadioButton Content="Участник (чип)" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Start}" VerticalAlignment="Center" Width="142" Height="30"/>
+            <RadioButton Grid.Column="1" Content="Участник (гонка)" HorizontalAlignment="Center" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Participation}" VerticalAlignment="Center" Height="30" Width="156"/>
+            <RadioButton Name="helpWindow" Grid.Column="3" Content="Помощь" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="helpWindow_Checked" Height="30" Width="91"/>
         </Grid>
     </Grid>
 </UserControl>
