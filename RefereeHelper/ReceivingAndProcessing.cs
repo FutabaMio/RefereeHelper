@@ -47,8 +47,8 @@ namespace RefereeHelper
         /// </summary>
         public async Task<string> Receive()
         {
-            try
-            {
+            //try
+            //{
                 result = await client.ReceiveAsync();
                 datagram = result.Buffer;
                 received = Encoding.UTF8.GetString(datagram);
@@ -56,12 +56,12 @@ namespace RefereeHelper
                 received = received.Substring(received.IndexOf("Tag:") + 4);
                 received = received.Substring(0, received.IndexOf(" "));
                 return received;
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e);
-                return " ";
-            }
+            //}
+            //catch(Exception e)
+            //{
+            //    Console.WriteLine(e);
+            //    return " ";
+            //}
         }
         /// <summary>
         /// Закрывает UDPClient
@@ -71,8 +71,14 @@ namespace RefereeHelper
             client.Close();
         }
     }
+    /// <summary>
+    /// Класс обработки данных
+    /// </summary>
     public class Processing 
     {
+        /// <summary>
+        /// Rонтекст данных, используемый для взаимодействия с базой данных
+        /// </summary>
         public DbContext dbContext;
 
         public Processing()
@@ -116,7 +122,14 @@ namespace RefereeHelper
             d.Start.Partisipation = dbContext.Set<Partisipation>().First(x => x.Id == t.Start.PartisipationId);
             d.Start.Partisipation.Group = dbContext.Set<Group>().First(x => x.Id == d.Start.Partisipation.GroupId);
             d.Start.Partisipation.Group.Distance = dbContext.Set<Distance>().First(x => x.Id == d.Start.Partisipation.Group.DistanceId);
-            var ts = dbContext.Set<Timing>().Include(x => x.Start).ThenInclude(c => c.Partisipation).ThenInclude(v => v.Group).Where(m => m.Start.Partisipation.Group.DistanceId == d.Start.Partisipation.Group.DistanceId).OrderByDescending(n => n.TimeFromStart).ToList();
+            var ts = dbContext.Set<Timing>().Include(x => x.Start)
+                                            .ThenInclude(c => c.Partisipation)
+                                            .ThenInclude(v => v.Group)
+                                            .Where(m => m.Start.Partisipation.Group.DistanceId == d.Start.Partisipation.Group.DistanceId)
+                                            .OrderByDescending(n => n.TimeFromStart)
+                                            .GroupBy(l => l.StartId)
+                                            .Select(k => k.First())
+                                            .ToList();
             int i = 0;
             foreach (var k in ts)
             {
@@ -139,8 +152,12 @@ namespace RefereeHelper
             t.Start.Partisipation.Group = dbContext.Set<Group>().First(x => x.Id == t.Start.Partisipation.GroupId);
             t.Start.Partisipation.Group.Distance = dbContext.Set<Distance>().First(x => x.Id == t.Start.Partisipation.Group.DistanceId);
             //var t = DataService.Get(idOfTiming).Result;
-            if (t.Start?.Partisipation?.Group?.Distance.Circles-1 < t.Circle)
+            if (t.Start?.Partisipation?.Group?.Distance.Circles > t.Circle)
             {
+                if (t.Start?.Partisipation?.Group?.Distance.Circles == t.Circle)
+                {
+                    return true;
+                }
                 return false;
             }
             else

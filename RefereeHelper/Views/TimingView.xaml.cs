@@ -704,6 +704,7 @@ namespace RefereeHelper.Views
                         string received = u.Receive().Result.ToString();
 
                         Process(received, p.dbContext, u.secondOfDifference);
+                        //TimingFill();
                     }
                     catch
                     {
@@ -802,6 +803,7 @@ namespace RefereeHelper.Views
                 }
 
             }
+            TimingFill();
         }
         /// <summary>
         /// Обновляет все позиции
