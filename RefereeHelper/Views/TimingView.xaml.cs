@@ -803,7 +803,8 @@ namespace RefereeHelper.Views
                 }
 
             }
-            TimingFill();
+            //TimingFill();
+            invoke(TimingFill());
         }
         /// <summary>
         /// Обновляет все позиции
