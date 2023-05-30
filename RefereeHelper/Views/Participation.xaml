@@ -19,8 +19,15 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Name="manualAddParticipation" Content="Добавить вручную" FontSize="20" Click="manualAddStart_Click"/>
+            <Button Grid.Column="1" Grid.Row="0" Name="BTNdelete" Content="Удалить" FontSize="20" Click="BTNdelete_Click"/>
             <!--Не уверен, что кнопки вообще нужны - добавить по ПКМ, изменить по двойному клику(?)-->
         </Grid>
-        <DataGrid Grid.Row="0" Name="partisipationTable" ItemsSource="{Binding}"/>
+        <DataGrid Grid.Row="0" Name="partisipationTable" ItemsSource="{Binding}" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
     </Grid>
 </UserControl>

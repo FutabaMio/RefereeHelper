@@ -616,7 +616,7 @@ namespace RefereeHelper.Views
         //конец
 
         //
-        //блок секундомер (не асинхронный)
+        //блок секундомер
         //
         DispatcherTimer dt = new DispatcherTimer();
         Stopwatch sw = new Stopwatch();
@@ -631,6 +631,8 @@ namespace RefereeHelper.Views
                 currentTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 secundomer.Text = currentTime;
             }
+            
+            TimingFill();
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
@@ -804,7 +806,7 @@ namespace RefereeHelper.Views
 
             }
             //TimingFill();
-            invoke(TimingFill());
+            //Dispatcher.Invoke(() => TimingFill());
         }
         /// <summary>
         /// Обновляет все позиции

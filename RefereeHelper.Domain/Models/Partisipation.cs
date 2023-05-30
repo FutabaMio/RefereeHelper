@@ -29,6 +29,8 @@ namespace RefereeHelper.Models
 
         public override string ToString()
         {
+            //string fin = $"{Member.FamilyName} {Member.Name} - {Competition.Name}";
+            //return fin;
             return Id.ToString();
         }
     }

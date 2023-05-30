@@ -21,9 +21,15 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Name="manualAddStart" Content="Добавить вручную" FontSize="20" Click="manualAddStart_Click"/>
-            <Button Grid.Column="1" Name="editStart" Content="Редактировать" FontSize="20" Click="editStart_Click"/>
+            <!--<Button Grid.Column="1" Name="editStart" Content="Редактировать" FontSize="20" Click="editStart_Click"/>-->
             <Button Grid.Column="2" Name="deleteStart" Content="Удалить" FontSize="20" Click="deleteStart_Click"/>
         </Grid>
-        <DataGrid Grid.Row="0" Name="startTable" ItemsSource="{Binding}"/>
+        <DataGrid Grid.Row="0" Name="startTable" ItemsSource="{Binding}">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
     </Grid>
 </UserControl>

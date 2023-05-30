@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RefereeHelper.EntityFramework;
+using RefereeHelper.Models;
 using RefereeHelper.OptionsWindows;
+using RefereeHelper.OptionsWindows.EditWindows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +69,38 @@ namespace RefereeHelper.Views
                 List<Models.Partisipation> partisipations = db.Partisipations.ToList();
                 partisipationTable.DataContext=partisipations;
                 partisipationTable.ItemsSource=partisipations;
+            }
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            var part = row.DataContext as Partisipation;
+            EditParticipationInfo window = new EditParticipationInfo(part);
+            window.ShowPartisipation(part);
+            if (window.DialogResult==true)
+            {
+                RefreshData();
+            }
+        }
+
+        private void BTNdelete_Click(object sender, RoutedEventArgs e)
+        {
+            DelPartisipation();
+            RefreshData();
+        }
+
+        public void DelPartisipation()
+        {
+            Partisipation SelectedPartisipation = (Partisipation)partisipationTable.SelectedItem;
+            if (SelectedPartisipation!=null)
+            {
+                using (var db = new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    Partisipation dbpartisipation = db.Partisipations.Find(SelectedPartisipation.Id);
+                    db.Remove(dbpartisipation);
+                    db.SaveChanges();
+                }
             }
         }
     }

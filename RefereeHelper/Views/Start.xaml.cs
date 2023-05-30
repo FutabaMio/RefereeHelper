@@ -2,6 +2,7 @@
 using RefereeHelper.EntityFramework;
 using RefereeHelper.Models;
 using RefereeHelper.OptionsWindows;
+using RefereeHelper.OptionsWindows.EditWindows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Input.Manipulations;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -57,14 +59,36 @@ namespace RefereeHelper.Views
             RefreshData();
         }
 
-        private void editStart_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void deleteStart_Click(object sender, RoutedEventArgs e)
         {
+            DelStart();
+            RefreshData();
+        }
 
+        public void DelStart()
+        {
+            Models.Start SelectedStart = (Models.Start)startTable.SelectedItem;
+            if(SelectedStart!= null)
+            {
+                using(var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                {
+                    Models.Start dbstart = db.Starts.Find(SelectedStart.Id);
+                    db.Remove(dbstart);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            var st = row.DataContext as Models.Start;
+            EditStartInfo window = new EditStartInfo(st);
+            window.ShowStart(st);
+            if (window.DialogResult==true)
+            {
+                RefreshData();
+            }
         }
     }
 }
