@@ -11,9 +11,9 @@
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="28"/>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="77"/>
-            <RowDefinition Height="38"/>
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="79"/>
+            <RowDefinition Height="68"/>
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
@@ -26,7 +26,7 @@
             </Grid.ColumnDefinitions>
             <!--  <ComboBox Grid.Row="0" Name="EventsListBox" Grid.Column="2" ItemsSource="{Binding}"/> -->
         </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40*"/>
                 <ColumnDefinition Width="40*"/>
@@ -37,24 +37,19 @@
             <CheckBox Grid.Column="3" Content="Вкл/Выкл" Name="automode" HorizontalAlignment="Left" FontSize="20" Checked="CheckBox_Checked" Margin="126,0,0,0" Width="123" ToolTip="Режим автоматического считывания"/>
             <TextBox Grid.Row="0" Grid.Column="1" Name="textBox_TimeOfDifference" Text="5" Margin="0,0,5,0" ToolTip="Таймер считывания меток (секунды)"/>
         </Grid>
+
+
         <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="127*"/>
-                <ColumnDefinition Width="95*"/>
-                <ColumnDefinition Width="578*"/>
-            </Grid.ColumnDefinitions>
-            <TextBox Name="secundomer" FontSize="20" BorderThickness="0" Text="00:00:00.00" VerticalAlignment="Top" HorizontalAlignment="Left" Height="26" Width="108" />
+            <TextBox Name="secundomer" FontSize="20" BorderThickness="0" Text="00:00:00" VerticalAlignment="Top" HorizontalAlignment="Left" Height="26" Width="108" />
             <Grid Grid.Row="1" Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Button Name="StartButton" Click="StartButton_Click" Content="Старт" Grid.Row="0" FontSize="14" MaxHeight="36" MaxWidth="96"/>
-                <Button Name="StopButton" Click="TimerStop" Content="Стоп" Grid.Row="1" FontSize="14" MaxHeight="36" MaxWidth="96"/>
+                <Button Name="StartButton" Click="StartButton_Click" Content="Старт" Grid.Row="0" FontSize="14" MaxHeight="36" MaxWidth="96" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="115,0,0,0" Width="80" Height="36"/>
+                <Button Name="StopButton" Click="TimerStop" Content="Стоп" Grid.Row="0" FontSize="14" MaxHeight="36" MaxWidth="96" Margin="210,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="63" Height="36"/>
 
             </Grid>
         </Grid>
-        <Grid Grid.Row="3">
+
+
+        <Grid Grid.Row="2" Margin="0,29,0,19">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -67,10 +62,11 @@
             <Button Grid.Column="2" Content="Результаты" Name="TimingFillBut" Click="TimingFillBut_Click"/>
         </Grid>
 
-        <DataGrid Grid.Row="4" Name="TeamTimer" MouseRightButtonDown="TeamTimer_MouseRightButtonDown" IsReadOnly="True">
+        <DataGrid Grid.Row="2" Name="TeamTimer" MouseRightButtonDown="TeamTimer_MouseRightButtonDown" IsReadOnly="True" Margin="0,58,0,0" Grid.RowSpan="3">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="TeamTimer_MouseDoubleClick"/>
+                    <EventSetter Event="KeyDown" Handler="DataGridRow_KeyDown"/>
                 </Style>
             </DataGrid.Resources>
         </DataGrid>

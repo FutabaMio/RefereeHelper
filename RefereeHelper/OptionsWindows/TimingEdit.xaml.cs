@@ -86,7 +86,10 @@ namespace RefereeHelper.OptionsWindows
             try
             {
                 int StartNumber = Int32.Parse(startNumberTbx.Text.ToString());
-                if (StartNumber == Int32.Parse(Timing.Startnumber)) { Close(); }
+                if (StartNumber == Int32.Parse(Timing.Startnumber)) 
+                {
+                    Close(); 
+                }
                 else
                 {
                     Process(StartNumber, p.dbContext);
@@ -95,7 +98,7 @@ namespace RefereeHelper.OptionsWindows
             }
             catch
             {
-                startNumberTbx.Text = string.Empty;
+                //startNumberTbx.Text = string.Empty;
             }
             
         }

@@ -24,6 +24,7 @@ using System.Windows.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics.Metrics;
 using RefereeHelper.Domain.Models;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 namespace RefereeHelper.Views
 {
@@ -92,7 +93,7 @@ namespace RefereeHelper.Views
         {
             InitializeComponent();
             dt.Tick += new EventHandler(dtTick);
-            dt.Interval = new TimeSpan(0, 0, 0, 0, 1);
+            dt.Interval = new TimeSpan(0, 0, 1);
             if (FillCompList())
             {
                 CompList.SelectedIndex = 0;
@@ -236,7 +237,7 @@ namespace RefereeHelper.Views
                                         buf.SecondName = member.SecondName;
                                     buf.BornDate = member.BornDate.ToShortDateString();
                                     if (member.Phone != null)
-                                        buf.City = member.Phone;
+                                        buf.City = member.City;
                                     if (member.ClubId != null)
                                         foreach (Club club in clubs)
                                             if (club.Id == member.ClubId)
@@ -302,7 +303,7 @@ namespace RefereeHelper.Views
                 column.Binding = new Binding("Gender");
                 TeamTimer.Columns.Add(column);
                 column = new DataGridTextColumn();
-                column.Header = "Возрост";
+                column.Header = "Возраст";
                 column.Binding = new Binding("Age");
                 TeamTimer.Columns.Add(column);
                 column = new DataGridTextColumn();
@@ -440,7 +441,7 @@ namespace RefereeHelper.Views
                 column.Binding = new Binding("Chip");
                 TeamTimer.Columns.Add(column);
                 column = new DataGridTextColumn();
-                column.Header = "Врямя старта";
+                column.Header = "Время старта";
                 column.Binding = new Binding("StartTime");
                 TeamTimer.Columns.Add(column);
                 column = new DataGridTextColumn();
@@ -615,9 +616,9 @@ namespace RefereeHelper.Views
         
         //конец
 
-        //
-        //блок секундомер
-        //
+        /// <summary>
+        /// CodeBehind для секундомера
+        /// </summary>
         DispatcherTimer dt = new DispatcherTimer();
         Stopwatch sw = new Stopwatch();
         string currentTime = string.Empty;
@@ -628,11 +629,10 @@ namespace RefereeHelper.Views
             if (sw.IsRunning)
             {
                 TimeSpan ts = sw.Elapsed;
-                currentTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                currentTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
                 secundomer.Text = currentTime;
+                TimingFill();
             }
-            
-            TimingFill();
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
@@ -648,9 +648,6 @@ namespace RefereeHelper.Views
                 sw.Stop();
             }
         }
-        //
-        //блок секундомера конец
-        //
 
         public void LoadEvents()//надо привести возвращаемые объекты к тексту, придумать, как по названию (или айди выбранного объекта) искать в базе и подгружать участников
         {                       //придумать, как можно сохранить выбранное мероприятие (зафиксировать его при переключении вкладок)
@@ -1229,6 +1226,38 @@ namespace RefereeHelper.Views
             
 
             
+            
+        }
+
+        private void DataGridRow_KeyDown(object sender, KeyEventArgs e)
+        {
+            TimingDataItem SelectedTiming = (TimingDataItem)TeamTimer.SelectedItem;
+            if (SelectedTiming!=null)
+            {
+                if (e.Key == Key.Delete)
+                {
+                    int.TryParse(SelectedTiming.Id, out int selID);
+                    using (var db=new RefereeHelperDbContextFactory().CreateDbContext())
+                    {
+                        Timing dbtiming = db.Timings.Find(selID);
+                        db.Remove(dbtiming);
+                        p.RefrechPlace(db, dbtiming);
+                        p.RefrechAbsolutePlace(db, dbtiming);
+                        db.SaveChanges();
+                        
+                    }
+                    TimingFill();
+                    
+                }
+                else
+                {
+                    MessageBox.Show("Для удаления нажмите DELETE");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Запись не была выбрана");
+            }
             
         }
 
