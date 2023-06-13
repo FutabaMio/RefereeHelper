@@ -1241,9 +1241,9 @@ namespace RefereeHelper.Views
                     {
                         Timing dbtiming = db.Timings.Find(selID);
                         db.Remove(dbtiming);
-                        p.RefrechPlace(db, dbtiming);
+                       
+                        db.SaveChanges(); p.RefrechPlace(db, dbtiming);
                         p.RefrechAbsolutePlace(db, dbtiming);
-                        db.SaveChanges();
                         
                     }
                     TimingFill();

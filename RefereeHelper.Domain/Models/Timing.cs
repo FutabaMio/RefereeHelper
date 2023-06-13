@@ -49,11 +49,7 @@ namespace RefereeHelper.Models
         {
             throw new NotImplementedException();
         }
-        //public bool autoMode { get; set; } = false;            //почитать об инициализации переменной после указания её свойств
-        /// <summary>
-        /// 
-        /// </summary>
-        //public TimeOnly? currentTime { get; set; }              //надо распарсить только время, поискать как (TimeOnly currentTime = DateOnly.FromDateTime(timer))
+
     }
 }
 
