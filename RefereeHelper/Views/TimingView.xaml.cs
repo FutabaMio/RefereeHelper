@@ -25,6 +25,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics.Metrics;
 using RefereeHelper.Domain.Models;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using Xceed.Wpf.AvalonDock.Converters;
 
 namespace RefereeHelper.Views
 {
@@ -93,6 +94,7 @@ namespace RefereeHelper.Views
         {
             InitializeComponent();
             dt.Tick += new EventHandler(dtTick);
+            SetAutoUpdateTimer();
             dt.Interval = new TimeSpan(0, 0, 1);
             if (FillCompList())
             {
@@ -648,6 +650,30 @@ namespace RefereeHelper.Views
                 sw.Stop();
             }
         }
+
+        /// <summary>
+        /// Автообновление DataGrid
+        /// </summary>
+        
+
+        public void SetAutoUpdateTimer()
+        {
+            DispatcherTimer autoReloader = new DispatcherTimer();
+            autoReloader.Tick+=AutoReloader_Tick;
+            autoReloader.Interval = TimeSpan.FromSeconds(Int32.Parse(textBox_TimeOfDifference.Text));
+            autoReloader.Start();
+        }
+
+        private void AutoReloader_Tick(object? sender, EventArgs e)
+        {
+            if ()
+            {
+                TimingFill();
+            }
+            
+        }
+
+
 
         public void LoadEvents()//надо привести возвращаемые объекты к тексту, придумать, как по названию (или айди выбранного объекта) искать в базе и подгружать участников
         {                       //придумать, как можно сохранить выбранное мероприятие (зафиксировать его при переключении вкладок)
