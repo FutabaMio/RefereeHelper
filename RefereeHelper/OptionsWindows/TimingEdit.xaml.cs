@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 
 namespace RefereeHelper.OptionsWindows
 {
@@ -88,17 +89,17 @@ namespace RefereeHelper.OptionsWindows
                 int StartNumber = Int32.Parse(startNumberTbx.Text.ToString());
                 if (StartNumber == Int32.Parse(Timing.Startnumber)) 
                 {
-                    Close(); 
+                    Process(StartNumber, p.dbContext);
+                    DialogResult = true;
                 }
                 else
                 {
-                    Process(StartNumber, p.dbContext);
-                    DialogResult = true;
+                    Close();
                 }
             }
             catch
             {
-                //startNumberTbx.Text = string.Empty;
+                startNumberTbx.Text = string.Empty;
             }
             
         }
@@ -106,9 +107,10 @@ namespace RefereeHelper.OptionsWindows
         public void ShowTiming(TimingDataItem timing)
         {
             Timing = timing;
-            //FamilyNameTbx.Text=$"{timing.FamilyName}";
-            //NameTbx.Text=$"{timing.MemberName}";
-            startNumberTbx.Text=$"{timing.Startnumber}";
+            familyTbx.Text=$"{Timing.FamilyName}";
+            nameTbx.Text=$"{Timing.MemberName}";
+            startNumberTbx.Text=$"{Timing.Startnumber}";
+            timeTP.Text=$"{Timing.CircleTime}";
             this.ShowDialog();
         }
     }

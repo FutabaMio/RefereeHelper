@@ -666,10 +666,10 @@ namespace RefereeHelper.Views
 
         private void AutoReloader_Tick(object? sender, EventArgs e)
         {
-            if ()
-            {
+            //if ()
+            //{
                 TimingFill();
-            }
+            //}
             
         }
 
